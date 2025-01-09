@@ -1,5 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 body{
   margin: 0px;
+}
+
+:root{
+  --font-size: 18px;
+  --Mont: 'Montserrat', sans-serif; 
+  --color: color: rgb(196, 195, 195);
 }
 
 .logo {
@@ -76,6 +84,10 @@ header{
   display: flex;
   gap: 2px;
   color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+  font-size: var(--font-size);
+  
+
 }
 
 .content {
@@ -88,4 +100,35 @@ header{
   margin: 0 auto; 
 }
 
+span{
+  color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+  font-size: var(--font-size);
+}
+
+svg{
+  margin-right: 7px;
+}
+
+.logo{
+  padding:  10px 0px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 50px;
+}
+
+.hr-logo{
+  width: 110px;
+  
+}
+
+.navigate{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 0;
+  
+}
 

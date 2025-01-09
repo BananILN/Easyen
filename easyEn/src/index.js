@@ -9,7 +9,6 @@ export const ROUTES = {
 
 export const NAV_ITEMS = [
     {
-        icon: "/img",
         title:"Главная",
         path: ROUTES.homepage,
     },
@@ -18,12 +17,12 @@ export const NAV_ITEMS = [
         path: ROUTES.courses,
     },
     {
-        title:"Профиль",
-        path: ROUTES.profile,
+        title:"Статистика",
+        path: ROUTES.statistic
     },
     {
-        title:"Статистика",
-        path: ROUTES.statistic,
+        title:"Профиль",
+        path: ROUTES.profile,
     },
     
 ]
