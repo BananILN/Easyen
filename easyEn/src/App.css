@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 body{
-  margin: 0px;
+  margin: 0rem;
 }
 
 :root{
-  --font-size: 18px;
+  --font-size: 1rem;
   --Mont: 'Montserrat', sans-serif; 
   --color: color: rgb(196, 195, 195);
 }
@@ -75,27 +75,28 @@ header{
 }
 
 .sidebar{
-  width: 180px; 
+  width: 10rem; 
   background-color: rgb(34, 37, 63);
-  padding: 20px; 
+  padding: 1.2em; 
+  height: 100vh;
 }
 
 .nav-items{
   display: flex;
-  gap: 2px;
+  gap: 0.2em;
   color: rgb(196, 195, 195);
   font-family: var(--Mont);
   font-size: var(--font-size);
-  
-
 }
+
+
 
 .content {
   flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 1rem;
   overflow-y: auto;
   margin: 0 auto; 
 }
@@ -107,19 +108,25 @@ span{
 }
 
 svg{
-  margin-right: 7px;
+  margin-right: 0.3em;
 }
 
 .logo{
-  padding:  10px 0px;
+  padding:  1.2em 0em;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  height: 50px;
+  height: 2rem;
 }
 
 .hr-logo{
-  width: 110px;
+  width: 7rem;
+  
+}
+
+.hr-profile{
+  margin-top: 1rem;
+  width: 7rem;
   
 }
 
@@ -127,8 +134,40 @@ svg{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 10px;
-  padding: 20px 0;
+  gap: 0.4em;
+  padding: 1.5rem 0.6rem;
   
 }
 
+
+
+@media (max-width: 768px) {
+  .main {
+    flex-direction: column; /* Сайдбар сверху, контент снизу */
+  }
+
+  .sidebar {
+    width: 100%; /* Сайдбар занимает всю ширину */
+    height: auto; /* Высота автоматическая */
+    padding: 10px; /* Уменьшаем отступы */
+  }
+
+  .navigate {
+    flex-direction: row; /* Элементы навигации в строку */
+    justify-content: space-around; /* Равномерное распределение */
+    padding: 10px 0; /* Уменьшаем отступы */
+  }
+
+  .nav-items {
+    font-size: 0.9rem; /* Уменьшаем размер шрифта */
+    padding: 5px 0; /* Уменьшаем отступы */
+  }
+
+  .content {
+    padding: 10px; /* Уменьшаем отступы */
+  }
+
+  hr{
+    display: none;
+  }
+}

@@ -7,7 +7,7 @@ export default function SideBar ({children}) {
           <Logo/>
             <span>Try out</span>
         </div>
-        <hr className="hr-logo"  color="#303270" />
+        <hr className="hr-logo"  color="#424245" />
 
             {children}
        </div>
