@@ -15,10 +15,10 @@ export default function MainNavigation() {
         "/statistic": <StatisticIcon />,
     }
    
-
+    const filteredNavItems = NAV_ITEMS.filter(item => item.path !== "/profile");
     return(
         <nav className="navigate"  >
-            {NAV_ITEMS.map(item => (
+            {filteredNavItems.map(item => (
                  <React.Fragment key={item.path}>
                  {item.path === "/profile" && <hr className="hr-profile" color="#444" />}
                  <Link to={item.path} className="nav-items">
