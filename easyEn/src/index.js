@@ -9,6 +9,7 @@ export const ROUTES = {
 
 export const NAV_ITEMS = [
     {
+        icon: "/img",
         title:"Главная",
         path: ROUTES.homepage,
     },
