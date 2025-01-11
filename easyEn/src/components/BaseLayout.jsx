@@ -1,7 +1,8 @@
 import MainNavigation from "./MainNavigation"
 import SideBar from "./SideBar"
 import Header from "./Header"
-export const BaseLayout = ({ children }) => {
+import { Outlet } from "react-router"
+export const BaseLayout = () => {
     return (
         <div className="main">
         
@@ -9,9 +10,9 @@ export const BaseLayout = ({ children }) => {
                  <MainNavigation/>
              </SideBar>
              <div className="content-wrapper">
-                <Header /> {/* Header теперь внутри content-wrapper */}
+                <Header /> 
                 <div className="content">
-                    {children}
+                    <Outlet/>
                 </div>
             </div>
         </div>

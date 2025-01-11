@@ -313,6 +313,29 @@ img{
   flex-direction: column;
 }
 
+.user-cont{
+  display: flex;
+  justify-content: center;
+  width: 64rem;
+  background-color:  rgb(23, 32, 71);
+  margin-left: 15rem;
+  border-radius: 2em;
+}
+
+.user-img{
+
+}
+
+.user-desc{
+display: flex;
+align-items: center;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 3em;
+padding-left: 2em;
+}
+
 
 @media (max-width: 768px) {
   .main {
