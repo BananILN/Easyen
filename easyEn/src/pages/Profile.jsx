@@ -1,7 +1,12 @@
 export default function Profile(){
     return (
         <>
-            <h1>Profile </h1>
+         <div className="activity">
+
+         </div>
+         <div className="statistic">
+            
+         </div>
         </>
     )
 }

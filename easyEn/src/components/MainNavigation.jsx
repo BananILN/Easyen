@@ -1,6 +1,6 @@
 import React from 'react';
 import { NAV_ITEMS } from "..";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 import HomeIcon  from "../assets/home.svg?react";
 import CoursesIcon  from "../assets/Cours.svg?react";
 import ProfileIcon  from "../assets/Profile.svg?react";
@@ -21,10 +21,10 @@ export default function MainNavigation() {
             {filteredNavItems.map(item => (
                  <React.Fragment key={item.path}>
                  {item.path === "/profile" && <hr className="hr-profile" color="#444" />}
-                 <Link to={item.path} className="nav-items">
+                 <NavLink to={item.path} className={({isActive}) => `nav-items ${isActive ? 'active-item' : ""}`}>
                      {icons[item.path]}
-                     <span>{item.title}</span>
-                 </Link>
+                     {item.title}
+                 </NavLink>
              </React.Fragment>
             ))}
         </nav>
