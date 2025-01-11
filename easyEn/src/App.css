@@ -285,7 +285,32 @@ img{
 }
 
 .activity{
-  
+  width: 64rem;
+  height: 30rem;
+  background-color:  rgb(23, 32, 71);
+  border-radius: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statistic{
+  width: 42rem;
+  height: 14rem;
+  background-color:  rgb(23, 32, 71);
+  border-radius: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-cont{
+  display: flex;
+  gap: 2em;
+  justify-content: center;
+  align-items: flex-start;
+
+  flex-direction: column;
 }
 
 
