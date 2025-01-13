@@ -1,4 +1,5 @@
-
+import { ROUTES } from "..";
+import { LinkButton } from "../components/LinkButton";
 
 export default function HomePage(){
 
@@ -16,7 +17,7 @@ export default function HomePage(){
                 </h1>
 
                 <span className="span-under-title-desc">Practice your English and learn new things with the platform.</span>
-                <button> Courses</button>
+                <LinkButton to={ROUTES.courses} title="Courses"/>
                 </div>
             </div>
             <div className="image-cont">
