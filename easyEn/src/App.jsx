@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import {Route, Routes} from "react-router"
+import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes} from "react-router"
 import './App.css'
+
+import { ROUTES } from '.'
 import HomePage from './pages/HomePage'
 import Courses from './pages/Courses'
 import Statistic from './pages/Statistic'
@@ -8,26 +10,55 @@ import Profile from './pages/Profile'
 import ErrorPage from './pages/ErrorPage'
 import { BaseLayout } from './components/BaseLayout'
 import { CoursesDetails } from './pages/CoursesDetails'
+import { Loader } from './components/Loader'
+import { courseLoader } from './pages/Courses'
 
+
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+
+    <Route path='/' element={<BaseLayout/>} errorElement={<ErrorPage/>}>
+        <Route index  element={<HomePage/>} /> 
+
+      <Route
+      path="courses/:id"
+      element={<CoursesDetails />}
+      loader={courseLoader}
+      >
+
+     <Route
+        path="courses"
+        fallbackElement={<Loader />}
+        lazy={() =>
+          import("./pages/Courses").then((module) => ({
+            Component: module.Courses,
+            loader: module.courseLoader,
+          }))
+        }
+      />
+      </Route>
+
+        <Route
+        path={ROUTES.profile}
+        element={
+            <Profile />
+        }
+        />
+        <Route 
+        path={ROUTES.statistic}
+        element={
+          <Statistic/>
+        }/>
+
+        <Route path="*" element={<ErrorPage />} />
+    </Route>
+  )
+);
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-  
-      <Routes>
-        <Route path='/' element={<BaseLayout/>}>
-            <Route index path="/" element={<HomePage/>} />
-            <Route path="/courses" element={<Courses/>} />
-            <Route path='/courses/:id' element={<CoursesDetails />} />
-            <Route path="/profile" element={<Profile/>}  />
-            <Route path='/statistic' element={<Statistic/>} />
-            <Route paht="*" element={<ErrorPage errorCode ={404} />}  />
-            <Route/>
-          </Route>
-      </Routes>
-
-  );
+ 
+  return <RouterProvider router={router} fallbackElement={<Loader/>}/>;
 }
 
-export default App
+export default App;
