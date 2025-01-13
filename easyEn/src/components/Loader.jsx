@@ -1,0 +1,12 @@
+import {ThreeCircles} from 'react-loader-spinner'
+export const Loader = () =>{
+    render(<ThreeCircles
+        visible={true}
+        height="100"
+        width="100"
+        color="#217bcf"
+        ariaLabel="three-circles-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        />)
+}
