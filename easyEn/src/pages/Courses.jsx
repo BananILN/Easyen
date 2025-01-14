@@ -3,6 +3,18 @@ import { mockFetch } from "../api";
 import { Suspense, useState, useEffect } from "react";
 import { Loader } from "../components/Loader";
 
+const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            func.apply(null, args);
+        }, delay);
+    };
+};
+
 export const courseLoader = async ({ request }) => {
     const search = new URL(request.url).searchParams.get("search");
     const courses = await mockFetch("/courses", { search }); // Используем await
@@ -20,24 +32,37 @@ export const Courses = () => {
     const { state } = useNavigation();
     const [search, setSearch] = useState(searchFromQuery);
 
-    useEffect(() => {
+    const updateSearchParams = debounce((newSearch) => {
         setSearchParams((params) => {
-            if (search) {
-                params.set("search", search);
+            if (newSearch) {
+                params.set("search", newSearch);
             } else {
                 params.delete("search");
             }
             return params;
         });
-    }, [search, setSearchParams]);
+    }, 1500); 
+
+    useEffect(() => {
+        updateSearchParams(search);
+    }, [search]);
 
     if (!Array.isArray(courses)) {
         console.error("courses is not an array:", courses);
-        return <div>No courses available</div>; // Сообщение об отсутствии курсов
+        return <div>No courses available</div>; 
+    }
+
+    if (state === "loading") {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <Loader />
+            </div>
+        );
     }
 
     return (
         <>
+         {state === "loading" && <Loader />}
             <input
                 type="text"
                 className="search-input"
@@ -48,9 +73,9 @@ export const Courses = () => {
             <div className="title-content">
                 <h1>Courses</h1>
             </div>
-
+           
             <div className="card-container">
-                {state === "loading" && <Loader />}
+               
                 {courses.map((course) => (
                     <div className="card" key={course.id}>
                         <div className="img-cont">
