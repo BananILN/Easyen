@@ -2,6 +2,7 @@ import { Await, useLoaderData, useNavigation, useSearchParams } from "react-rout
 import { mockFetch } from "../api";
 import { Suspense, useState, useEffect } from "react";
 import { Loader } from "../components/Loader";
+import { LinkButton } from "../components/LinkButton";
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -86,7 +87,7 @@ export const Courses = () => {
                             />
                         </div>
                         <div className="title-card">
-                            {course.title}
+                             {course.title} 
                         </div>
 
                         <div className="progress-card">

@@ -31,7 +31,7 @@ export const courseMock = [
 ]
 const mockRequest = (data) => {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(data), REQUEST_TIMEOUT * Math.random());
+      setTimeout(() => resolve(data), 1000);
     });
   };
 
