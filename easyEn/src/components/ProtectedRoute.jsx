@@ -1,4 +1,4 @@
-import { Navigate } from "react-router"
+import { Navigate } from "react-router-dom"
 
 export const ProtectedRoute = ({children, isAllowed}) =>{
     if(!isAllowed){

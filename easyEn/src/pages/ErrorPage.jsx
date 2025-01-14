@@ -1,7 +1,7 @@
 export default function ErrorPage(){
     return (
         <>
-            <h1>Not Found</h1>
+            <h1>Not Fghound</h1>
         </>
     )
 }

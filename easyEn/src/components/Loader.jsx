@@ -1,6 +1,6 @@
 import {ThreeCircles} from 'react-loader-spinner'
 export const Loader = () =>{
-    render(<ThreeCircles
+    return (<ThreeCircles
         visible={true}
         height="100"
         width="100"

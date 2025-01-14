@@ -4,9 +4,9 @@ import './App.css'
 
 import { ROUTES } from '.'
 import HomePage from './pages/HomePage'
-import Courses from './pages/Courses'
 import Statistic from './pages/Statistic'
 import Profile from './pages/Profile'
+import { Courses } from './pages/Courses'
 import ErrorPage from './pages/ErrorPage'
 import { BaseLayout } from './components/BaseLayout'
 import { CoursesDetails } from './pages/CoursesDetails'
@@ -18,17 +18,18 @@ import { courseLoader } from './pages/Courses'
 const router = createBrowserRouter(
   createRoutesFromElements(
 
-    <Route path='/' element={<BaseLayout/>} errorElement={<ErrorPage/>}>
+    <Route path='/' element={<BaseLayout/>} >
+      
         <Route index  element={<HomePage/>} /> 
 
+        <Route 
+        path={ROUTES.courses}
+        element={
+          <Courses />
+        }
+        loader={courseLoader}/> 
       <Route
-      path="courses/:id"
-      element={<CoursesDetails />}
-      loader={courseLoader}
-      >
-
-     <Route
-        path="courses"
+        path="/courses"
         fallbackElement={<Loader />}
         lazy={() =>
           import("./pages/Courses").then((module) => ({
@@ -37,7 +38,12 @@ const router = createBrowserRouter(
           }))
         }
       />
-      </Route>
+      <Route
+      path="/courses/:id"
+      element={<CoursesDetails />}
+      loader={courseLoader}
+      />
+      
 
         <Route
         path={ROUTES.profile}
@@ -50,8 +56,8 @@ const router = createBrowserRouter(
         element={
           <Statistic/>
         }/>
-
-        <Route path="*" element={<ErrorPage />} />
+       
+        {/* <Route path="*" element={<ErrorPage />} /> */}
     </Route>
   )
 );
