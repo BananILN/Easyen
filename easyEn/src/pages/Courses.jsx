@@ -50,7 +50,7 @@ export const Courses = () => {
 
     if (!Array.isArray(courses)) {
         console.error("courses is not an array:", courses);
-        return <div>No courses available</div>; 
+        return <div>No  available</div>; 
     }
 
     if (state === "loading") {
