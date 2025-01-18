@@ -50,7 +50,14 @@ const mockData = [
                 : courseMock,
         
     ],
-    ["/courses/:id", ({id}) => courseMock[id]],
+    [
+      "/courses/:id",
+      ({ id }) => {
+        const course = courseMock.find((course) => course.id === Number(id));
+        console.log("Course found:", course); // Отладочное сообщение
+        return course || null;
+      },
+    ],
 ];
 
 

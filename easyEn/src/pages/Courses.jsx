@@ -1,9 +1,7 @@
 import { useLoaderData, useNavigation, useSearchParams } from "react-router";
 import { mockFetch } from "../api";
-import { Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Loader } from "../components/Loader";
-import { ROUTES } from "../index";
-import { Link } from "react-router";
 import CourseCard from "../components/CourseCard";
 
 const debounce = (func, delay) => {

@@ -12,9 +12,10 @@ import { BaseLayout } from './components/BaseLayout'
 import { CoursesDetails } from './pages/CoursesDetails'
 import { Loader } from './components/Loader'
 import { courseLoader } from './pages/Courses'
+import { courseLoaderS } from './pages/CoursesDetails'
 
 const CoursesP = lazy(() => import('./pages/Courses'));
-const CoursesDetailsP = lazy(() => import('./pages/CoursesDetails'));
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,24 +32,14 @@ const router = createBrowserRouter(
           </Suspense>
         }
         loader={courseLoader}/> 
-      {/* <Route
-        path="/courses"
-        fallbackElement={<Loader />}
-        lazy={() =>
-          import("./pages/Courses").then((module) => ({
-            Component: module.Courses,
-            loader: module.courseLoader,
-          }))
-        }
-      /> */}
       <Route
       path="/courses/:id"
       element={
-      <Suspense fallback={<Loader />}>
+      
        <CoursesDetails />
-      </Suspense>
+     
     }
-      loader={courseLoader}
+      loader={courseLoaderS}
       />
         <Route
         path={ROUTES.profile}
