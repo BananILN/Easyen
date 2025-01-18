@@ -35,9 +35,7 @@ const router = createBrowserRouter(
       <Route
       path="/courses/:id/*"
       element={
-      
        <CoursesDetails />
-     
     }
       loader={courseLoaderS}
       />

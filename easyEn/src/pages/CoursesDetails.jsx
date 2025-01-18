@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useLoaderData, useNavigation, useParams, Outlet, Route, Routes } from "react-router";
+import { useLoaderData, useNavigation, useParams, Outlet, Route, Routes, } from "react-router";
 import { mockFetch } from "../api";
 import { Loader } from "../components/Loader";
 import { Tabs } from "./Tabs";
 import { CourseProgram } from "./CourseProgram";
 import { CourseResourse } from "./CourseResourse";
-
+import { LinkButton } from "../components/LinkButton";
 const TABS = [
     {
         path: "",
@@ -55,6 +55,7 @@ export const CoursesDetails = () => {
             <Route index path="" element={<CourseProgram/> }/>
             <Route path="resourse" element={<CourseResourse/>}/>
          </Routes>
+         <LinkButton to="start-course" title="Start course" />
       </div>
     );
 };
