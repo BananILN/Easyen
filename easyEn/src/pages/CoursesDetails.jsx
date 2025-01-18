@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLoaderData, useNavigation, useParams, Outlet, Route, Routes, } from "react-router";
+import { useLoaderData, useNavigation, useParams,  Route, Routes, } from "react-router";
 import { mockFetch } from "../api";
 import { Loader } from "../components/Loader";
 import { Tabs } from "./Tabs";
@@ -32,7 +32,8 @@ export const courseLoaderS = async ({ params: { id } }) => {
 export const CoursesDetails = () => {
     const { course } = useLoaderData();
     const { state } = useNavigation();
-  
+    const { id } = useParams(); 
+
     console.log("Course in CoursesDetails:", course); 
   
     if (state === "loading") {
@@ -55,7 +56,7 @@ export const CoursesDetails = () => {
             <Route index path="" element={<CourseProgram/> }/>
             <Route path="resourse" element={<CourseResourse/>}/>
          </Routes>
-         <LinkButton to="start-course" title="Start course" />
+         <LinkButton to={`/courses/${id}/start-course`} title="Start course" /> 
       </div>
     );
 };
