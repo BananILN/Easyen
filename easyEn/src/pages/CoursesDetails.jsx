@@ -15,25 +15,27 @@ const TABS = [
 ];
 
 export const courseLoaderS = async ({ params: { id } }) => {
-    console.log("Fetching course with id:", id); // Отладочное сообщение
+    console.log("Fetching course with id:", id); // отладка
     const course = await mockFetch(`/courses/${id}`);
-    console.log("Course data from loader:", course); // Отладочное сообщение
+    console.log("Course data from loader:", course); // отладка
   
     if (!course) {
       throw new Response("Course not found", { status: 404 });
     }
   
-    return { course }; // Возвращаем объект с курсом
+    return { course }; 
   };
 
 export const CoursesDetails = () => {
-    const { course } = useLoaderData(); // Получаем данные о курсе
+    const { course } = useLoaderData();
     const { state } = useNavigation();
   
-    console.log("Course in CoursesDetails:", course); // Отладочное сообщение
+    console.log("Course in CoursesDetails:", course); 
   
     if (state === "loading") {
-      return <Loader />;
+      return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Loader />
+    </div>;
     }
   
     if (!course) {
@@ -41,10 +43,12 @@ export const CoursesDetails = () => {
     }
   
     return (
-      <div>
-        <h1>{course.title}</h1>
-        <p>{course.description}</p>
-        <img src={course.imageUrl} alt={course.title} />
+      <div className="content-details">
+       
+         <h1>{course.title}</h1>
+        <p className="p-details">{course.description}</p>
+        
+        
       </div>
     );
 };

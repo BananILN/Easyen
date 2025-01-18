@@ -336,6 +336,18 @@ gap: 3em;
 padding-left: 2em;
 }
 
+.content-details{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.p-details{
+  font-size: var(--font-size);
+}
+
+
+
 
 @media (max-width: 768px) {
   .main {
