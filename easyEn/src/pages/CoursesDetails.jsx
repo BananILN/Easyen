@@ -1,7 +1,10 @@
 import { useEffect } from "react";
-import { useLoaderData, useNavigation, useParams } from "react-router";
+import { useLoaderData, useNavigation, useParams, Outlet, Route, Routes } from "react-router";
 import { mockFetch } from "../api";
 import { Loader } from "../components/Loader";
+import { Tabs } from "./Tabs";
+import { CourseProgram } from "./CourseProgram";
+import { CourseResourse } from "./CourseResourse";
 
 const TABS = [
     {
@@ -47,8 +50,11 @@ export const CoursesDetails = () => {
        
          <h1>{course.title}</h1>
         <p className="p-details">{course.description}</p>
-        
-        
+        <Tabs tabs={TABS}/>
+         <Routes>
+            <Route index path="" element={<CourseProgram/> }/>
+            <Route path="resourse" element={<CourseResourse/>}/>
+         </Routes>
       </div>
     );
 };
