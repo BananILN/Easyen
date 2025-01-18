@@ -13,6 +13,8 @@ import { CoursesDetails } from './pages/CoursesDetails'
 import { Loader } from './components/Loader'
 import { courseLoader } from './pages/Courses'
 import { courseLoaderS } from './pages/CoursesDetails'
+import { StartCoursePage } from './pages/StartCoursePage'
+import { startCourseAction } from './pages/StartCoursePage'
 
 const CoursesP = lazy(() => import('./pages/Courses'));
 
@@ -39,6 +41,13 @@ const router = createBrowserRouter(
     }
       loader={courseLoaderS}
       />
+
+      <Route
+        path="courses/:id/start-course"
+        element={<StartCoursePage />}
+        action={startCourseAction}
+      />
+
         <Route
         path={ROUTES.profile}
         element={
