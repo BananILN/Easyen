@@ -15,6 +15,7 @@ import { courseLoader } from './pages/Courses'
 import { courseLoaderS } from './pages/CoursesDetails'
 import { StartCoursePage } from './pages/StartCoursePage'
 import { startCourseAction } from './pages/StartCoursePage'
+import { ProtectedRoute } from './components/ProtectedRoute'
 
 const CoursesP = lazy(() => import('./pages/Courses'));
 
@@ -51,7 +52,9 @@ const router = createBrowserRouter(
         <Route
         path={ROUTES.profile}
         element={
+          <ProtectedRoute isAllowed={false}>
             <Profile />
+            </ProtectedRoute>
         }
         />
         <Route 
