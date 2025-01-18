@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect } from "react";
 import { Loader } from "../components/Loader";
 import { ROUTES } from "../index";
 import { Link } from "react-router";
+import CourseCard from "../components/CourseCard";
 
 const debounce = (func, delay) => {
   let timeoutId;
@@ -28,7 +29,7 @@ export const courseLoader = async ({ request }) => {
   return { courses };
 };
 
-export const Courses = ({ id }) => {
+export const Courses = () => {
   const { courses } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchFromQuery = searchParams.get("search") || "";
@@ -78,22 +79,7 @@ export const Courses = ({ id }) => {
       </div>
       <div className="card-container">
         {courses.map((course) => (
-          <div className="card" key={course.id}>
-            <div className="img-cont">
-              <img
-                className="abstract-img-course"
-                src={course.imageUrl}
-                alt={course.title}
-              />
-            </div>
-            <Link to={`${ROUTES.courses}/${course.id}`} className="title-card">
-              {course.title}
-            </Link>
-            <div className="progress-card">
-              <div className="progressbar-Card"></div>
-              <div className="text-desc-card">Completed: 0%</div>
-            </div>
-          </div>
+         <CourseCard key={course.id} course={course} />
         ))}
       </div>
     </>
