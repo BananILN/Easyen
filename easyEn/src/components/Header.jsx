@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import ProfileIcon from "../assets/Profile.svg?react";
 import { NAV_ITEMS } from "..";
 

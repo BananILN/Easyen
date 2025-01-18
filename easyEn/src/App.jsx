@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense } from 'react'
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes} from "react-router"
 import './App.css'
 
@@ -13,7 +13,8 @@ import { CoursesDetails } from './pages/CoursesDetails'
 import { Loader } from './components/Loader'
 import { courseLoader } from './pages/Courses'
 
-
+const CoursesP = lazy(() => import('./pages/Courses'));
+const CoursesDetailsP = lazy(() => import('./pages/CoursesDetails'));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,10 +26,12 @@ const router = createBrowserRouter(
         <Route 
         path={ROUTES.courses}
         element={
-          <Courses />
+          <Suspense fallback={<Loader />} >
+            <Courses />
+          </Suspense>
         }
         loader={courseLoader}/> 
-      <Route
+      {/* <Route
         path="/courses"
         fallbackElement={<Loader />}
         lazy={() =>
@@ -37,14 +40,16 @@ const router = createBrowserRouter(
             loader: module.courseLoader,
           }))
         }
-      />
+      /> */}
       <Route
       path="/courses/:id"
-      element={<CoursesDetails />}
+      element={
+      <Suspense fallback={<Loader />}>
+       <CoursesDetails />
+      </Suspense>
+    }
       loader={courseLoader}
       />
-      
-
         <Route
         path={ROUTES.profile}
         element={
