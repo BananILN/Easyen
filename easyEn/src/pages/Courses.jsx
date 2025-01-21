@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigation, useSearchParams } from "react-router";
 import { mockFetch } from "../api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Loader } from "../components/Loader";
 import CourseCard from "../components/CourseCard";
 
@@ -11,60 +11,72 @@ const debounce = (func, delay) => {
       clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
-      func.apply(null, args);
+      func(...args);
     }, delay);
   };
 };
 
-export const courseLoader = async ({ request }) => {
-  const search = new URL(request.url).searchParams.get("search");
-  const courses = await mockFetch("/courses", { search });
+// export const courseLoader = async ({ request }) => {
+//   const search = new URL(request.url).searchParams.get("search");
+//   const courses = await mockFetch("/courses", { search });
 
-  if (courses.error) {
-    throw new Response("Not Found", { status: 404 });
-  }
+//   if (courses.error) {
+//     throw new Response("Not Found", { status: 404 });
+//   }
 
-  return { courses };
-};
+//   return { courses };
+// };
 
 export const Courses = () => {
-  const { courses } = useLoaderData();
+  const [course, setCourses] = useState([]) 
+  const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchFromQuery = searchParams.get("search") || "";
   const { state } = useNavigation();
-  const [search, setSearch] = useState(searchFromQuery);
+  const [search, setSearch] = useState(searchParams.get("search") || "");
 
-  const updateSearchParams = debounce((newSearch) => {
+
+  const getCourses = useCallback(
+    debounce(async (newSearch) =>{
+        setLoading(true);
+        const coursesData = await mockFetch("/courses", { search: newSearch });
+        setCourses(coursesData);
+        setLoading(false)
+    },1000),[]
+  );
+
+
+  const updateSearchParams = () => {
     setSearchParams((params) => {
-      if (newSearch) {
-        params.set("search", newSearch);
+      if (search) {
+        params.set("search", search);
       } else {
         params.delete("search");
       }
-      return params;
+      return new URLSearchParams(params);
     });
-  }, 2000);
+  };
 
   useEffect(() => {
-    updateSearchParams(search);
+    updateSearchParams();
+    getCourses(search)
   }, [search]);
 
-  if (!Array.isArray(courses)) {
-    console.error("courses is not an array:", courses);
-    return <div>No courses available</div>;
-  }
+  // if (!Array.isArray(courses)) {
+  //   console.error("courses is not an array:", courses);
+  //   return <div>No courses available</div>;
+  // }
 
-  if (state === "loading") {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Loader />
-      </div>
-    );
-  }
+  // if (state === "loading") {
+  //   return (
+  //     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+  //       <Loader />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
-      {state === "loading" && <Loader />}
+      {/* {state === "loading" && <Loader />} */}
       <input
         type="text"
         className="search-input"
@@ -76,9 +88,17 @@ export const Courses = () => {
         <h1>Courses</h1>
       </div>
       <div className="card-container">
-        {courses.map((course) => (
-         <CourseCard key={course.id} course={course} />
-        ))}
+        {loading ? (
+          <Loader/>
+        ) : (
+          course.length === 0 ?(
+            <div>No courses found</div>
+          ): (
+            course.map((cours) => (
+              <CourseCard key={cours.id} course={cours} />
+             ))
+          )
+        )}
       </div>
     </>
   );

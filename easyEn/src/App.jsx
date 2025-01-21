@@ -17,7 +17,7 @@ import { StartCoursePage } from './pages/StartCoursePage'
 import { startCourseAction } from './pages/StartCoursePage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
-const CoursesP = lazy(() => import('./pages/Courses'));
+// const CoursesP = lazy(() => import('./pages/Courses'));
 
 
 const router = createBrowserRouter(
@@ -30,17 +30,14 @@ const router = createBrowserRouter(
         <Route 
         path={ROUTES.courses}
         element={
-          <Suspense fallback={<Loader />} >
             <Courses />
-          </Suspense>
         }
-        loader={courseLoader}/> 
+        /> 
       <Route
       path="/courses/:id/*"
       element={
        <CoursesDetails />
     }
-      loader={courseLoaderS}
       />
 
       <Route

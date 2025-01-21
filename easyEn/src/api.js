@@ -35,7 +35,7 @@ export const courseMock = [
 ]
 const mockRequest = (data) => {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(data),500);
+      setTimeout(() => resolve(data),REQUEST_TIMEOUT);
     });
   };
 
@@ -79,7 +79,7 @@ const mockData = [
   
     console.log("Response for:", requestUrl, options, response);
   
-    return response;
+    return await response;
   };
   
 window.mockFetch = mockFetch;
