@@ -4,6 +4,8 @@ body{
   margin: 0rem;
   color: var(--color);
   font-family: var(--Mont);
+    overflow-x: hidden;
+  
 }
 
 :root{
@@ -117,6 +119,7 @@ a{
   align-items: left;
   padding: 1rem;
   overflow-y: auto;
+  overflow-x: hidden;
   margin: 0 auto; 
 }
 
@@ -272,6 +275,7 @@ img{
   gap: 2em;
   justify-content: space-around;
   align-items: center;
+ 
 }
 
 .title-content{

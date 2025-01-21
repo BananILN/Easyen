@@ -17,17 +17,7 @@ const TABS = [
     }
 ];
 
-// export const courseLoaderS = async ({ params: { id } }) => {
-//     console.log("Fetching course with id:", id); // отладка
-//     const course = await mockFetch(`/courses/${id}`);
-//     console.log("Course data from loader:", course); // отладка
-  
-//     if (!course) {
-//       throw new Response("Course not found", { status: 404 });
-//     }
-  
-//     return { course }; 
-//   };
+
 
 export const CoursesDetails = () => {
     const [ course, setCourse] = useState({});

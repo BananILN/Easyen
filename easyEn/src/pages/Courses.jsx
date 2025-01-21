@@ -51,45 +51,51 @@ export const Courses = () => {
     getCourses(search)
   }, [search]);
 
-  // if (!Array.isArray(courses)) {
-  //   console.error("courses is not an array:", courses);
-  //   return <div>No courses available</div>;
-  // }
-
-  // if (state === "loading") {
-  //   return (
-  //     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
+  const styles = {
+    loaderContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      width: '100vw',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+     
+      zIndex: 1000,
+    },
+  };
+  
 
   return (
     <>
-      {/* {state === "loading" && <Loader />} */}
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Search courses"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <div className="title-content">
-        <h1>Courses</h1>
+    {loading ? (
+      <div style={styles.loaderContainer}>
+        <Loader />
       </div>
-      <div className="card-container">
-        {loading ? (
-          <Loader/>
-        ) : (
-          course.length === 0 ?(
+    ) : (
+      <>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search courses"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <div className="title-content">
+          <h1>Courses</h1>
+        </div>
+        <div className="card-container">
+          {course.length === 0 ? (
             <div>No courses found</div>
-          ): (
-            course.map((cours) => (
-              <CourseCard key={cours.id} course={cours} />
-             ))
-          )
-        )}
-      </div>
-    </>
+          ) : (
+            course.map((item) => (
+              <CourseCard key={item.id} course={item} />
+            ))
+          )}
+        </div>
+      </>
+    )}
+  </>
   );
 };

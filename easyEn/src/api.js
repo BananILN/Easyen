@@ -54,7 +54,7 @@ const mockData = [
       "/courses/:id",
       ({ id }) => {
         const course = courseMock.find((course) => course.id === Number(id));
-        console.log("Course found:", course); // Отладочное сообщение
+        console.log("Course found:", course); 
         return course || null;
       },
     ],
@@ -75,11 +75,9 @@ const mockData = [
 
     const { params } = matchPath(matchedUrl, requestUrl);
   
-    const response = await mockRequest(getMocks({ ...params, ...options }));
+    return await mockRequest(getMocks({ ...params, ...options }));
   
-    console.log("Response for:", requestUrl, options, response);
-  
-    return await response;
+    
   };
   
 window.mockFetch = mockFetch;
