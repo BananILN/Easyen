@@ -7,17 +7,16 @@ import HomePage from './pages/HomePage'
 import Statistic from './pages/Statistic'
 import Profile from './pages/Profile'
 import { Courses } from './pages/Courses'
-import ErrorPage from './pages/ErrorPage'
+
 import { BaseLayout } from './components/BaseLayout'
 import { CoursesDetails } from './pages/CoursesDetails'
 import { Loader } from './components/Loader'
-import { courseLoader } from './pages/Courses'
-import { courseLoaderS } from './pages/CoursesDetails'
+
 import { StartCoursePage } from './pages/StartCoursePage'
 import { startCourseAction } from './pages/StartCoursePage'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
-// const CoursesP = lazy(() => import('./pages/Courses'));
+
 
 
 const router = createBrowserRouter(

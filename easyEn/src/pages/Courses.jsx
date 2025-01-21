@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigation, useSearchParams } from "react-router";
+import { useNavigation, useSearchParams } from "react-router";
 import { mockFetch } from "../api";
 import { useState, useEffect, useCallback } from "react";
 import { Loader } from "../components/Loader";
@@ -16,16 +16,6 @@ const debounce = (func, delay) => {
   };
 };
 
-// export const courseLoader = async ({ request }) => {
-//   const search = new URL(request.url).searchParams.get("search");
-//   const courses = await mockFetch("/courses", { search });
-
-//   if (courses.error) {
-//     throw new Response("Not Found", { status: 404 });
-//   }
-
-//   return { courses };
-// };
 
 export const Courses = () => {
   const [course, setCourses] = useState([]) 
