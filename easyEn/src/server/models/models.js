@@ -3,74 +3,74 @@ import { DataTypes } from "sequelize"
 
 const Role = sequelize.define('Role', {
     RoleID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    RoleName: { type: DataTypes.STRING, unique: true, allowNull: false } // Название роли должно быть уникальным и обязательным
+    RoleName: { type: DataTypes.STRING, unique: true, allowNull: false } 
 });
 
 const User = sequelize.define('User', {
     UserID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    username: { type: DataTypes.STRING, unique: true, allowNull: false }, // Имя пользователя уникальное и обязательное
-    email: { type: DataTypes.STRING, unique: true, allowNull: false }, // Email уникальный и обязательный
-    password: { type: DataTypes.STRING, allowNull: false }, // Пароль обязательный
-    img: { type: DataTypes.STRING, allowNull: true }, // Изображение пользователя (необязательное)
-    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, // Дата создания (автоматически заполняется)
-    RoleID: { type: DataTypes.INTEGER, allowNull: false } // Роль обязательная
+    username: { type: DataTypes.STRING, unique: true, allowNull: false }, 
+    email: { type: DataTypes.STRING, unique: true, allowNull: false }, 
+    password: { type: DataTypes.STRING, allowNull: false }, 
+    img: { type: DataTypes.STRING, allowNull: true }, // Изображение пользователя необязательное
+    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, 
+    RoleID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const Lesson = sequelize.define('Lesson', {
     LessonID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    title: { type: DataTypes.STRING, allowNull: false }, // Название урока обязательное
-    content: { type: DataTypes.TEXT, allowNull: true } // Содержание урока (необязательное)
+    title: { type: DataTypes.STRING, allowNull: false }, 
+    content: { type: DataTypes.TEXT, allowNull: true } 
 });
 
 const Progress = sequelize.define('Progress', {
     ProgressID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     completed: { type: DataTypes.BOOLEAN, defaultValue: false }, // По умолчанию прогресс не завершен
     UserID: { type: DataTypes.INTEGER, allowNull: false }, // Пользователь обязательный
-    LessonID: { type: DataTypes.INTEGER, allowNull: false } // Урок обязательный
+    LessonID: { type: DataTypes.INTEGER, allowNull: false } //  обязательный
 });
 
 const Test = sequelize.define('Test', {
     TestID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    title: { type: DataTypes.STRING, allowNull: false }, // Название теста обязательное
-    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, // Дата создания (автоматически заполняется)
-    LessonID: { type: DataTypes.INTEGER, allowNull: false } // Урок обязательный
+    title: { type: DataTypes.STRING, allowNull: false }, 
+    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, // Дата создания автоматически заполняется
+    LessonID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const Question = sequelize.define('Question', {
     QuestionID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    QuestionText: { type: DataTypes.TEXT, allowNull: false }, // Текст вопроса обязательный
+    QuestionText: { type: DataTypes.TEXT, allowNull: false }, 
     IsMultipleChoice: { type: DataTypes.BOOLEAN, defaultValue: false }, // По умолчанию вопрос не множественного выбора
-    TestID: { type: DataTypes.INTEGER, allowNull: false } // Тест обязательный
+    TestID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const Answer = sequelize.define('Answer', {
     AnswerID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    AnswerText: { type: DataTypes.TEXT, allowNull: false }, // Текст ответа обязательный
+    AnswerText: { type: DataTypes.TEXT, allowNull: false }, 
     IsCorrect: { type: DataTypes.BOOLEAN, defaultValue: false }, // По умолчанию ответ неправильный
-    QuestionID: { type: DataTypes.INTEGER, allowNull: false } // Вопрос обязательный
+    QuestionID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const TestResult = sequelize.define('TestResult', {
     ResultID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    Score: { type: DataTypes.INTEGER, allowNull: false }, // Оценка обязательная
-    CompletedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, // Дата завершения (автоматически заполняется)
-    TestID: { type: DataTypes.INTEGER, allowNull: false }, // Тест обязательный
-    UserID: { type: DataTypes.INTEGER, allowNull: false } // Пользователь обязательный
+    Score: { type: DataTypes.INTEGER, allowNull: false }, 
+    CompletedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, 
+    TestID: { type: DataTypes.INTEGER, allowNull: false }, 
+    UserID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const Groups = sequelize.define('Groups', {
     GroupID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    GroupName: { type: DataTypes.STRING, unique: true, allowNull: false } // Название группы уникальное и обязательное
+    GroupName: { type: DataTypes.STRING, unique: true, allowNull: false } 
 });
 
 const StudentGroup = sequelize.define('StudentGroup', {
-    StudentID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }, // Уникальный ID для связи
-    GroupID: { type: DataTypes.INTEGER, allowNull: false } // Группа обязательная
+    StudentID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }, 
+    GroupID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const TeacherGroup = sequelize.define('TeacherGroup', {
-    TeacherID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }, // Уникальный ID для связи
-    GroupID: { type: DataTypes.INTEGER, allowNull: false } // Группа обязательная
+    TeacherID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }, 
+    GroupID: { type: DataTypes.INTEGER, allowNull: false } 
 });
    
 
