@@ -1,4 +1,4 @@
-import { sequelize } from "../db"
+import { sequelize } from "../db.js";
 import { DataTypes } from "sequelize"
 
 const Role = sequelize.define('Role', {
@@ -64,14 +64,22 @@ const Groups = sequelize.define('Groups', {
 });
 
 const StudentGroup = sequelize.define('StudentGroup', {
-    StudentID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }, 
+    StudentID: { type: DataTypes.INTEGER, allowNull: false }, 
     GroupID: { type: DataTypes.INTEGER, allowNull: false } 
+}, {
+    timestamps: false, 
+    primaryKey: false 
 });
 
 const TeacherGroup = sequelize.define('TeacherGroup', {
-    TeacherID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }, 
+    TeacherID: { type: DataTypes.INTEGER, allowNull: false }, 
     GroupID: { type: DataTypes.INTEGER, allowNull: false } 
+}, {
+    timestamps: false, 
+    primaryKey: false 
 });
+
+
    
 
 Role.hasMany(User, { foreignKey: 'RoleID' });
@@ -116,7 +124,7 @@ StudentGroup.belongsTo(User, { foreignKey: 'StudentID' });
 User.hasMany(TeacherGroup, { foreignKey: 'TeacherID' });
 TeacherGroup.belongsTo(User, { foreignKey: 'TeacherID' });
 
-module.exports = {
+const models = {
     User,
     Role,
     Lesson,
@@ -129,3 +137,5 @@ module.exports = {
     StudentGroup,
     TeacherGroup
 }
+
+export { models }

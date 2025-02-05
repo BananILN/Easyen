@@ -1,8 +1,9 @@
 import express from 'express';
 import { config } from 'dotenv';
 import { sequelize } from './db.js';
+import { models } from './models/models.js';
 
-config(); // Загружаем переменные окружения
+config(); 
 
 const PORT = process.env.PORT || 5000;
 
