@@ -115,3 +115,17 @@ StudentGroup.belongsTo(User, { foreignKey: 'StudentID' });
 
 User.hasMany(TeacherGroup, { foreignKey: 'TeacherID' });
 TeacherGroup.belongsTo(User, { foreignKey: 'TeacherID' });
+
+module.exports = {
+    User,
+    Role,
+    Lesson,
+    Progress,
+    Test,
+    TestResult,
+    Question,
+    Answer,
+    Groups,
+    StudentGroup,
+    TeacherGroup
+}
