@@ -4,7 +4,9 @@ import { sequelize } from './db.js';
 import { models } from './models/models.js';
 import  cors  from 'cors'
 import { router } from './routes/index.js'
-import  Midlleware  from './midllewire/ErrorHandlingMiddleWare.js';
+import ErrorHandlingMiddleWare from '../server/middleware/ErrorHandlingMiddleWare.js'
+
+
 
 config(); 
 
@@ -14,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 app.use('/api', router)
-app.use(Midlleware())
+app.use(ErrorHandlingMiddleWare); 
 
 const start = async () => {
   try {
