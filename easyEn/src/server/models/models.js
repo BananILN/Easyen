@@ -19,7 +19,8 @@ const User = sequelize.define('User', {
 const Lesson = sequelize.define('Lesson', {
     LessonID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 
-    content: { type: DataTypes.TEXT, allowNull: true } 
+    content: { type: DataTypes.TEXT, allowNull: true },
+    img: { type: DataTypes.STRING, allowNull: true }, // ДОБАВИЛ НОВУЮ СТРОКУ IMG
 });
 
 const Progress = sequelize.define('Progress', {
@@ -32,7 +33,7 @@ const Progress = sequelize.define('Progress', {
 const Test = sequelize.define('Test', {
     TestID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 
-    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, // Дата создания автоматически заполняется
+    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, allowNull: true }, // Дата создания автоматически заполняется
     LessonID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
@@ -124,7 +125,7 @@ StudentGroup.belongsTo(User, { foreignKey: 'StudentID' });
 User.hasMany(TeacherGroup, { foreignKey: 'TeacherID' });
 TeacherGroup.belongsTo(User, { foreignKey: 'TeacherID' });
 
-const models = {
+ export const models = {
     User,
     Role,
     Lesson,
@@ -138,4 +139,4 @@ const models = {
     TeacherGroup
 }
 
-export { models }
+ 

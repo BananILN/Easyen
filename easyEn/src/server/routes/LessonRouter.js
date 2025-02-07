@@ -1,7 +1,8 @@
 import { Router } from "express";
+import LessonController from "../controllers/LessonController.js";
 
 export const router = new Router();
 
-router.post('/',)
-router.get('/',)
-router.get('/:id',)
+router.post('/', LessonController.create)
+router.get('/',LessonController.getAll)
+router.get('/:id',LessonController.getOne)

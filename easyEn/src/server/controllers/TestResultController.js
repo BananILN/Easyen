@@ -1,9 +1,9 @@
 class TestResultController{
-    async create(){
+    async create(req, res){
 
     }
 
-    async getAll(){
+    async getAll(req, res){
 
     }
 }
