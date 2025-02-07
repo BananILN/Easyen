@@ -1,5 +1,5 @@
 class UserController {
-    async regisration (req, res){
+    async registration (req, res){
 
     }
 
@@ -10,4 +10,4 @@ class UserController {
 
     }
 }
-export default new UserController
+export default new UserController();
