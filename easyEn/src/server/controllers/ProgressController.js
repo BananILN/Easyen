@@ -3,7 +3,7 @@ class ProgressController{
 
     }
 
-    async get(){
+    async getAll(){
 
     }
 }

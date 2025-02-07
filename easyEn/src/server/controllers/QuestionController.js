@@ -3,7 +3,7 @@ class QuestionController{
 
     }
 
-    async get(){
+    async getAll(){
 
     }
 }

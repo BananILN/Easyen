@@ -7,7 +7,8 @@ class UserController {
 
     }
     async cheeck(req, res){
-
+        const {id} = req.query;
+        res.json(id)
     }
 }
 export default new UserController();

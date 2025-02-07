@@ -3,7 +3,7 @@ class AnswerController{
 
     }
 
-    async get(){
+    async getAll(){
 
     }
 }

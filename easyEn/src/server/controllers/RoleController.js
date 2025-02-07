@@ -3,7 +3,7 @@ class RoleController{
 
     }
 
-    async get(){
+    async getAll(){
 
     }
 }

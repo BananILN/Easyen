@@ -3,9 +3,15 @@ class LessonController{
 
     }
 
-    async get(){
+    async getAll(){
 
     }
+
+    async getOne(){
+
+    }
+    
+
 }
 export default new LessonController();
 

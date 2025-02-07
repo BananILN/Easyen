@@ -3,7 +3,7 @@ class TestController{
 
     }
 
-    async get(){
+    async getAll(){
 
     }
 }
