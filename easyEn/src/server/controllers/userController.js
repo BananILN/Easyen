@@ -27,10 +27,10 @@ class UserController {
         const usernameCandidate = await User.findOne({ where: { username } });
         if (usernameCandidate) {
             return next(ApiError.badRequest("This username is already in use"));
-        }
-    
+        } 
+     
         const hashPassword = await bcrypt.hash(password, 5);
-    
+     
         const user = await User.create({ username, email, RoleID: roleid, password: hashPassword });
         const lesson = await Lesson.create({ UserID: user.id, title: "some", content:"Text" });
     
@@ -41,7 +41,7 @@ class UserController {
     async login(req, res, next) { 
         const { email, password } = req.body;
     
-        // Проверка на наличие email
+        
         let user = await User.findOne({ where: { email } });
 
        
@@ -49,16 +49,16 @@ class UserController {
             return next(ApiError.internal("Пользователя нет с таким email"));
         }
     
-        // Сравнение пароля
+    
         const comparePassword = bcrypt.compareSync(password, user.password);
         if (!comparePassword) {
             return next(ApiError.internal("Неверный пароль"));
         }
     
-        // Генерация токена
+      
         const token = generateJwt(user.id, user.username, user.email, user.roleid);
     
-        // Возвращение токена в формате JSON
+      
         return res.json({ token });
     }
 
