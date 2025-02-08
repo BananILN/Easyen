@@ -5,5 +5,6 @@ import userController from "../controllers/userController.js";
 export const router = new Router();
 
 router.post('/registration',userController.registration)
+
 router.post('/login',userController.login)
 router.get('/auth',userController.cheeck)
