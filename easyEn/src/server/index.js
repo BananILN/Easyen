@@ -5,7 +5,7 @@ import { models } from './models/models.js';
 import  cors  from 'cors'
 import { router } from './routes/index.js'
 import ErrorHandlingMiddleWare from '../server/middleware/ErrorHandlingMiddleWare.js'
-
+import fileUpload from 'express-fileupload';
 
 
 config(); 
@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(cors());
 app.use(express.json())
+app.use(fileUpload({}))
 app.use('/api', router)
 app.use(ErrorHandlingMiddleWare); 
 

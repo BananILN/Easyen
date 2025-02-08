@@ -1,0 +1,8 @@
+// .sequelizerc
+require = require('esm')(module); // Подключаем поддержку ES-модулей
+module.exports = {
+  config: 'config/config.json', // Путь к конфигурации
+  'models-path': 'models', // Путь к моделям
+  'migrations-path': 'migrations', // Путь к миграциям
+  'seeders-path': 'seeders', // Путь к сидерам
+};

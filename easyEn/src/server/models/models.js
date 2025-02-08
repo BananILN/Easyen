@@ -12,7 +12,6 @@ const User = sequelize.define('User', {
     email: { type: DataTypes.STRING, unique: true, allowNull: false }, 
     password: { type: DataTypes.STRING, allowNull: false }, 
     img: { type: DataTypes.STRING, allowNull: true }, // Изображение пользователя необязательное
-    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, 
     RoleID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
@@ -20,7 +19,7 @@ const Lesson = sequelize.define('Lesson', {
     LessonID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 
     content: { type: DataTypes.TEXT, allowNull: true },
-    img: { type: DataTypes.STRING, allowNull: true }, // ДОБАВИЛ НОВУЮ СТРОКУ IMG
+    img: { type: DataTypes.STRING, allowNull: true }, // 
 });
 
 const Progress = sequelize.define('Progress', {

@@ -5,8 +5,8 @@ const { Test } = models;
 
 class TestController{
     async create(req, res){
-        const {title} = req.body
-        const testTitle = await Test.create({title})
+        const {title, LessonID} = req.body
+        const testTitle = await Test.create({title,LessonID})
         return res.json(testTitle)
     }
 
