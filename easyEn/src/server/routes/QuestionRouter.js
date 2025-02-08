@@ -5,3 +5,4 @@ export const router = new Router();
 
 router.post('/',QuestionController.create)
 router.get('/', QuestionController.getAll)
+router.get('/:id', QuestionController.getOne)

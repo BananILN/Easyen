@@ -16,7 +16,7 @@ class LessonController{
             const {title, content} = req.body;
             const {img} = req.files;
             let fileName = uuidv4() + ".png"
-            
+
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
     
             const lesson =  await Lesson.create({title,content, img: fileName})
@@ -33,8 +33,14 @@ class LessonController{
         return res.json(lessons)
     }
 
-    async getOne(){
+    async getOne(req,res,next){
+        const {id} = req.params;
+        const lesson = await Lesson.findByPk(id);
 
+        if(!lesson){
+            return next(ApiError.badRequest("not found"))
+        }
+        return res.json(lesson)
     }
     
 

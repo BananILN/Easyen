@@ -6,3 +6,4 @@ export const router = new Router();
 
 router.post('/', AnswerController.create)
 router.get('/', AnswerController.getAll)
+router.get('/:id', AnswerController.getOne)
