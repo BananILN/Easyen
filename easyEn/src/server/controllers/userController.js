@@ -4,13 +4,13 @@ import { models } from '../models/models.js';
 import jwt from 'jsonwebtoken'
 const {User, Lesson} = models;
 
-const generateJwt =  (id, username, email, roleid) =>{
-    return jwt.sign({ id, username, email, roleid }, process.env.SECRET_KEY, { expiresIn: '24h' });
+const generateJwt =  (id, username, email, RoleID) =>{
+    return jwt.sign({ id, username, email, RoleID }, process.env.SECRET_KEY, { expiresIn: '24h' });
 }
 
 class UserController {
     async registration(req, res, next) {
-        const { username, email, password, roleid } = req.body;
+        const { username, email, password, RoleID } = req.body;
     
       
         if (!email || !password || !username) {
@@ -31,10 +31,10 @@ class UserController {
      
         const hashPassword = await bcrypt.hash(password, 5);
      
-        const user = await User.create({ username, email, RoleID: roleid, password: hashPassword });
+        const user = await User.create({ username, email, RoleID: RoleID, password: hashPassword });
         const lesson = await Lesson.create({ UserID: user.id, title: "some", content:"Text" });
     
-        const token = generateJwt(user.id, username, email, roleid)
+        const token = generateJwt(user.id, user.username, user.email, user.RoleID)
         return res.json({ token });
     }
 
@@ -56,7 +56,7 @@ class UserController {
         }
     
       
-        const token = generateJwt(user.id, user.username, user.email, user.roleid);
+        const token = generateJwt(user.id, user.username, user.email, user.RoleID);
     
       
         return res.json({ token });
@@ -64,7 +64,7 @@ class UserController {
 
     async cheeck(req, res, next){
 
-        const token = generateJwt(req.user.id ,req.user.email, req.user.roleid)
+        const token = generateJwt(req.user.id ,req.user.email, req.user.RoleID)
         return res.json({token})
     }
 }
