@@ -2,44 +2,76 @@ import ApiError from "../Error/ApiErrors.js";
 import bcrypt from 'bcrypt'
 import { models } from '../models/models.js';
 import jwt from 'jsonwebtoken'
-const {User, TestResult} = models;
+const {User, Lesson} = models;
+
+const generateJwt =  (id, username, email, roleid) =>{
+    return jwt.sign({ id, username, email, roleid }, process.env.SECRET_KEY, { expiresIn: '24h' });
+}
 
 class UserController {
-    async registration (req, res,next){
-        const { username, email, password, roleid} = req.body;
+    async registration(req, res, next) {
+        const { username, email, password, roleid } = req.body;
+    
+      
+        if (!email || !password || !username) {
+            return next(ApiError.badRequest("Email, password, and username are required"));
+        }
+    
+        
+        const emailCandidate = await User.findOne({ where: { email } });
+        if (emailCandidate) {
+            return next(ApiError.badRequest("This email is already in use"));
+        }
+    
+    
+        const usernameCandidate = await User.findOne({ where: { username } });
+        if (usernameCandidate) {
+            return next(ApiError.badRequest("This username is already in use"));
+        }
+    
+    
+        const hashPassword = await bcrypt.hash(password, 5);
+    
+      
+        const user = await User.create({ username, email, RoleID: roleid, password: hashPassword });
+    
 
-        if(!email || !password){
-            return next(ApiError.badRequest("Not find email or passwrod"))
-        } 
+        const lesson = await Lesson.create({ UserID: user.id, title: "some", content:"Text" });
+    
 
-        const candidate = await User.findOne({where: {email}})
-            if(candidate){
-                return next(ApiError.badRequest("This email already have "))
+        const token = generateJwt(user.id, username, email, roleid)
 
-            }
-
-            const hashPassword = await bcrypt.hash(password, 5)
-
-            const user =await User.create({username, email , roleid,  password: hashPassword})
-
-            const testResult = await TestResult.create({UserID:user.id});
-
-            const token = jwt.sign({id: user.id,username, email, roleid}, process.env.SECRET_KEY,
-                {expiresIn: '24h'}
-            )
-            return res.json(token)
+    
+      
+        return res.json({ token });
     }
 
-    async login(req, res){
+    async login(req, res, next) { 
+        const { email, password } = req.body;
+    
+        // Проверка на наличие email
+        let user = await User.findOne({ where: { email } });
 
+       
+        if (!user) {
+            return next(ApiError.internal("Пользователя нет с таким email"));
+        }
+    
+        // Сравнение пароля
+        const comparePassword = bcrypt.compareSync(password, user.password);
+        if (!comparePassword) {
+            return next(ApiError.internal("Неверный пароль"));
+        }
+    
+        // Генерация токена
+        const token = generateJwt(user.id, user.username, user.email, user.roleid);
+    
+        // Возвращение токена в формате JSON
+        return res.json({ token });
     }
 
     async cheeck(req, res, next){
-        const {id} = req.query;
-        if(!id){
-            return next(ApiError.badRequest('Не задан ID'))
-        }
-        res.json(id)
+        
     }
 }
-export default new UserController();
+export default new UserController(); 
