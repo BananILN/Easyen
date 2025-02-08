@@ -29,20 +29,12 @@ class UserController {
             return next(ApiError.badRequest("This username is already in use"));
         }
     
-    
         const hashPassword = await bcrypt.hash(password, 5);
     
-      
         const user = await User.create({ username, email, RoleID: roleid, password: hashPassword });
-    
-
         const lesson = await Lesson.create({ UserID: user.id, title: "some", content:"Text" });
     
-
         const token = generateJwt(user.id, username, email, roleid)
-
-    
-      
         return res.json({ token });
     }
 
@@ -71,7 +63,9 @@ class UserController {
     }
 
     async cheeck(req, res, next){
-        
+
+        const token = generateJwt(req.user.id ,req.user.email, req.user.roleid)
+        return res.json({token})
     }
 }
 export default new UserController(); 
