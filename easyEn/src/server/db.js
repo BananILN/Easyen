@@ -15,4 +15,4 @@ const sequelize = new Sequelize(
 );
 console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 
-export { sequelize };
+export { sequelize }; 

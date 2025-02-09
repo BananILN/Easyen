@@ -19,23 +19,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json())
-
-// app.use(express.static(path.resolve(__dirname, 'static')))
+app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 app.use(express.static(path.resolve(__dirname, '../../dist'))); 
 app.use('/api', router)
 
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../../dist', 'index.html'), (err) => { 
-    if (err) {
-      console.error("Error sending index.html:", err);
-      res.status(err.status).end();
-    }
-  });
+  res.sendFile(path.resolve(__dirname, '../../dist/index.html'));
 });
+
 app.use(ErrorHandlingMiddleWare); 
 
 

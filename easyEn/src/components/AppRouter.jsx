@@ -1,22 +1,25 @@
 import {Route, Routes, Navigate} from 'react-router'
 import { authRoutes, publicRoutes } from '../routes'
+import HomePage from '../pages/HomePage'
+import  Lesson  from '../pages/Lesson';
+import  Admin  from '../pages/Admin';
+import Test  from '../pages/Test';
 
-
-export const AppRouter = ({ isAuth }) => {
+const AppRouter = () => {
+    const isAuth = false;
+  
     return (
-        <Routes>
-            {/* Public Routes */}
-            {publicRoutes.map(({ path, Component }) => (
-                <Route key={path} path={path} element={<Component />} />
-            ))}
-            
-            {/* Auth Routes */}
-            {isAuth && authRoutes.map(({ path, Component }) => (
-                <Route key={path} path={path} element={<Component />} />
-            ))}
-
-            {/* Перенаправление на главную страницу при неправильном пути */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/lesson/:id" element={<Lesson />} />
+        <Route path="/lesson" element={<Navigate to="/lesson/1" replace />} />
+        <Route path="/test" element={<Test />} />
+        
+        {isAuth && <Route path="/admin" element={<Admin />} />}
+        
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     );
-};
+  };
+  
+  export default AppRouter;

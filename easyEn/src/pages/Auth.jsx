@@ -1,4 +1,4 @@
-export const Auth = () =>{
+ const Auth = () =>{
 
     return (
          <div>
@@ -6,4 +6,4 @@ export const Auth = () =>{
         </div>
         ) 
  }
-
+ export default Auth

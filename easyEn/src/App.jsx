@@ -1,22 +1,22 @@
-import { lazy, Suspense } from 'react'
+// import { lazy, Suspense } from 'react'
 import {BrowserRouter, createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes} from "react-router"
 import './App.css'
-import { router } from './routes';
-import { ROUTES } from '.'
-import HomePage from './pages/HomePage'
-import Statistic from './pages/Statistic'
-import Profile from './pages/Profile'
-import { Courses } from './pages/Courses'
+
+// import { ROUTES } from '.'
+// import HomePage from './pages/HomePage'
+// import Statistic from './pages/Statistic'
+// import Profile from './pages/Profile'
+// import { Courses } from './pages/Courses'
 
 import { BaseLayout } from './components/BaseLayout'
-import { CoursesDetails } from './pages/CoursesDetails'
-import { Loader } from './components/Loader'
+// import { CoursesDetails } from './pages/CoursesDetails'
+// import { Loader } from './components/Loader'
 
-import { StartCoursePage } from './pages/StartCoursePage'
-import { startCourseAction } from './pages/StartCoursePage'
-import { ProtectedRoute } from './components/ProtectedRoute'
+// import { StartCoursePage } from './pages/StartCoursePage'
+// import { startCourseAction } from './pages/StartCoursePage'
+// import { ProtectedRoute } from './components/ProtectedRoute'
 
-import { AppRouter } from './components/AppRouter'
+import AppRouter  from './components/AppRouter'
 
 
 
@@ -67,13 +67,14 @@ import { AppRouter } from './components/AppRouter'
 // <RouterProvider router={router} fallbackElement={<Loader/>}/>;
 
 function App() {
-  const isAuth = false; 
+   
   return (
-        <BrowserRouter>
-          <BaseLayout>
-              <AppRouter isAuth={isAuth} />
-          </BaseLayout>
-    </BrowserRouter>
+    <BrowserRouter>
+      <BaseLayout>
+        <AppRouter />
+      </BaseLayout>
+  </BrowserRouter>
+  
   ) 
 }
 

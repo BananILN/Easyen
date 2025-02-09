@@ -19,7 +19,7 @@ export default function MainNavigation() {
     return(
         <nav className="navigate"  >
             {filteredNavItems.map(item => (
-                 <React.Fragment key={item.path}>
+                 <React.Fragment key={item.path}> 
                  {item.path === "/profile" && <hr className="hr-profile" color="#444" />}
                  <NavLink to={item.path} className={({isActive}) => `nav-items ${isActive ? 'active-item' : ""}`}>
                      {icons[item.path]}

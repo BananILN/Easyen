@@ -1,4 +1,4 @@
-export const Lesson = () =>{
+ const Lesson = () =>{
 
     return (
          <div>
@@ -6,4 +6,4 @@ export const Lesson = () =>{
         </div>
         ) 
  }
-
+export default Lesson
