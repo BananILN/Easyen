@@ -6,6 +6,14 @@ export  const ROUTES = {
     courseDetalis: "/course/:id",
 }
 
+export const ADMIN_ROUTE = '/admin'
+export const LOGIN_ROUTE = '/login'
+export const LESSON_ROUTE = '/lesson'
+export const TEST_ROUTE = '/test'
+export const REGISTRATION_ROUTE = '/registration'
+
+
+
 
 export const NAV_ITEMS = [
     {
@@ -24,5 +32,4 @@ export const NAV_ITEMS = [
         title:"Профиль",
         path: ROUTES.profile,
     },
-    
 ]

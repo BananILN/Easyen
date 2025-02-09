@@ -14,7 +14,7 @@ class LessonController{
     async create(req, res,next){
         try{
             const {title, content} = req.body;
-            let fileName = null; // Изначально устанавливаем fileName в null
+            let fileName = null; 
            
 
             if (req.files && req.files.img) {
