@@ -20,7 +20,7 @@ export const PROFILE_ROUTE = '/profile'
 export const NAV_ITEMS = [
     {
         title:"Главная",
-        path: ROUTES.homepage,
+        path: HOME_ROUTE,
     },
     {
         title:"Уроки",
@@ -32,6 +32,6 @@ export const NAV_ITEMS = [
     },
     {
         title:"Профиль",
-        path: ROUTES.profile,
+        path: PROFILE_ROUTE,
     },
 ]
