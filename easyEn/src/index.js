@@ -11,6 +11,7 @@ export const LOGIN_ROUTE = '/login'
 export const LESSON_ROUTE = '/lesson'
 export const TEST_ROUTE = '/test'
 export const REGISTRATION_ROUTE = '/registration'
+export const HOME_ROUTE ='/'
 
 
 
@@ -22,7 +23,7 @@ export const NAV_ITEMS = [
     },
     {
         title:"Уроки",
-        path: ROUTES.courses,
+        path: LESSON_ROUTE,
     },
     {
         title:"Статистика",

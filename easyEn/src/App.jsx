@@ -1,7 +1,10 @@
 // import { lazy, Suspense } from 'react'
-import {BrowserRouter, createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes} from "react-router"
+import {BrowserRouter, createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes,Navigate} from "react-router"
 import './App.css'
+import HomePage from './pages/HomePage.jsx'
+import  Lesson  from './pages/Lesson.jsx';
 
+import Test  from './pages/Test';
 // import { ROUTES } from '.'
 // import HomePage from './pages/HomePage'
 // import Statistic from './pages/Statistic'
@@ -70,9 +73,7 @@ function App() {
    
   return (
     <BrowserRouter>
-      <BaseLayout>
-        <AppRouter />
-      </BaseLayout>
+    <AppRouter />
   </BrowserRouter>
   
   ) 

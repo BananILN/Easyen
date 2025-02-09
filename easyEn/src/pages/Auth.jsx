@@ -2,7 +2,8 @@
 
     return (
          <div>
-             AUTH
+             
+             <h1>AUTH</h1> 
         </div>
         ) 
  }

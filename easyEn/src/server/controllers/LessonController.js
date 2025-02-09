@@ -15,23 +15,18 @@ class LessonController{
         try{
             const {title, content} = req.body;
             let fileName = null; 
-           
 
             if (req.files && req.files.img) {
                 const { img } = req.files;
                 fileName = uuidv4() + ".png";
                 await img.mv(path.resolve(__dirname, '..', 'static', fileName));
             }
-
-          
-    
             const lesson =  await Lesson.create({title,content, img: fileName})
             return res.json(lesson) 
         } catch (e){
             next(ApiError.badRequest(e.message))
         }
 
-       
     }
 
     async getAll(req, res){

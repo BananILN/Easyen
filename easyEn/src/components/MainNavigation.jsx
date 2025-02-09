@@ -10,7 +10,7 @@ import { Fragment } from "react";
 export default function MainNavigation() {
     const icons = {
         "/": <HomeIcon/>,
-        "/courses": <CoursesIcon />,
+        "/lesson": <CoursesIcon />,
         "/profile": <ProfileIcon />,
         "/statistic": <StatisticIcon />,
     }
