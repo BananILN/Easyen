@@ -12,6 +12,7 @@ export const LESSON_ROUTE = '/lesson'
 export const TEST_ROUTE = '/test'
 export const REGISTRATION_ROUTE = '/registration'
 export const HOME_ROUTE ='/'
+export const PROFILE_ROUTE = '/profile'
 
 
 

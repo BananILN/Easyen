@@ -6,9 +6,11 @@ import Test from '../pages/Test';
 import { BaseLayout } from '../components/BaseLayout';
 import { publicRoutes } from '../routes';
 import { authRoutes } from '../routes';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const AppRouter = () => {
-  const isAuth = false;
+  const { isAuth} = useContext(AuthContext)
 
   return (
     <Routes>

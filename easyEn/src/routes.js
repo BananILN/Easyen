@@ -1,10 +1,11 @@
 import { Component } from "react"
-import { ADMIN_ROUTE, LESSON_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, TEST_ROUTE,HOME_ROUTE } from "."
+import { ADMIN_ROUTE, LESSON_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, TEST_ROUTE,HOME_ROUTE, PROFILE_ROUTE } from "."
 import  Admin  from "./pages/Admin"
 import  Test  from "./pages/Test"
 import  Auth  from "./pages/Auth"
 import  Lesson  from "./pages/Lesson"
 import HomePage from "./pages/HomePage"
+import Profile from "./pages/Profile"
 
 export const authRoutes = [
     {
@@ -14,6 +15,10 @@ export const authRoutes = [
     {
         path: TEST_ROUTE,
         Component: Test
+    },
+    {
+        path: PROFILE_ROUTE,
+        Component: Profile
     }
 
 ]
