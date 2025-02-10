@@ -13,7 +13,7 @@ export default function Header() {
         return (
             <header className="header">
               {isAuth ? (
-                // Если пользователь авторизован, показываем профиль и кнопку выхода
+                // Если пользователь авторизован,  и кнопку выходпоказываем профильа
                 <div className="header-auth">
                   {profile && (
                     <NavLink

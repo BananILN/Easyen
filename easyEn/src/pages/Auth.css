@@ -1,0 +1,14 @@
+.custom-input::placeholder {
+    color: #1890ff; /* Темно-синий цвет плейсхолдера */
+    opacity: 1; /* Убедитесь, что плейсхолдер не полупрозрачный */
+  }
+/* Стили для текста внутри Input */
+.custom-input {
+    color: black; /* Темно-синий цвет текста */
+  }
+  
+  /* Стили для рамки при фокусе */
+  .custom-input:focus {
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }  

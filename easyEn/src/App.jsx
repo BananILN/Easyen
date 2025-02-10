@@ -1,8 +1,11 @@
 // import { lazy, Suspense } from 'react'
 import {BrowserRouter, createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Routes,Navigate} from "react-router"
+
 import './App.css'
+import 'antd/dist/reset.css';
 import HomePage from './pages/HomePage.jsx'
 import  Lesson  from './pages/Lesson.jsx';
+
 
 import Test  from './pages/Test';
 // import { ROUTES } from '.'

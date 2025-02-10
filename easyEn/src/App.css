@@ -135,14 +135,20 @@ svg{
 }
 
 .logo{
-  padding:  1.2em 0em;
+  padding:  1em 0em;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  height: 2rem;
+  height: 0rem;
+  padding-bottom: 2.1em;
+  
+}
+.hr-logo-cont{
+  padding-bottom: 1em;
 }
 
 .hr-logo{
+  
   width: 7rem;
   
 }
@@ -157,8 +163,8 @@ svg{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.4em;
-  padding: 1.5rem 0.6rem;
+  gap: 1em;
+  padding: 3.5rem 0.6rem;
   
 }
 
@@ -169,7 +175,7 @@ svg{
   display: flex;
   flex-direction: column;
   width: calc(100% - 10rem); /* Ширина контента минус ширина сайдбара */
-  margin-left: 12rem; 
+  margin-left: 10rem; 
   overflow-x: hidden;
 }
 
@@ -183,6 +189,7 @@ svg{
   border-bottom: 1px solid #444;
   box-sizing: border-box; 
   margin-bottom: 2em;
+  
   
 }
 

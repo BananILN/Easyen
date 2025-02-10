@@ -4,7 +4,7 @@ import { UserContext } from "./UserContext.jsx";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) =>{
-    const [isAuth, setIsAuth] = useState(false)
+    const [isAuth, setIsAuth] = useState(true)
     const { updateUser } = useContext(UserContext)
 
     const login = () => {
