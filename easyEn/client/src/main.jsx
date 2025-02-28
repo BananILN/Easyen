@@ -6,6 +6,10 @@ import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { UserProvider } from './context/UserContext.jsx'
 
+console.log(import.meta.env.VITE_API_URL);
+
+
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <UserProvider>
