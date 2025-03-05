@@ -23,56 +23,49 @@ import { BaseLayout } from './components/BaseLayout'
 // import { ProtectedRoute } from './components/ProtectedRoute'
 
 import AppRouter  from './components/AppRouter'
+import { useEffect, useState,useContext } from "react";
+import { check } from "./http/userApi.js";
+import { UserContext } from "./context/UserContext.jsx";
+import { AuthContext } from "./context/AuthContext.jsx";
+import {MutatingDots} from 'react-loader-spinner'
 
-
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-
-//     <Route path='/' element={<BaseLayout/>} >
-      
-//         <Route index  element={<HomePage/>} /> 
-
-//         <Route 
-//         path={ROUTES.courses}
-//         element={
-//             <Courses />
-//         }
-//         /> 
-//       <Route
-//       path="/courses/:id/*"
-//       element={
-//        <CoursesDetails />
-//     }
-//       />
-
-//       <Route
-//         path="courses/:id/start-course"
-//         element={<StartCoursePage />}
-//         action={startCourseAction}
-//       />
-
-//         <Route
-//         path={ROUTES.profile}
-//         element={
-//           <ProtectedRoute isAllowed={false}>
-//             <Profile />
-//             </ProtectedRoute>
-//         }
-//         />
-//         <Route 
-//         path={ROUTES.statistic}
-//         element={
-//           <Statistic/>
-//         }/>
-       
-//         {/* <Route path="*" element={<ErrorPage />} /> */}
-//     </Route>
-//   )
-// );
-// <RouterProvider router={router} fallbackElement={<Loader/>}/>;
 
 function App() {
+  const {login} = useContext(AuthContext)
+  const {updateUser} = useContext(UserContext)
+  const [loading, setLoading] = useState(true);
+
+  useEffect( ()=>{
+      check().then(data =>{
+        updateUser(true)
+        login(true)
+      }).finally( () =>{
+        setLoading(false)
+      })  
+  }, [])
+
+  if(loading){
+    return (
+<div style={{
+        display: "flex",
+        justifyContent: "center", 
+        alignItems: "center", 
+        height: "100vh", 
+        backgroundColor: "rgb(28, 30, 51)" 
+      }}>
+        <MutatingDots
+          visible={true}
+          height="100"
+          width="100"
+          color="#2d82e3" 
+          secondaryColor="#2d82e3"
+          radius="12.5"
+          ariaLabel="mutating-dots-loading"
+        />
+      </div>
+    )
+  }
+
    
   return (
     <BrowserRouter>

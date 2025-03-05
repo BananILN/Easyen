@@ -1,4 +1,9 @@
+import { useEffect } from "react"
+import { fetchLesson } from "../http/LessonApi"
+
 export const CourseProgram =() =>{
+
+
     return (
         <>
             <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum aliquam dolorum sit recusandae sapiente provident quam. Illum molestias eaque nobis ipsa esse veritatis dolorum culpa sint doloribus, ipsum ducimus consequatur.

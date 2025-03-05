@@ -1,8 +1,10 @@
 import { useNavigation, useSearchParams } from "react-router";
-import { mockFetch } from "../api";
+
 import { useState, useEffect, useCallback } from "react";
 import { Loader } from "../components/Loader";
 import CourseCard from "../components/CourseCard";
+import { fetchLesson } from "../http/LessonApi";
+
 
 const debounce = (func, delay) => {
   let timeoutId;
@@ -25,31 +27,42 @@ export const Courses = () => {
   const [search, setSearch] = useState(searchParams.get("search") || "");
 
 
-  const getCourses = useCallback(
-    debounce(async (newSearch) =>{
-        setLoading(true);
-        const coursesData = await mockFetch("/courses", { search: newSearch });
-        setCourses(coursesData);
-        setLoading(false)
-    },1000),[]
-  );
+
+  const [lesson, setLesson] = useState();
 
 
-  const updateSearchParams = () => {
-    setSearchParams((params) => {
-      if (search) {
-        params.set("search", search);
-      } else {
-        params.delete("search");
-      }
-      return new URLSearchParams(params);
-    });
-  };
+  useEffect(()=>{
+          fetchLesson().then(data => {
+              setLesson(data)
+          })
+  }, [])
+  
 
-  useEffect(() => {
-    updateSearchParams();
-    getCourses(search)
-  }, [search]);
+  // const getCourses = useCallback(
+  //   debounce(async (newSearch) =>{
+  //       setLoading(true);
+  //       const coursesData = await mockFetch("/courses", { search: newSearch });
+  //       setCourses(coursesData);
+  //       setLoading(false)
+  //   },1000),[]
+  // );
+
+
+  // const updateSearchParams = () => {
+  //   setSearchParams((params) => {
+  //     if (search) {
+  //       params.set("search", search);
+  //     } else {
+  //       params.delete("search");
+  //     }
+  //     return new URLSearchParams(params);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   updateSearchParams();
+  //   getCourses(search)
+  // }, [search]);
 
   const styles = {
     loaderContainer: {
@@ -83,14 +96,14 @@ export const Courses = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <div className="title-content">
-          <h1>Courses</h1>
+          <h1>Lesson</h1>
         </div>
         <div className="card-container">
           {course.length === 0 ? (
             <div>No courses found</div>
           ) : (
             course.map((item) => (
-              <CourseCard key={item.id} course={item} />
+              <CourseCard key={item.id} lesson={item} />
             ))
           )}
         </div>

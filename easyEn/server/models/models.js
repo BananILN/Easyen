@@ -19,7 +19,7 @@ const Lesson = sequelize.define('Lesson', {
     LessonID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 
     content: { type: DataTypes.TEXT, allowNull: true },
-    img: { type: DataTypes.STRING, allowNull: true }, // 
+    img: { type: DataTypes.STRING, allowNull: true }, 
 });
 
 const Progress = sequelize.define('Progress', {

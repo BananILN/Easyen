@@ -2,34 +2,62 @@ import React, { useState, useContext } from 'react';
 import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { NavLink, Navigate } from 'react-router';
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, PROFILE_ROUTE, HOME_ROUTE } from '../index'; // Исправленный импорт
-import { AuthContext } from '../context/AuthContext'; // Импортируем AuthContext
-import './Auth.css'; // Импортируем CSS для стилизации
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, PROFILE_ROUTE, HOME_ROUTE } from '../index'; 
+import { AuthContext } from '../context/AuthContext'; 
+import './Auth.css'; 
+import { registrationAuth, loginAuth } from '../http/userApi';
 
 const Auth = () => {
-  const [isLoginForm, setIsLoginForm] = useState(true); // Состояние для переключения между формами
-  const { isAuth, login } = useContext(AuthContext); // Получаем методы и состояние из AuthContext
+  const [isLoginForm, setIsLoginForm] = useState(true); 
+  const { isAuth, login } = useContext(AuthContext); 
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-
-    if (isLoginForm) {
-      // Логика авторизации
-      login(); // Вызываем метод login из AuthContext
-      message.success('Вы успешно авторизовались!');
-    } else {
-      // Логика регистрации
-      message.success('Вы успешно зарегистрировались!');
-      setIsLoginForm(true); // Переключаем на форму авторизации после регистрации
+  const handlerAuth = async () => {
+    try {
+      let response;
+      if (isLoginForm) {
+     
+        response = await loginAuth(email, password);
+        console.log("Ответ при входе:", response);
+        login(); 
+        message.success('Вы успешно авторизовались!');
+      } else {
+       
+        response = await registrationAuth(email, username, password);
+        console.log("Ответ при регистрации:", response);
+        message.success('Вы успешно зарегистрировались!');
+        setIsLoginForm(true); 
+      }
+    } catch (error) {
+      console.error("Ошибка при авторизации/регистрации:", error);
+      if (error.response && error.response.data.message) {
+        message.error(error.response.data.message); 
+      } else {
+        message.error('Произошла ошибка. Пожалуйста, попробуйте снова.');
+      }
     }
   };
 
-  // Переключение между формами
+ const onFinish = (values) => {
+    console.log('Received values of form: ', values);
+    
+    setEmail(values.email);
+    setPassword(values.password);
+    if (!isLoginForm) {
+      setUsername(values.username);
+    }
+
+    handlerAuth();
+  };
+
+ 
   const toggleForm = () => {
     setIsLoginForm((prev) => !prev);
   };
 
-  // Если пользователь авторизован, перенаправляем на главную страницу
+
   if (isAuth) {
     return <Navigate to={HOME_ROUTE} replace />;
   }
@@ -44,7 +72,7 @@ const Auth = () => {
         }}
         style={{
           maxWidth: 360,
-          margin: '0 auto', // Центрируем форму
+          margin: '0 auto', 
         }}
         onFinish={onFinish}
       >
@@ -59,9 +87,11 @@ const Auth = () => {
             ]}
           >
             <Input
-              prefix={<UserOutlined style={{ color: '#1890ff' }} />} // Темно-синий цвет иконки
+              prefix={<UserOutlined style={{ color: '#1890ff' }} />} 
               placeholder="Логин"
-              className="custom-input" // Добавляем класс для стилизации плейсхолдера
+              className="custom-input"
+              value={username}
+              onChange={e => setUsername(e.target.value)} 
             />
           </Form.Item>
         )}
@@ -79,9 +109,11 @@ const Auth = () => {
           ]}
         >
           <Input
-            prefix={<MailOutlined style={{ color: '#1890ff' }} />} // Темно-синий цвет иконки
+            prefix={<MailOutlined style={{ color: '#1890ff' }} />} 
             placeholder="Email"
-            className="custom-input" // Добавляем класс для стилизации плейсхолдера
+            className="custom-input"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
         </Form.Item>
         <Form.Item
@@ -98,13 +130,15 @@ const Auth = () => {
           ]}
         >
           <Input
-            prefix={<LockOutlined style={{ color: '#1890ff' }} />} // Темно-синий цвет иконки
+            prefix={<LockOutlined style={{ color: '#1890ff' }} />} 
             type="password"
             placeholder="Пароль"
-            className="custom-input" // Добавляем класс для стилизации плейсхолдера
+            className="custom-input" 
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
         </Form.Item>
-        {isLoginForm && ( // Чекбокс "Remember me" только для авторизации
+        {isLoginForm && ( 
           <Form.Item>
             <Flex justify="space-between" align="center">
               <Form.Item name="remember" valuePropName="checked" noStyle>
