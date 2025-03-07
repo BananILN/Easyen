@@ -7,9 +7,11 @@ import {router as testResultRouter} from "./TestResultRouter.js"
 import {router as userRouter} from "./UserRouter.js"
 import {router as roleRouter} from  "./RoleRouter.js"
 import {router as ProgressRouter} from  "./ProgressRouter.js"
+import {router as ProfileRouter} from "./ProfileRouter.js"
 
 export const router = new Router();
 
+router.use("/profile", ProfileRouter)
 router.use('/user',userRouter)
 router.use('/lesson',lessonRouter)
 router.use('/test',testRouter)

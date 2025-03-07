@@ -1,9 +1,12 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate, Navigate } from "react-router";
 import ProfileIcon from "../assets/Profile.svg?react";
 import { NAV_ITEMS } from "..";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext"; 
+import { HOME_ROUTE } from "..";
+
+import ExitIcon from "../assets/exit.svg?react"
 
 
 export default function Header() {
@@ -30,10 +33,11 @@ export default function Header() {
                       {profile.title} {/* Отображаем имя или email пользователя  user?.name || user?.email*/}
                     </NavLink>
                   )}
+                      
                 
-                      <button onClick={logout}  className="logout-button">
-                            Выйти
-                      </button>
+                      <span onClick={logout}  className="">
+                       <NavLink to={HOME_ROUTE}>  <ExitIcon/> </NavLink> 
+                      </span>
                 
                 </div>
               ) : (

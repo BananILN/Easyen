@@ -4,6 +4,8 @@ import { jwtDecode } from "jwt-decode";
 export const registrationAuth = async (email, username, password) => {
   const { data } = await $host.post('api/user/registration', { email, username, password, RoleID: 1 });
   localStorage.setItem('token', data.token);
+  const decodedToken = jwtDecode(data.token);
+    console.log(decodedToken);
   return jwtDecode(data.token); // Декодируем токен
 };
 
@@ -34,3 +36,9 @@ export const loginAuth = async (email, password) => {
       throw error;
     }
   };
+
+
+  export const GetProfileInfo = async () =>{
+
+    const {data} = await $authHost.get("")
+  }

@@ -16,6 +16,8 @@ export default function HomePage(){
                     made easy.
                 </h1>
 
+                
+                
                 <span className="span-under-title-desc">Practice your English and learn new things with the platform.</span>
                 <LinkButton to={LESSON_ROUTE} title="Lesson"/>
                 </div>

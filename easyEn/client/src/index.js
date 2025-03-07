@@ -13,6 +13,7 @@ export const TEST_ROUTE = '/test'
 export const REGISTRATION_ROUTE ='/registration'
 export const HOME_ROUTE ='/'
 export const PROFILE_ROUTE = '/profile'
+export const STATISTIC_ROUTE ='/statistic'
 
 
 
