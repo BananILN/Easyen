@@ -35,13 +35,20 @@ class LessonController{
     }
 
     async getOne(req,res,next){
-        const {id} = req.params;
-        const lesson = await Lesson.findByPk(id);
-
-        if(!lesson){
-            return next(ApiError.badRequest("not found"))
+        try {
+            const {id} = req.params;
+            const lesson = await Lesson.findByPk(id);
+            
+            if(!lesson) {
+                return res.status(404).json({message: "Урок не найден"});
+            }
+            
+            res.set('Content-Type', 'application/json');
+            return res.json(lesson);
+        } catch (e) {
+            console.error(e);
+            return res.status(500).json({message: "Ошибка сервера"});
         }
-        return res.json(lesson)
     }
     
 

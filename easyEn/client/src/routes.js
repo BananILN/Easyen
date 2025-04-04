@@ -1,5 +1,5 @@
 import { Component } from "react"
-import { ADMIN_ROUTE, LESSON_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, TEST_ROUTE,HOME_ROUTE, PROFILE_ROUTE, STATISTIC_ROUTE } from "./index.js"
+import { ADMIN_ROUTE, LESSON_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, TEST_ROUTE,HOME_ROUTE, PROFILE_ROUTE, STATISTIC_ROUTE, LESSDETAILS_ROUTE } from "./index.js"
 import  Admin  from "./pages/Admin"
 import  Test  from "./pages/Test"
 import  Auth  from "./pages/Auth"
@@ -7,6 +7,7 @@ import Statistic from "./pages/Statistic"
 import  Lesson  from "./pages/Lesson"
 import HomePage from "./pages/HomePage"
 import Profile from "./pages/Profile"
+import LessonDetails  from "./pages/LessonDetails"
 
 export const authRoutes = [
     {
@@ -24,7 +25,12 @@ export const authRoutes = [
     {
         path: STATISTIC_ROUTE,
         Component: Statistic
+    },
+    {
+        path:LESSDETAILS_ROUTE,
+        Component: LessonDetails
     }
+
 
 ]
 

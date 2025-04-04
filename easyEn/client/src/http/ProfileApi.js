@@ -19,3 +19,4 @@ export const fetchProfile = async (userId) => {
         throw error;
     }
 };
+

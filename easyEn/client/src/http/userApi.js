@@ -2,11 +2,24 @@ import { $authHost, $host } from ".";
 import { jwtDecode } from "jwt-decode";
 
 export const registrationAuth = async (email, username, password) => {
-  const { data } = await $host.post('api/user/registration', { email, username, password, RoleID: 1 });
-  localStorage.setItem('token', data.token);
-  const decodedToken = jwtDecode(data.token);
+  try {
+    const { data } = await $host.post('api/user/registration', { email, username, password, RoleID: 1 });
+    
+      if (!data.token) {
+        throw new Error("Токен не получен");
+      }
+
+    localStorage.setItem('token', data.token);
+
+    const decodedToken = jwtDecode(data.token);
     console.log(decodedToken);
-  return jwtDecode(data.token); // Декодируем токен
+
+    return decodedToken;
+
+  } catch (error) {
+    console.error("Ошибка при регистрации:", error);
+    throw error;
+  }
 };
 
 export const loginAuth = async (email, password) => {
@@ -39,6 +52,11 @@ export const loginAuth = async (email, password) => {
 
 
   export const GetProfileInfo = async () =>{
-
-    const {data} = await $authHost.get("")
+    try {
+      const { data } = await $authHost.get("api/user/profile"); // Указать правильный endpoint
+      return data;
+    } catch (error) {
+      console.error("Ошибка при получении профиля:", error);
+      throw error;
+    }
   }

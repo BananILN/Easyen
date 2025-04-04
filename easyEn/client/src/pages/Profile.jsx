@@ -11,9 +11,9 @@ export default function Profile() {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      console.log(decodedToken); // Проверьте содержимое токена
+      console.log(decodedToken);
 
-      const userId = decodedToken.UserID; // Извлечение UserID
+      const userId = decodedToken.UserID; 
       if (!userId) {
         setError("ID пользователя не найден в токене");
         setLoading(false);
@@ -55,10 +55,10 @@ export default function Profile() {
       </div>
       <div className="user-desc">
         <div className="user-name">
-          {profile.username} {/* Отображаем имя пользователя */}
+          {profile.username} 
         </div>
         <div className="user-email">
-          {profile.email} {/* Отображаем почту пользователя */}
+          {profile.email} 
         </div>
         <div className="user-bio">
           Made design, api queries, statistics, sprint game, did some layout and supervised development.

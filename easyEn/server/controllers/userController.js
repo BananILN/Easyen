@@ -14,7 +14,7 @@ const generateJwt =  (UserID, username, email, RoleID) =>{
 
 class UserController {
     async registration(req, res, next) {
-        const { username, email, password, RoleID } = req.body;
+        const { username, email, password, RoleID = 1 } = req.body;
       
         if (!email || !password || !username) {
           return next(ApiError.badRequest("Email, password, and username are required"));
@@ -63,9 +63,19 @@ class UserController {
       }
 
     async cheeck(req, res, next){
+      try{
+        if (!req.user || !req.user.UserID) {
+          return res.status(401).json({ message: "Не авторизован" });
+       }
 
         const token = generateJwt(req.user.UserID ,req.user.email, req.user.RoleID)
         return res.json({token})
+      }
+       catch (e) {
+        next(ApiError.internal(e.message));
+    }
+
+      
     }
 }
 export default new UserController(); 

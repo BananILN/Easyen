@@ -2,16 +2,22 @@ import { useParams,useSearchParams } from "react-router";
 import { useState,useEffect } from "react";
 import CourseCard from "../components/CourseCard";
 import { fetchLesson } from "../http/LessonApi";
+import ModalLesson from "../components/ModalLesson";
+import { Button } from "antd";
 
 const Lesson = () => {
-  const { id } = useParams(); // Получите ID урока из параметров (если нужно)
-  const [lesson, setLesson] = useState([]); // Инициализируем как массив
-  const [loading, setLoading] = useState(true); // Состояние для загрузки
-  const [error, setError] = useState(null); // Состояние для ошибок
-  const [searchParams, setSearchParams] = useSearchParams(); // Управление параметрами URL
+  const { id } = useParams(); 
+  const [lesson, setLesson] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [searchParams, setSearchParams] = useSearchParams(); 
   const search = searchParams.get("search") || "";
 
- 
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleLessonCreated = (newLesson) => {
+    setLesson([...lesson, newLesson]);
+  };
 
   const updateSearchParams = (newSearch) =>{
     setSearchParams((params) =>{
@@ -34,26 +40,28 @@ const Lesson = () => {
   };
   
   useEffect(() => {
+    let isMounted = true
+    
     const getCourses = async () => {
       try {
-        const data = await fetchLesson(search); // Передаем search в API
-        setLesson(data); // Устанавливаем данные уроков
-        setLoading(false); // Загрузка завершена
+        const data = await fetchLesson(search); 
+        setLesson(data); 
+        setLoading(false); 
       } catch (err) {
-        setError(err.message); // Устанавливаем ошибку
-        setLoading(false); // Загрузка завершена
+        setError(err.message); 
+        setLoading(false); 
       }
     };
 
-    getCourses(); // Вызываем функцию загрузки
+    getCourses(); 
   }, [search]);
 
   if (loading) {
-      return <div>Загрузка уроков...</div>; // Отображаем загрузку
+      return <div>Загрузка уроков...</div>; 
   }
 
   if (error) {
-      return <div>Ошибка: {error}</div>; // Отображаем ошибку
+      return <div>Ошибка: {error}</div>; 
   }
 
   return (
@@ -68,18 +76,35 @@ const Lesson = () => {
           <div className="title-content">
               <h1>Lesson</h1>
           </div>
+                <div>
+            {/* Существующий код... */}
+            
+            <div style={{ margin: "20px 0", display: "flex", justifyContent: "flex-end" }}>
+              <Button 
+                type="primary" 
+                onClick={() => setModalVisible(true)}
+              >
+                Добавить урок
+              </Button>
+            </div>
+
+            <ModalLesson
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onLessonCreated={handleLessonCreated}
+            />
+          </div>
+
           <div className="card-container">
               {filteredLessons.length === 0 ? (
-                  <div>No lessons found</div> // Если уроков нет
+                  <div>No lessons found</div> 
               ) : (
                   filteredLessons.map((item) => (
-                      <CourseCard key={item.LessonID} lesson={item} /> // Используем CourseCard
+                      <CourseCard key={item.LessonID} lesson={item} /> 
                   ))
               )}
           </div>
       </div>
   );
-  
 };
-
 export default Lesson;

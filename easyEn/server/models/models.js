@@ -29,6 +29,8 @@ const Progress = sequelize.define('Progress', {
     LessonID: { type: DataTypes.INTEGER, allowNull: false } //  обязательный
 });
 
+
+
 const Test = sequelize.define('Test', {
     TestID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 

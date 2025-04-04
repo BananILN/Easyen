@@ -391,6 +391,188 @@ input{
   width: 20rem;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-main {
+  background: rgb(34, 37, 63);
+  border-radius: 1.4em;
+  width: 500px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid #444;
+}
+
+.modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  color: rgb(196, 195, 195);
+  margin: 0;
+  font-size: 2rem;
+  font-family: var(--Mont);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  color: rgb(196, 195, 195);
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+}
+
+/* Стили для инпутов */
+.ant-input,
+.ant-input-textarea {
+  background-color: rgb(23, 32, 71);
+  border: 1px solid #444;
+  color: rgb(196, 195, 195);
+  border-radius: 0.5rem;
+  padding: 10px;
+}
+
+.ant-input::placeholder,
+.ant-input-textarea::placeholder {
+  color: #666;
+}
+
+/* Обновленные стили для кнопок */
+.ant-btn {
+  border-radius: 0.5rem;
+  font-family: var(--Mont);
+  transition: all 0.3s ease;
+}
+
+.ant-btn-default {
+  background-color: rgb(23, 32, 71);
+  border-color: #555;
+  color: rgb(220, 220, 220);
+}
+
+.ant-btn-default:hover {
+  background-color: rgb(15, 22, 50);
+  border-color: #666;
+  color: rgb(240, 240, 240);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ant-btn-primary {
+  background-color: #2d82e3;
+  border-color: #2d82e3;
+  color: white;
+}
+
+.ant-btn-primary:hover {
+  background-color: #1a6bc9;
+  border-color: #1a6bc9;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Обновленные стили для инпутов */
+.ant-input,
+.ant-input-textarea {
+  background-color: rgb(20, 28, 60);
+  border: 1px solid #555;
+  color: rgb(220, 220, 220);
+  border-radius: 0.5rem;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+.ant-input:hover,
+.ant-input-textarea:hover {
+  border-color: #2d82e3;
+  background-color: rgb(18, 25, 55);
+}
+
+.ant-input:focus,
+.ant-input-textarea:focus {
+  border-color: #2d82e3;
+  box-shadow: 0 0 0 2px rgba(45, 130, 227, 0.2);
+  background-color: rgb(15, 22, 50);
+}
+
+.ant-input::placeholder,
+.ant-input-textarea::placeholder {
+  color: #777;
+}
+
+/* Обновленные стили для загрузки файлов */
+.ant-upload {
+  color: rgb(220, 220, 220);
+}
+
+.ant-upload-btn {
+  background-color: rgb(23, 32, 71);
+  border: 1px dashed #555;
+  transition: all 0.3s ease;
+}
+
+.ant-upload-btn:hover {
+  border-color: #2d82e3;
+  background-color: rgb(20, 28, 60);
+  color: rgb(240, 240, 240);
+}
+
+/* Дополнительные стили для текста в формах */
+.form-group label {
+  color: rgb(220, 220, 220);
+}
+
+.modal-header h2 {
+  color: rgb(220, 220, 220);
+}
+
+.close-btn {
+  color: rgb(220, 220, 220);
+}
+
+.close-btn:hover {
+  color: rgb(240, 240, 240);
+}
+
+.modal-footer {
+  padding: 10px 16px;
+  border-top: 1px solid #444;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
 
 @media (max-width: 1980px)  {
   
