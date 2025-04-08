@@ -1,40 +1,58 @@
 import { useEffect, useState } from "react";
 import { fetchProfile } from "../http/ProfileApi";
 import { jwtDecode } from "jwt-decode";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+import Auth from "./Auth";
+import { UserContext } from "../context/UserContext";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isAuth } = useContext(AuthContext)
+  const { user } = useContext(UserContext)
+
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
+   if (!isAuth) {
+      setError("Требуется авторизация");
+      setLoading(false);
+      return;
+    }
 
-      const userId = decodedToken.UserID; 
-      if (!userId) {
-        setError("ID пользователя не найден в токене");
-        setLoading(false);
-        return;
-      }
+    const token = localStorage.getItem('token');
+  
+    
+    if (!token) {
+      setError("Токен не найден");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const decodedToken = jwtDecode(token);
+      console.log("Декодированный токен:", decodedToken); // Отладочный вывод
+      
+      const userId = decodedToken.UserID || user?.UserID;
+      if (!userId) throw new Error("ID пользователя не найден");
 
       fetchProfile(userId)
         .then(data => {
+          console.log("Данные профиля:", data); // Отладочный вывод
           setProfile(data);
-          setLoading(false);
         })
-        .catch(error => {
-          console.error("Ошибка при загрузке профиля:", error);
-          setError("Не удалось загрузить профиль");
-          setLoading(false);
-        });
-    } else {
-      setError("Токен не найден");
+        .catch(err => {
+          console.error("Ошибка загрузки:", err);
+          setError("Ошибка загрузки профиля");
+        })
+        .finally(() => setLoading(false));
+    } catch (err) {
+      console.error("Ошибка декодирования:", err);
+      setError("Неверный токен");
       setLoading(false);
     }
-  }, []);
+  }, [isAuth, user]);
 
   if (loading) {
     return <div>Загрузка...</div>;

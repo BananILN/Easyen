@@ -16,22 +16,30 @@ import {MutatingDots} from 'react-loader-spinner'
 
 function App() {
   const { login } = useContext(AuthContext)
-  const {updateUser} = useContext(UserContext)
+  const { setUser} = useContext(UserContext)
   const [loading, setLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
     try {
-      const data = await check()
-      updateUser(data)
-      login(true)
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("Токен отсутствует");
+      }
+      
+      const data = await check();
+      login(data);
+    } catch (error) {
+      if (error.message !== "Токен отсутствует") {
+        console.error("Auth check failed:", error);
+      }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [login, updateUser])
+  }, [login]); // Только login в зависимостях
 
   useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+    checkAuth();
+  }, [checkAuth]);
 
   if (loading) {
     return (

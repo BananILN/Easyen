@@ -12,10 +12,10 @@ console.log(import.meta.env.VITE_API_URL);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+     <AuthProvider>
     <UserProvider>
-    <AuthProvider>
         <App />
-    </AuthProvider>
     </UserProvider>
+    </AuthProvider>
   </StrictMode>,
 )

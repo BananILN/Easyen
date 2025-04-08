@@ -5,16 +5,24 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext"; 
 import { HOME_ROUTE } from "..";
-
+import { useEffect } from "react";
 import ExitIcon from "../assets/exit.svg?react"
 
 
 export default function Header() {
     const { isAuth, logout } = useContext(AuthContext); // Получаем isAuth и logout из AuthContext
     const { user } = useContext(UserContext);
-    
+    const navigate = useNavigate();
 
-    
+    const handleLogout = (e) => {
+      e.preventDefault(); // Предотвращаем стандартное поведение
+      console.log("Выход из системы"); 
+      logout();
+      navigate(HOME_ROUTE, { replace: true }); // Перенаправляем на главную
+  };
+//   useEffect(() => {
+//     console.log("isAuth изменился:", isAuth);
+// }, []);
 
         const profile = NAV_ITEMS.find(item => item.path ==="/profile");
         return (
@@ -35,9 +43,13 @@ export default function Header() {
                   )}
                       
                 
-                      <span onClick={logout}  className="">
-                       <NavLink to={HOME_ROUTE}>  <ExitIcon/> </NavLink> 
-                      </span>
+                      <NavLink 
+                        to={HOME_ROUTE} 
+                        onClick={handleLogout}
+                        className="logout-button"
+                    >
+                        <ExitIcon />
+                    </NavLink>
                 
                 </div>
               ) : (

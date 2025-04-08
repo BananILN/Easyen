@@ -63,19 +63,17 @@ class UserController {
       }
 
     async cheeck(req, res, next){
-      try{
+      try {
         if (!req.user || !req.user.UserID) {
           return res.status(401).json({ message: "Не авторизован" });
-       }
-
-        const token = generateJwt(req.user.UserID ,req.user.email, req.user.RoleID)
-        return res.json({token})
-      }
-       catch (e) {
+        }
+    
+        // Генерируем токен с теми же параметрами, что и при логине
+        const token = generateJwt(req.user.UserID, req.user.username, req.user.email, req.user.RoleID);
+        return res.json({ token });
+      } catch (e) {
         next(ApiError.internal(e.message));
-    }
-
-      
+      }
     }
 }
 export default new UserController(); 

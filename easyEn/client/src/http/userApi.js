@@ -25,6 +25,7 @@ export const registrationAuth = async (email, username, password) => {
 export const loginAuth = async (email, password) => {
     try {
       const { data } = await $host.post('api/user/login', { email, password });
+      console.log("Полученный токен:", data.token);
       if (!data.token) {
         throw new Error("Токен не получен");
       }
@@ -38,6 +39,11 @@ export const loginAuth = async (email, password) => {
 
   export const check = async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("Токен отсутствует");
+      }
+      
       const { data } = await $authHost.get('api/user/auth');
       if (!data.token) {
         throw new Error("Токен не получен");
@@ -45,15 +51,25 @@ export const loginAuth = async (email, password) => {
       localStorage.setItem('token', data.token);
       return jwtDecode(data.token);
     } catch (error) {
-      console.error("Ошибка при проверке авторизации:", error);
-      throw error;
+     
+      // Добавляем более информативное сообщение об ошибке
+      if (error.response) {
+        // Ошибка от сервера
+        throw new Error(`Ошибка сервера: ${error.response.status}`);
+      } else if (error.request) {
+        // Запрос был сделан, но ответ не получен
+        throw new Error("Нет ответа от сервера");
+      } else {
+        // Другие ошибки
+        throw error;
+      }
     }
   };
 
 
   export const GetProfileInfo = async () =>{
     try {
-      const { data } = await $authHost.get("api/user/profile"); // Указать правильный endpoint
+      const { data } = await $authHost.get("api/user/profile"); 
       return data;
     } catch (error) {
       console.error("Ошибка при получении профиля:", error);
