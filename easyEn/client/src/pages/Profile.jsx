@@ -5,11 +5,16 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import Auth from "./Auth";
 import { UserContext } from "../context/UserContext";
+import SettingsNavigation from "../components/SettingNavigation";
+import { Button } from "antd";
+import  { Input } from "antd";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false); // Состояние редактирования
+  const [editedProfile, setEditedProfile] = useState({});
   const { isAuth } = useContext(AuthContext)
   const { user } = useContext(UserContext)
 
@@ -41,6 +46,7 @@ export default function Profile() {
         .then(data => {
           console.log("Данные профиля:", data); // Отладочный вывод
           setProfile(data);
+          setEditedProfile(data);
         })
         .catch(err => {
           console.error("Ошибка загрузки:", err);
@@ -53,6 +59,18 @@ export default function Profile() {
       setLoading(false);
     }
   }, [isAuth, user]);
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+    if (isEditing) {
+      // Здесь можно добавить логику сохранения на сервер
+      setProfile(editedProfile);
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setEditedProfile(prev => ({ ...prev, [field]: value }));
+  };
 
   if (loading) {
     return <div>Загрузка...</div>;
@@ -68,32 +86,58 @@ export default function Profile() {
 
   return (
     <div className="user-cont"> 
-      <div className="setting-navigation">
-        <h1>Setting</h1>
-          <ul>
-            <li>Personal Info</li>
-            <li>Appereance</li>
-          </ul>
-
-      </div>
-      
-    <div className="user-info">
-      <div className="user-img">
+     <SettingsNavigation /> {/* Левая панель настроек */}
+      <div className="user-info">
+        <h1>Personal Info</h1>
+        <div className="user-img">
           <img src="/src/assets/user.svg" alt="User" />
         </div>
         <div className="user-desc">
           <div className="user-name">
-            {profile.username} 
+            <label>Имя</label>
+            {isEditing ? (
+              <Input
+                value={editedProfile.username}
+                onChange={(e) => handleInputChange("username", e.target.value)}
+                className="edit-input"
+              />
+            ) : (
+              <p>{profile.username}</p>
+            )}
           </div>
           <div className="user-email">
-            {profile.email} 
+            <label>Email</label>
+            {isEditing ? (
+              <Input
+                value={editedProfile.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                className="edit-input"
+              />
+            ) : (
+              <p>{profile.email}</p>
+            )}
           </div>
-          <div className="user-bio">
-            Made design, api queries, statistics, sprint game, did some layout and supervised development.
-          </div>
+          {/* <div className="user-bio">
+            <label>About me</label>
+            {isEditing ? (
+              <Input value={editedProfile.about}
+              onChange={ (e)=> handleInputChange("about", e.target.value)}
+              className="edit-input"
+            />
+            ): (
+              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis, aperiam aut. Reiciendis corrupti dolor ipsum odio porro sunt ratione maiores?</p>
+            )}
+          
+          </div> */}
+          <Button
+            type={isEditing ? "primary" : "default"}
+            onClick={handleEditToggle}
+            className="edit-button"
+          >
+            {isEditing ? "Сохранить" : "Редактировать"}
+          </Button>
         </div>
       </div>
     </div>
-      
   );
 }
