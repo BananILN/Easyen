@@ -11,6 +11,21 @@ export const createLesson = async (formData) => {
   return data;
 };
 
+export const deleteLesson= async (id) =>{
+  const {data} = await $authHost.delete(`api/lesson/${id}`)
+  return data
+}
+
+export const updateLesson = async (id,formData) =>{
+  const { data } = await $authHost.put(`api/lesson/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+  return data;
+}
+
 export const fetchLesson = async () => {
       const { data } = await $host.get('api/lesson');
          return data

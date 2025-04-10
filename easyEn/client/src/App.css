@@ -118,6 +118,7 @@ a{
 
 .content {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: left;
@@ -262,11 +263,10 @@ img{
 
 .card{
   width: 17rem;
-  height: 18.5rem;
+  height: 19.5rem;
   background-color: rgb(23, 32, 71);
   display: flex;
   gap: 1em;
-  /* align-items: center; */
   flex-direction: column;
   justify-content: space-between;
   border-radius: 1.5em;
@@ -283,13 +283,15 @@ img{
   align-items: left;
 }
 
-.card-container{
+.card-container {
   display: flex;
   width: 100%;
+  height: 25rem;
   gap: 2em;
   justify-content: space-around;
   align-items: center;
- 
+  position: relative; 
+  
 }
 
 .title-content{
@@ -573,6 +575,127 @@ input{
   justify-content: flex-end;
   gap: 8px;
 }
+
+.lesson-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+  padding-bottom: 40px;
+  margin-left: 1.5rem;
+}
+
+.swiper-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-top: 1.5em;
+}
+/* Слайды */
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ /* Лёгкая прозрачность для неактивных слайдов */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Анимация */
+}
+.swiper-nav-prev,
+.swiper-nav-next {
+  position: absolute;
+  top: 0;
+  width: 100px; /* Ширина зоны клика */
+  height: 100%; /* Полная высота контейнера */
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+.swiper-nav-prev {
+  left: -20px; /* Смещаем влево от слайдера */
+}
+
+.swiper-nav-next {
+  right: -50px; /* Смещаем вправо от слайдера */
+}
+
+.swiper-slide-active {
+  opacity: 1; /* Активный слайд полностью непрозрачный */
+  transform: scale(1.05); /* Лёгкое увеличение активного слайда */
+}
+.swiper-nav-prev:hover,
+.swiper-nav-next:hover {
+  background-color: rgba(25, 27, 48, 0.1); /* Лёгкий фон при наведении */
+}
+
+/* Навигационные стрелки */
+.swiper-button-prev,
+.swiper-button-next {
+  width: 20px;
+  height: 20px;
+  background-color: transparent; /* Убираем фон */
+  color: rgb(196, 195, 195);
+  border: 1px solid rgb(196, 195, 195); /* Тонкая рамка */
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(45, 130, 227, 0.8); /* Цвет при наведении */
+  color: white;
+  transform: scale(1.1); /* Лёгкое увеличение при наведении */
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 12px; /* Меньший размер стрелок */
+}
+
+/* Пагинация */
+.swiper-pagination {
+  bottom: 10px !important; /* Перемещаем пагинацию ниже карточек */
+}
+
+.swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: rgb(196, 195, 195); /* Цвет неактивных точек */
+  opacity: 0.6;
+  transition: all 0.3s ease; /* Анимация */
+}
+
+.swiper-pagination-bullet-active {
+  background: #2d82e3; /* Цвет активной точки */
+  opacity: 1;
+  transform: scale(1.2); /* Лёгкое увеличение активной точки */
+}
+
+/* Убираем лишние отступы */
+.card {
+  width: 17rem;
+  height: 20.5rem;
+  background-color: rgb(23, 32, 71);
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 1.5em;
+  margin: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация наведения */
+}
+.card:hover {
+  transform: scale(1.08); /* Увеличение при наведении */
+  box-shadow: 0 4px 15px rgba(45, 130, 227, 0.3); /* Тень для эффекта поднятия */
+}
+
+
 
 @media (max-width: 1980px)  {
   

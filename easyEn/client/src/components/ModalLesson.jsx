@@ -5,7 +5,7 @@ import {Button, Input, Upload} from "antd";
 import {UploadOutlined} from "@ant-design/icons"
 
 
-export default function ModalLesson({visible, onClose, onLessonCreated}){
+export default function ModalLessonAdd({visible, onClose, onLessonCreated}){
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");

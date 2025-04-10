@@ -17,9 +17,7 @@ const authInterceptor = config => {
 };
 const errorInterceptor = error => {
     if (error.response?.status === 401) {
-        // Очищаем токен при 401 ошибке
         localStorage.removeItem('token');
-        // Можно добавить перенаправление на страницу входа
         window.location.href = '/login';
     }
     return Promise.reject(error);

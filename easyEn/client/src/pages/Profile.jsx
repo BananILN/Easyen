@@ -67,21 +67,33 @@ export default function Profile() {
   }
 
   return (
-    <div className="user-cont">
-      <div className="user-img">
-        <img src="/src/assets/user.svg" alt="User" />
+    <div className="user-cont"> 
+      <div className="setting-navigation">
+        <h1>Setting</h1>
+          <ul>
+            <li>Personal Info</li>
+            <li>Appereance</li>
+          </ul>
+
       </div>
-      <div className="user-desc">
-        <div className="user-name">
-          {profile.username} 
+      
+    <div className="user-info">
+      <div className="user-img">
+          <img src="/src/assets/user.svg" alt="User" />
         </div>
-        <div className="user-email">
-          {profile.email} 
-        </div>
-        <div className="user-bio">
-          Made design, api queries, statistics, sprint game, did some layout and supervised development.
+        <div className="user-desc">
+          <div className="user-name">
+            {profile.username} 
+          </div>
+          <div className="user-email">
+            {profile.email} 
+          </div>
+          <div className="user-bio">
+            Made design, api queries, statistics, sprint game, did some layout and supervised development.
+          </div>
         </div>
       </div>
     </div>
+      
   );
 }

@@ -28,6 +28,51 @@ class LessonController{
         }
 
     }
+    async delete(req, res, next) {
+        try {
+          const { id } = req.params;
+          const lesson = await Lesson.findByPk(id);
+          
+          if (!lesson) {
+            return res.status(404).json({ message: "Урок не найден" });
+          }
+    
+          await lesson.destroy();
+          return res.json({ message: "Урок успешно удален" });
+        } catch (e) {
+          next(ApiError.badRequest(e.message));
+        }
+      }
+
+    async update(req,res,next){
+        try {
+            const { id } = req.params;
+            const { title, content } = req.body;
+            let fileName = null;
+      
+            const lesson = await Lesson.findByPk(id);
+            if (!lesson) {
+              return res.status(404).json({ message: "Урок не найден" });
+            }
+      
+            if (req.files && req.files.img) {
+              const { img } = req.files;
+              fileName = uuidv4() + ".png";
+              await img.mv(path.resolve(__dirname, '..', 'static', fileName));
+            }
+      
+            // Обновляем только те поля, которые переданы
+            await lesson.update({
+              title: title || lesson.title,
+              content: content || lesson.content,
+              img: fileName || lesson.img,
+            });
+      
+            return res.json(lesson);
+          } catch (e) {
+            next(ApiError.badRequest(e.message));
+          }
+    }
 
     async getAll(req, res){
         const lessons = await Lesson.findAll()

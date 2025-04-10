@@ -52,12 +52,10 @@ export const loginAuth = async (email, password) => {
       return jwtDecode(data.token);
     } catch (error) {
      
-      // Добавляем более информативное сообщение об ошибке
       if (error.response) {
         // Ошибка от сервера
         throw new Error(`Ошибка сервера: ${error.response.status}`);
       } else if (error.request) {
-        // Запрос был сделан, но ответ не получен
         throw new Error("Нет ответа от сервера");
       } else {
         // Другие ошибки
