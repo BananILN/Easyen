@@ -4,8 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import SettingsNavigation from "../components/SettingNavigation";
-import { Button, Input, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Button, Input, message } from "antd";
+
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -112,14 +112,16 @@ export default function Profile() {
     setIsEditing(!isEditing);
   };
 
-  const beforeUpload = (file) => {
-    setFile(file);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreviewUrl(e.target.result);
-    };
-    reader.readAsDataURL(file);
-    return false;
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setPreviewUrl(event.target.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -136,27 +138,33 @@ export default function Profile() {
       <div className="user-info">
         <h1>Personal Info</h1>
         <div className="user-img">
-          {/* Изображение аватара с круглой формой определяется в CSS */}
-          <img
-            src={previewUrl || "/src/assets/user.svg"}
-            alt="User"
-            onError={(e) => {
-              console.error("Ошибка загрузки изображения:", previewUrl);
-              e.target.src = "/src/assets/user.svg";
-            }}
-          />
-          {isEditing && (
-            <Upload
-              beforeUpload={beforeUpload}
-              showUploadList={false}
-              accept="image/*"
-              className="upload-img"
-            >
-              <Button icon={<UploadOutlined />}>
-                {file ? file.name : "Изменить фото"}
-              </Button>
-            </Upload>
-          )}
+          <div className="avatar-wrapper">
+            <img
+              src={previewUrl || "/src/assets/user.svg"}
+              alt="User"
+              onError={(e) => {
+                console.error("Ошибка загрузки изображения:", previewUrl);
+                e.target.src = "/src/assets/user.svg";
+              }}
+            />
+            {isEditing && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="avatar-upload-input"
+              />
+            )}
+            {isEditing && (
+              <div className="avatar-overlay">
+                <span>
+                  <svg width="84" height="84" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <image href="/src/assets/changeImg.png" width="24" height="24"/>
+                </svg>
+          </span>
+              </div>
+            )}
+          </div>
         </div>
         <div className="user-desc">
           <div className="user-name">

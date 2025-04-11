@@ -1,5 +1,5 @@
 import {ThreeCircles} from 'react-loader-spinner'
-export const Loader = () =>{
+export  default function Loader (){
     return (<ThreeCircles
         visible={true}
         height="100"

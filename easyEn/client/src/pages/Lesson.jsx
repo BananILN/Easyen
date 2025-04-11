@@ -5,13 +5,13 @@ import { fetchLesson } from "../http/LessonApi";
 import { Button } from "antd";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-// Импортируем стили Swiper
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import ModalLessonAdd from "../components/ModalLesson";
 import ModalLessonEdit from "../components/ModalLessonEdit";
 import ModalLessonDelete from "../components/ModalLessonDelete";
+import Loader from "../components/Loader";
 
 const Lesson = () => {
   const { id } = useParams(); 
@@ -91,7 +91,7 @@ const Lesson = () => {
   }, [search]);
 
   if (loading) {
-      return <div>Загрузка уроков...</div>; 
+      return <div className="loader"><Loader/></div>; 
   }
 
   if (error) {

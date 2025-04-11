@@ -208,22 +208,56 @@ svg{
   font-family: var(--Mont);
   font-size: var(--font-size);
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition:  0.4s ease-in-out;
 }
 
 .header-profile:hover  {
-  color: rgb(248, 248, 248); 
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  color: rgb(170, 168, 168); 
+  filter: drop-shadow(0 0 1em #61dafbaa);
+  transition: ease-in-out 0.4s;
 }
 .header-profile:hover path {
   fill: currentColor;
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+.header-avatar-wrapper {
+  display: inline-block;
+  width: 3rem;
+  height: 3rem;
+}
+.header-avatar {
+  width: 3rem; /* Настройте размер по вашим нуждам */
+  height: 3rem;
+  border-radius: 50%; /* Делает аватарку круглой */
+  object-fit: cover; /* Обеспечивает правильное масштабирование изображения */
+}
+.header-profile.active-item .header-avatar {
+  border: 2px solid #1890ff; /* Например, синяя обводка для активного состояния */
+}
+
+.header-auth{
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.loader{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
+
 
 
 h1{
   margin: 0;
+ 
 }
+
 
 .main-home{
 display: flex;
@@ -361,7 +395,13 @@ img{
   object-fit: cover; 
   object-position: center; 
   border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
-  box-shadow: 0 4px 15px rgba(45, 130, 227, 0.3);
+  box-shadow: 0 6px 15px rgba(45, 130, 227, 0.3);
+  transition: ease-out 0.6s
+}
+.user-img img:hover{
+  border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
+  box-shadow: 0 6px 15px rgba(54, 72, 92, 0.3);
+  transition: ease-in-out 0.4s;
 }
 
 .user-desc{
@@ -785,11 +825,65 @@ input{
   box-shadow: 0 4px 15px rgba(45, 130, 227, 0.3); /* Тень для эффекта поднятия */
 }
 
+.avatar-wrapper {
+  position: relative;
+  width: 8rem;
+  height: 8rem;
+  cursor: pointer;
+}
 
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 2px solid rgb(45, 130, 227);
+  box-sizing: border-box;
+}
+.avatar-upload-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Скрываем input */
+  cursor: pointer;
+  z-index: 2; /* Выше overlay */
+}
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Затемнённый фон */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* Скрыт по умолчанию */
+  transition: opacity 0.3s ease; /* Плавное появление */
+  z-index: 1; /* Под input */
+}
+
+.avatar-overlay span {
+  color: rgb(220, 220, 220);
+  font-family: var(--Mont);
+  font-size: 1rem;
+}
+.avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
+}
 
 
 
 @media (max-width: 1980px)  {
+
+  .avatar-wrapper {
+    width: 10rem;
+    height: 10rem;
+  }
 
   .card{
     height: 21.8rem;
@@ -860,9 +954,27 @@ input{
       width: 18rem;
       height: 2.2rem;
     }
+    .user-img img {
+      width: 10rem; /* Фиксированная ширина */
+      height: 10rem; /* Фиксированная высота */
+      border-radius: 50%; /* Делаем круглым */
+      object-fit: cover; /* Изображение вписывается в круг, обрезая лишнее */
+      object-position: center; /* Центрируем изображение */
+      border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
+    }
+  
+   .img-cont img{
+    width: 20rem;
+    height: 11rem;
+   }
 }
 
 @media (max-width:1600px){
+
+  .avatar-wrapper {
+    width: 8rem;
+    height: 8rem;
+  }
 
   .user-cont{
     display: flex;
@@ -919,6 +1031,16 @@ input{
     width: 10rem;
     height: 10rem;
  
+  }
+  
+
+  .user-img img {
+    width: 8rem; /* Фиксированная ширина */
+    height: 8rem; /* Фиксированная высота */
+    border-radius: 50%; /* Делаем круглым */
+    object-fit: cover; /* Изображение вписывается в круг, обрезая лишнее */
+    object-position: center; /* Центрируем изображение */
+    border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
   }
 
   img{
@@ -929,6 +1051,12 @@ input{
 
 
 @media (max-width: 1280px){
+
+  .avatar-wrapper {
+    width: 8rem;
+    height: 8rem;
+  }
+
   .user-cont{
     display: flex;
     justify-content: center;
@@ -985,11 +1113,17 @@ input{
     height: 10rem;
  
   }
-
-  img{
-    width: 8em;
-    height: 7rem;
+  
+  .user-img img {
+    width: 9rem; 
+    height: 9rem; 
+    border-radius: 50%; 
+    object-fit: cover;  
+    object-position: center; 
+    border: 2px solid rgb(45, 130, 227); 
   }
+  
+
 
 
 }
@@ -998,6 +1132,12 @@ input{
 
 
 @media (max-width: 768px) {
+
+  .avatar-wrapper {
+    width: 10rem;
+    height: 10rem;
+  }
+
    .content{
     padding: 0 !important;
   } 
