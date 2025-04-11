@@ -1,4 +1,4 @@
-import {$authHost} from ".";
+import {$authHost, $host} from ".";
 import { jwtDecode } from "jwt-decode";
 
 export const fetchProfile = async (userId) => {
@@ -10,4 +10,20 @@ export const fetchProfile = async (userId) => {
         throw error;
     }
 };
+
+export const updateProfile = async (userId, formData) =>{
+    try{
+        const { data } = await $authHost.put(`api/profile/${userId}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+        })
+        return data;
+        }   
+    catch (error){
+        console.error();
+        console.error("Ошибка при обновлении профиля:", error);
+        throw error;
+    }
+}
 
