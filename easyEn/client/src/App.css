@@ -73,31 +73,163 @@ a{
 }
 
 
-.sidebar{
-  width: 10rem; 
+.sidebar {
+  width: 10rem;
   background-color: rgb(34, 37, 63);
-  padding: 1.2em; 
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0; /* Занимает всю ширину страницы */
-  z-index: 1000
+  transition: width 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar.collapsed {
+  width: 5rem; /* Свернутая ширина */
 }
 
-.nav-items{
+/* Логотип */
+.logo {
+  padding: 1em 0;
   display: flex;
-  gap: 0.2em;
+  align-items: center;
+  justify-content: center;
+  height: 4.9rem;
+  padding-bottom: 2.3em;
+}
+
+.logo-title {
+  color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+  font-size: var(--font-size);
+  margin-left: 0.5rem;
+  transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed .logo{
+  padding-bottom: 0.2em;
+  flex-direction: row-reverse;
+}
+
+.sidebar.collapsed .logo-title {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .hr-logo {
+  width: 3.4rem;
+}
+
+.sidebar.collapsed .hr-logo-cont {
+  padding-bottom: 3em;
+}
+
+
+.hr-logo-cont {
+  padding-bottom: 1em;
+}
+
+.hr-logo {
+  width: 7rem;
+}
+
+/* Стили для MainNavigation */
+.navigate {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6em;
+  padding: 0 0.6rem; 
+  flex-grow: 1; 
+  justify-content: space-between;
+}
+
+.sidebar.collapsed .navigate{
+  display: flex;
+  align-items: center;
+}
+
+.nav-items {
+  display: flex;
+  gap: 0.5em;
   color: rgb(196, 195, 195);
   font-family: var(--Mont);
   font-size: var(--font-size);
   transition: color 0.4s ease;
 }
 
-.active-item{
-  color: rgb(248, 248, 248); 
+.nav-items svg {
+  margin-right: 0.3em;
+}
+
+.nav-title {
+  transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed .nav-title {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.active-item {
+  color: rgb(248, 248, 248);
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+
+.active-item svg {
+  fill: rgb(248, 248, 248); 
+  stroke: rgb(247, 241, 241); 
+  filter: drop-shadow(0 0.2em 3em #61dafbaa); /* Эффект тени для иконки */
+}
+
+.nav-items:hover {
+  color: rgb(248, 248, 248);
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+.nav-items:hover path {
+  fill: currentColor;
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+.change-size {
+  margin-top: auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 2.8rem;
+}
+
+.change-size svg {
+  stroke: rgb(195, 196, 196);
+  transition: stroke 0.3s ease;
+}
+
+.change-size:hover svg {
+  stroke: #2d82e3;
+}
+
+.sidebar.collapsed + .content-wrapper {
+  margin-left: 5rem;
+  width: calc(100% - 5rem);
+}
+
+
+/* .nav-items{
+  display: flex;
+  gap: 0.2em;
+  color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+  font-size: var(--font-size);
+  transition: color 0.4s ease;
+} */
+
+/* .active-item{
+  color: rgb(248, 248, 248); 
+  filter: drop-shadow(0 0 2em #61dafbaa);
+} */
 
 
 .header-profile.active-item {
@@ -114,6 +246,8 @@ a{
   fill: currentColor; 
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+
+
 
 
 .content {
@@ -142,16 +276,20 @@ svg{
 }
 
 .logo{
-  padding:  1em 0em;
+  padding:  2em 0em;
   display: flex;
-  align-items: flex-start;
+  /* align-items: flex-start; */
   justify-content: center;
-  height: 0rem;
-  padding-bottom: 2.1em;
+  /* height: 0rem; */
+  padding-bottom: 1.3em;
   
 }
+
+.logo-title{
+  display: flex;
+}
 .hr-logo-cont{
-  padding-bottom: 1em;
+  padding-bottom: 3.6em;
 }
 
 .hr-logo{
@@ -166,15 +304,21 @@ svg{
   
 }
 
-.navigate{
+
+
+.content-wrapper {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 1em;
-  padding: 3.5rem 0.6rem;
-  
+  width: calc(100% - 10rem); /* Полная ширина минус меню */
+  margin-left: 10rem; /* Совпадает с шириной .navigate */
+  transition: margin-left 0.3s ease, width 0.3s ease-in-out; /* Анимация смещения */
 }
 
+.navigate.collapsed + .content-wrapper {
+  margin-left: 4rem; /* Смещение контента при свернутом меню */
+  width: calc(100% - 4rem); /* Увеличиваем ширину контента */
+}
 
 
 .content-wrapper {
@@ -188,6 +332,7 @@ svg{
 
 .header {
   width: 100%;
+  height: 6rem;
   background-color: rgb(39, 43, 73);
   padding: 1rem;
   display: flex;
@@ -876,6 +1021,20 @@ input{
   opacity: 1;
 }
 
+/* .sidebar {
+  width: 10rem;
+  background-color: rgb(34, 37, 63);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: width 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+} */
+
+
 
 
 @media (max-width: 1980px)  {
@@ -1189,23 +1348,7 @@ input{
     border-bottom: 0 !important;
   }
 
-  .sidebar {
-    width: 80%; 
-    height: 7rem; 
-    padding: 10px; 
-    border-right: 1px solid #444;
-  }
-
-  .navigate {
-    flex-direction: row; 
-    justify-content: space-around; 
-    padding: 10px 0; 
-  }
-
-  .nav-items {
-    font-size: 0.9rem; 
-    padding: 5px 0; 
-  }
+ 
 
   .buttonLink-logout{
     padding: 0.4em 0.4em;
