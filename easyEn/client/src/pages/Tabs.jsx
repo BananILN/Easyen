@@ -8,7 +8,7 @@ export const Tabs = ({ tabs }) =>{
         {tabs.map(({ path, title }) => (
           <li className="li-tabs" key={path}>
             <Link
-              to={`/courses/${id}/${path}`.replace(/\/+/g, '/')} // Абсолютный путь
+              to={`/courses/${id}/${path}`.replace(/\/+/g, '/')} 
               aria-current="page"
               className="inline-block p-4 text-blue-600 bg-gray-100 rounded-t-lg"
             >

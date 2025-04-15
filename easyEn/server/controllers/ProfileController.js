@@ -10,11 +10,23 @@ const __dirname = path.dirname(__filename);
 const {User} = models
 
 class ProfileController{
-        async getAll(req,res,next){
-
-                 const user = await User.findAll()
-                 return res.json(user)
+      async getAll(req, res, next) {
+        try {
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) {
+                return next(ApiError.unauthorized("Требуется авторизация"));
+            }
+            const decoded = jwtDecode(token);
+            const user = await User.findByPk(decoded.UserID);
+            if (!user || user.RoleID !== 2) {
+                return next(ApiError.forbidden("Доступ запрещён: требуется роль администратора"));
+            }
+            const users = await User.findAll();
+            return res.json(users);
+        } catch (e) {
+            return next(ApiError.internal(`Ошибка сервера: ${e.message}`));
         }
+    }
 
         async getOne(req,res,next){
             const { id } =req.params;

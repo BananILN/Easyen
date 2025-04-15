@@ -54,7 +54,6 @@ export default function ModalLessonEdit({ visible, onClose, lesson, onLessonUpda
       const updatedLesson = await updateLesson(lesson.LessonID, formData);
       message.success("Урок успешно обновлен");
 
-      // Добавляем временной параметр к URL изображения
       if (updatedLesson.img) {
         updatedLesson.imgUrl = `http://localhost:5000/static/${updatedLesson.img}?t=${new Date().getTime()}`;
       }

@@ -11,6 +11,16 @@ export const fetchProfile = async (userId) => {
     }
 };
 
+export const fetchAllUsers = async () => {
+    try {
+        const { data } = await $authHost.get(`api/profile`);
+        return data;
+    } catch (error) {
+        console.error("Ошибка при загрузке списка пользователей:", error);
+        throw error;
+    }
+};
+
 export const updateProfile = async (userId, formData) =>{
     try{
         const { data } = await $authHost.put(`api/profile/${userId}`, formData, {

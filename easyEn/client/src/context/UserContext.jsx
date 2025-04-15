@@ -13,10 +13,10 @@ export const UserProvider = ({ children }) =>{
       check()
         .then(data => {
           const userId = data.UserID;
-          return fetchProfile(userId); // Получаем полные данные профиля
+          return fetchProfile(userId); 
         })
         .then(profileData => {
-          setUser(profileData); // Устанавливаем данные с img
+          setUser(profileData); 
           console.log("Profile data set in UserContext:", profileData);
         })
         .catch(err => {

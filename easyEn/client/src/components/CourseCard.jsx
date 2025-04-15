@@ -20,9 +20,7 @@ export const CourseCard = memo(({ lesson, onEdit, onDelete }) => {
     console.error("Ошибка декодирования токена:", e);
   }
 
-  // Логируем lesson.img и lesson.imgUrl
- 
-  // Используем lesson.imgUrl, если оно есть, иначе формируем URL
+  
   const imageSrc = lesson.imgUrl 
     ? lesson.imgUrl
     : lesson.img 

@@ -79,7 +79,6 @@ const Lesson = () => {
     const getCourses = async () => {
       try {
         const data = await fetchLesson(search);
-        // Добавляем imgUrl для каждого урока
         const updatedData = data.map(item => ({
           ...item,
           imgUrl: item.img ? `http://localhost:5000/static/${item.img}?t=${new Date().getTime()}` : null
@@ -116,7 +115,7 @@ const Lesson = () => {
         onChange={handleSearchChange}
       />
       <div className="title-content">
-        <h1>Lesson</h1>
+        <h1>Уроки</h1>
       </div>
       <div>
         <div style={{ margin: "20px 0", display: "flex", justifyContent: "flex-end" }}>

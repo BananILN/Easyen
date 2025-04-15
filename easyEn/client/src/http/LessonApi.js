@@ -35,7 +35,7 @@ console.log('BaseURL:', $host.defaults.baseURL);
 
 export const fetchOneLesson = async (id) => {
   try {
-    const response = await $host.get(`api/lesson/${id}`); // Исправляем: используем шаблонную строку для вставки id
+    const response = await $host.get(`api/lesson/${id}`); 
     if (response.status !== 200) {
       throw new Error(`Ошибка ${response.status}`);
     }

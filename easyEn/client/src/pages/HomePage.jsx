@@ -11,14 +11,14 @@ export default function HomePage(){
             <div className="content-home">
                 <div className="text-content">
                 <h1 className="title-desc">
-                    Learning and
-                    teaching online,
-                    made easy.
+                Обучение и
+преподавание онлайн
+стали проще.
                 </h1>
 
                 
                 
-                <span className="span-under-title-desc">Practice your English and learn new things with the platform.</span>
+                <span className="span-under-title-desc">Практикуйте английский и изучайте новое с нашей платформой.</span>
                 <LinkButton to={LESSON_ROUTE} title="Lesson"/>
                 </div>
             </div>

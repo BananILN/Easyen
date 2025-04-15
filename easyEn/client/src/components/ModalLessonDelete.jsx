@@ -15,7 +15,7 @@ export default function ModalLessonDelete({ visible, onClose, lesson, onLessonDe
 
     try {
       const decoded = jwtDecode(token);
-      if (decoded.RoleID !== 2) { // Только админ
+      if (decoded.RoleID !== 2) {
         message.error('Недостаточно прав');
         return;
       }

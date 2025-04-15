@@ -53,12 +53,10 @@ export const loginAuth = async (email, password) => {
     } catch (error) {
      
       if (error.response) {
-        // Ошибка от сервера
         throw new Error(`Ошибка сервера: ${error.response.status}`);
       } else if (error.request) {
         throw new Error("Нет ответа от сервера");
       } else {
-        // Другие ошибки
         throw error;
       }
     }

@@ -44,14 +44,14 @@ export default function LessonDetails (){
 
 
     return <div className="lesson-details-page">
-    {/* Верхняя часть с заблюренным фоном */}
+    
     <div
       className="lesson-header"
       style={{
         backgroundImage: lesson.img
           ? `url(${import.meta.env.VITE_API_URL}/static/${lesson.img})`
           : "none",
-        backgroundColor: lesson.img ? "transparent" : "rgb(34, 37, 63)", // Запасной фон в тон дизайна
+        backgroundColor: lesson.img ? "transparent" : "rgb(34, 37, 63)", 
       }}
     >
       <div className="lesson-header-overlay">
@@ -59,7 +59,7 @@ export default function LessonDetails (){
       </div>
     </div>
 
-    {/* Содержимое урока */}
+   
     <div className="lesson-content-container">
       <h3 className="lesson-content-title">Описание урока:</h3>
       <div
@@ -69,7 +69,7 @@ export default function LessonDetails (){
         }}
       />
 
-      {/* Кнопка "Начать тест" */}
+      
       <Link to={`/lesson/${id}/test`}>
       <button className="start-quiz-button">
         Начать тест
@@ -77,7 +77,7 @@ export default function LessonDetails (){
       </Link>
   
 
-      {/* Ссылка "Назад" */}
+      
       <Link to={LESSON_ROUTE} className="back-link">
         ← Назад к списку уроков
       </Link>

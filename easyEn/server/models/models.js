@@ -11,7 +11,7 @@ const User = sequelize.define('User', {
     username: { type: DataTypes.STRING, unique: true, allowNull: false }, 
     email: { type: DataTypes.STRING, unique: true, allowNull: false }, 
     password: { type: DataTypes.STRING, allowNull: false }, 
-    img: { type: DataTypes.STRING, allowNull: true }, // Изображение пользователя необязательное
+    img: { type: DataTypes.STRING, allowNull: true }, 
     RoleID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
@@ -24,9 +24,9 @@ const Lesson = sequelize.define('Lesson', {
 
 const Progress = sequelize.define('Progress', {
     ProgressID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    completed: { type: DataTypes.BOOLEAN, defaultValue: false }, // По умолчанию прогресс не завершен
-    UserID: { type: DataTypes.INTEGER, allowNull: false }, // Пользователь обязательный
-    LessonID: { type: DataTypes.INTEGER, allowNull: false } //  обязательный
+    completed: { type: DataTypes.BOOLEAN, defaultValue: false }, 
+    UserID: { type: DataTypes.INTEGER, allowNull: false }, 
+    LessonID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 
@@ -34,21 +34,21 @@ const Progress = sequelize.define('Progress', {
 const Test = sequelize.define('Test', {
     TestID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 
-    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, allowNull: true }, // Дата создания автоматически заполняется
+    createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, allowNull: true }, 
     LessonID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const Question = sequelize.define('Question', {
     QuestionID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     QuestionText: { type: DataTypes.TEXT, allowNull: false }, 
-    IsMultipleChoice: { type: DataTypes.BOOLEAN, defaultValue: false }, // По умолчанию вопрос не множественного выбора
+    IsMultipleChoice: { type: DataTypes.BOOLEAN, defaultValue: false }, 
     TestID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 
 const Answer = sequelize.define('Answer', {
     AnswerID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     AnswerText: { type: DataTypes.TEXT, allowNull: false }, 
-    IsCorrect: { type: DataTypes.BOOLEAN, defaultValue: false }, // По умолчанию ответ неправильный
+    IsCorrect: { type: DataTypes.BOOLEAN, defaultValue: false }, 
     QuestionID: { type: DataTypes.INTEGER, allowNull: false } 
 });
 

@@ -84,7 +84,7 @@ const Auth = () => {
         }}
         onFinish={onFinish}
       >
-        {!isLoginForm && ( // Поле username только для регистрации
+        {!isLoginForm && ( 
           <Form.Item
             name="username"
             rules={[

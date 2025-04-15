@@ -1,4 +1,3 @@
-// Test.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { fetchTestByLesson, fetchQuestionsByTest, fetchAnswersByQuestion, submitTestResult } from "../http/TestApi";
@@ -6,52 +5,52 @@ import Loader from "../components/Loader";
 import { Button } from "antd";
 
 const Test = () => {
-  const { id: lessonId } = useParams(); // ID урока из URL
+  const { id: lessonId } = useParams(); 
   const navigate = useNavigate();
-  const [test, setTest] = useState(null); // Состояние для теста
-  const [questions, setQuestions] = useState([]); // Состояние для вопросов
-  const [answers, setAnswers] = useState({}); // Храним ответы: { QuestionID: [AnswerID, ...] }
-  const [selectedAnswers, setSelectedAnswers] = useState({}); // Храним выбранные ответы: { QuestionID: [AnswerID, ...] }
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Индекс текущего вопроса
-  const [loading, setLoading] = useState(true); // Состояние загрузки
-  const [error, setError] = useState(null); // Состояние ошибки
-  const [score, setScore] = useState(null); // Результат теста в процентах
-  const [testNotFound, setTestNotFound] = useState(false); // Состояние для случая, когда тест не найден
-  const [results, setResults] = useState([]); // Состояние для хранения результатов по каждому вопросу
+  const [test, setTest] = useState(null); 
+  const [questions, setQuestions] = useState([]); 
+  const [answers, setAnswers] = useState({}); 
+  const [selectedAnswers, setSelectedAnswers] = useState({}); 
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [score, setScore] = useState(null); 
+  const [testNotFound, setTestNotFound] = useState(false); 
+  const [results, setResults] = useState([]); 
 
-  // Загрузка теста, вопросов и ответов
+
   useEffect(() => {
     const loadTestData = async () => {
       try {
         setLoading(true);
 
-        // 1. Получаем тест по LessonID
+       
         const testData = await fetchTestByLesson(lessonId);
         if (!testData) {
-          setTestNotFound(true); // Если тест не найден, устанавливаем флаг
+          setTestNotFound(true); 
           return;
         }
         setTest(testData);
 
-        // 2. Получаем вопросы по TestID
+    
         const questionsData = await fetchQuestionsByTest(testData.TestID);
         if (questionsData.length === 0) {
           throw new Error("Вопросы для теста не найдены");
         }
-        // Ограничиваем до 15 вопросов
+      
         const limitedQuestions = questionsData.slice(0, 15);
         setQuestions(limitedQuestions);
 
-        // 3. Получаем ответы для каждого вопроса и инициализируем selectedAnswers
+        
         const answersData = {};
         const initialSelectedAnswers = {};
         for (const question of limitedQuestions) {
           const questionAnswers = await fetchAnswersByQuestion(question.QuestionID);
           answersData[question.QuestionID] = questionAnswers;
-          initialSelectedAnswers[question.QuestionID] = []; // Инициализируем пустой массив для каждого вопроса
+          initialSelectedAnswers[question.QuestionID] = []; 
         }
         setAnswers(answersData);
-        setSelectedAnswers(initialSelectedAnswers); // Устанавливаем начальные выбранные ответы
+        setSelectedAnswers(initialSelectedAnswers);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -62,12 +61,12 @@ const Test = () => {
     loadTestData();
   }, [lessonId]);
 
-  // Обработка выбора ответа
+ 
   const handleAnswerSelect = (questionId, answerId, isMultipleChoice) => {
     setSelectedAnswers((prev) => {
       const currentSelection = prev[questionId] || [];
       if (isMultipleChoice) {
-        // Для множественного выбора
+       
         if (currentSelection.includes(answerId)) {
           return {
             ...prev,
@@ -80,7 +79,7 @@ const Test = () => {
           };
         }
       } else {
-        // Для одиночного выбора
+       
         return {
           ...prev,
           [questionId]: [answerId],
@@ -89,35 +88,32 @@ const Test = () => {
     });
   };
 
-  // Проверка, выбран ли хотя бы один ответ для текущего вопроса
+
   const isAnswerSelected = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const currentQuestionId = currentQuestion.QuestionID;
     const userAnswers = selectedAnswers[currentQuestionId] || [];
-    return userAnswers.length > 0; // Возвращает true, если выбран хотя бы один ответ
+    return userAnswers.length > 0; 
   };
 
-  // Переход к следующему вопросу
+
   const handleNextQuestion = () => {
     if (!isAnswerSelected()) {
-      return; // Не переходим к следующему вопросу, если ответ не выбран
+      return; 
     }
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // Завершение теста
       calculateScore();
     }
   };
 
-  // Переход к предыдущему вопросу
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
-  // Подсчёт результата и создание детализированных результатов
   const calculateScore = () => {
     let correctAnswers = 0;
     const detailedResults = [];
@@ -139,7 +135,6 @@ const Test = () => {
 
       if (isCorrect) correctAnswers++;
 
-      // Собираем информацию о вопросе и ответах
       const userAnswerTexts = userAnswers.map((answerId) =>
         answers[question.QuestionID].find((ans) => ans.AnswerID === answerId)?.AnswerText || "Не выбрано"
       );
@@ -155,11 +150,11 @@ const Test = () => {
       });
     });
 
-    const finalScore = Math.round((correctAnswers / questions.length) * 100); // Процент правильных ответов
+    const finalScore = Math.round((correctAnswers / questions.length) * 100); 
     setScore(finalScore);
-    setResults(detailedResults); // Сохраняем детализированные результаты
+    setResults(detailedResults); 
 
-    // Отправка результата на сервер
+   
     const userId = localStorage.getItem('userId');
     if (userId && test) {
       submitTestResult(test.TestID, userId, finalScore);
@@ -244,7 +239,7 @@ const Test = () => {
               <input
                 type={currentQuestion.IsMultipleChoice ? "checkbox" : "radio"}
                 checked={selectedAnswers[currentQuestion.QuestionID]?.includes(answer.AnswerID) || false}
-                onChange={() => {}} // Пустой onChange для предотвращения предупреждения React
+                onChange={() => {}} 
               />
               <span>{answer.AnswerText}</span>
             </div>
@@ -252,12 +247,10 @@ const Test = () => {
         </div>
       </div>
 
-      {/* Сообщение, если ответ не выбран */}
       {!isAnswerSelected() && (
         <p className="warning-message">Пожалуйста, выберите хотя бы один ответ, чтобы продолжить.</p>
       )}
 
-      {/* Навигация */}
       <div className="navigation-buttons">
         <Button
           disabled={currentQuestionIndex === 0}
@@ -268,13 +261,12 @@ const Test = () => {
         <Button
           type="primary"
           onClick={handleNextQuestion}
-          disabled={!isAnswerSelected()} // Кнопка заблокирована, если ответ не выбран
+          disabled={!isAnswerSelected()} 
         >
           {currentQuestionIndex === questions.length - 1 ? "Завершить" : "Далее"}
         </Button>
       </div>
 
-      {/* Прогресс-бар */}
       <div className="progress-bar-container">
         <div
           className="progress-bar"
