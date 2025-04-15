@@ -15,9 +15,12 @@ class AnswerController{
     }
 
     async getAll(req, res) {
-        const answers = await Answer.findAll();
+        const { QuestionID } = req.query;
+        const answers = await Answer.findAll({
+          where: QuestionID ? { QuestionID } : {},
+        });
         return res.json(answers);
-    }
+      }
 
     async getOne(req, res, next) {
         const { id } = req.params;

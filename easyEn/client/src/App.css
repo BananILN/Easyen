@@ -52,14 +52,14 @@ body{
 }
 
 .loader{
-  display: flex; /* Включаем Flexbox */
-  height: 100vh; /* Занимает всю высоту экрана */
+  display: flex; 
+  height: 100vh; 
 color: blue;
 }
 
 .main{
-  display: flex; /* Включаем Flexbox */
-  height: auto; /* Занимает всю высоту экрана */
+  display: flex; 
+  height: auto; 
   background-color: rgb(44, 48, 80);
   
 }
@@ -92,7 +92,6 @@ a{
   
 }
 
-/* Логотип */
 .logo {
   padding: 1em 0;
   display: flex;
@@ -138,7 +137,6 @@ a{
   width: 7rem;
 }
 
-/* Стили для MainNavigation */
 .navigate {
   display: flex;
   flex-direction: column;
@@ -198,8 +196,7 @@ a{
 .active-item svg {
   fill: rgb(248, 248, 248); 
   stroke: rgb(247, 241, 241); 
-  filter: drop-shadow(0 0.2em 3em #000708aa); /* Эффект тени для иконки */
-  /* transition: color 0.6s ease-in-out; */
+  filter: drop-shadow(0 0.2em 3em #000708aa); 
 }
 
 
@@ -242,16 +239,11 @@ a{
 
 
 .header-profile.active-item {
-  color: rgb(248, 248, 248); /* Цвет для активного состояния */
+  color: rgb(248, 248, 248); 
 }
 
 
 
-/* .nav-items:hover path {
-  fill: currentColor; 
-  filter: drop-shadow(0 0 2em #61dafbaa);
-  transition: color 0.6s ease-in-out;
-} */
 
 
 
@@ -263,7 +255,6 @@ a{
   flex-direction: column;
   justify-content: left;
   align-items: left;
-  /* padding: 1rem; */
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 auto; 
@@ -284,9 +275,7 @@ svg{
 .logo{
   padding:  2em 0em;
   display: flex;
-  /* align-items: flex-start; */
   justify-content: center;
-  /* height: 0rem; */
   padding-bottom: 1.3em;
   
 }
@@ -316,15 +305,15 @@ svg{
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  width: calc(100% - 10rem); /* Полная ширина минус меню */
-  margin-left: 10rem; /* Совпадает с шириной .navigate */
-  transition: margin-left 0.3s ease, width 0.3s ease-in-out; /* Анимация смещения */
+  width: calc(100% - 10rem); 
+  margin-left: 10rem; 
+  transition: margin-left 0.3s ease, width 0.3s ease-in-out; 
   min-height: 100vh;
 }
 
 .navigate.collapsed + .content-wrapper {
-  margin-left: 4rem; /* Смещение контента при свернутом меню */
-  width: calc(100% - 4rem); /* Увеличиваем ширину контента */
+  margin-left: 4rem; 
+  width: calc(100% - 4rem); 
 }
 
 
@@ -332,7 +321,7 @@ svg{
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  width: calc(100% - 10rem); /* Ширина контента минус ширина сайдбара */
+  width: calc(100% - 10rem);
   margin-left: 10rem; 
   overflow-x: hidden;
 }
@@ -347,7 +336,6 @@ svg{
   align-items: center;
   border-bottom: 1px solid #444;
   box-sizing: border-box; 
-  /* margin-bottom: 2em; */
   
   
 }
@@ -378,13 +366,13 @@ svg{
   height: 3rem;
 }
 .header-avatar {
-  width: 3rem; /* Настройте размер по вашим нуждам */
+  width: 3rem; 
   height: 3rem;
-  border-radius: 50%; /* Делает аватарку круглой */
-  object-fit: cover; /* Обеспечивает правильное масштабирование изображения */
+  border-radius: 50%;
+  object-fit: cover; 
 }
 .header-profile.active-item .header-avatar {
-  border: 2px solid #1890ff; /* Например, синяя обводка для активного состояния */
+  border: 2px solid #1890ff;
 }
 
 .header-auth{
@@ -417,11 +405,11 @@ padding: 1em;
 }
 
 .content-home{
-  width: 100%; /* Занимает всю ширину контейнера */
+  width: 100%; 
   display: flex;
-  flex-direction: row; /* Располагаем элементы в строку */
-  align-items: center; /* Выравниваем по вертикали */
-  justify-content: space-between; /* Разделяем пространство между элементами */
+  flex-direction: row; 
+  align-items: center; 
+  justify-content: space-between; 
   color: var(--color);
   font-family: var(--Mont);
   margin-left: 2em;
@@ -437,9 +425,9 @@ padding: 1em;
 }
 
 .image-cont{
-  flex: 1; /* Занимает вторую половину контейнера */
+  flex: 1; 
   display: flex;
-  justify-content: flex-end; /* Выравниваем изображение по правому краю */
+  justify-content: flex-end; 
   align-items: center;
 }
 
@@ -545,17 +533,17 @@ img{
   gap: 1rem;
 }
 .user-img img {
-  width: 10rem; /* Фиксированная ширина */
-  height: 10rem; /* Фиксированная высота */
-  border-radius: 50%; /* Делаем круглым */
+  width: 10rem; 
+  height: 10rem; 
+  border-radius: 50%; 
   object-fit: cover; 
   object-position: center; 
-  border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
+  border: 2px solid rgb(45, 130, 227); 
   box-shadow: 0 6px 15px rgba(45, 130, 227, 0.3);
   transition: ease-out 0.6s
 }
 .user-img img:hover{
-  border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
+  border: 2px solid rgb(45, 130, 227); 
   box-shadow: 0 6px 15px rgba(54, 72, 92, 0.3);
   transition: ease-in-out 0.4s;
 }
@@ -594,7 +582,7 @@ padding-left: 2em;
 }
 .edit-input {
   width: 100%;
-  max-width: 20rem; /* Ограничим ширину инпутов */
+  max-width: 20rem; 
 }
 
 .edit-button {
@@ -740,7 +728,6 @@ input{
   font-family: var(--Mont);
 }
 
-/* Стили для инпутов */
 .ant-input,
 .ant-input-textarea {
   background-color: rgb(23, 32, 71);
@@ -755,7 +742,6 @@ input{
   color: #666;
 }
 
-/* Обновленные стили для кнопок */
 .ant-btn {
   border-radius: 0.5rem;
   font-family: var(--Mont);
@@ -788,7 +774,6 @@ input{
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Обновленные стили для инпутов */
 .ant-input,
 .ant-input-textarea {
   background-color: rgb(20, 28, 60);
@@ -817,7 +802,6 @@ input{
   color: #777;
 }
 
-/* Обновленные стили для загрузки файлов */
 .ant-upload {
   color: rgb(220, 220, 220);
 }
@@ -834,7 +818,6 @@ input{
   color: rgb(240, 240, 240);
 }
 
-/* Дополнительные стили для текста в формах */
 .form-group label {
   color: rgb(220, 220, 220);
 }
@@ -883,20 +866,19 @@ input{
 }
 
 
-/* Слайды */
 .swiper-slide {
   display: flex;
   justify-content: center;
   align-items: center;
- /* Лёгкая прозрачность для неактивных слайдов */
-  transition: opacity 0.3s ease, transform 0.3s ease; /* Анимация */
+
+  transition: opacity 0.3s ease, transform 0.3s ease; 
 }
 .swiper-nav-prev,
 .swiper-nav-next {
   position: absolute;
   top: 0;
-  width: 100px; /* Ширина зоны клика */
-  height: 100%; /* Полная высота контейнера */
+  width: 100px; 
+  height: 100%;
   z-index: 10;
   cursor: pointer;
   display: flex;
@@ -905,65 +887,64 @@ input{
   transition: background-color 0.3s ease;
 }
 .swiper-nav-prev {
-  left: -20px; /* Смещаем влево от слайдера */
+  left: -20px; 
 }
 
 .swiper-nav-next {
-  right: -50px; /* Смещаем вправо от слайдера */
+  right: -50px; 
 }
 
 .swiper-slide-active {
-  opacity: 1; /* Активный слайд полностью непрозрачный */
-  transform: scale(1.05); /* Лёгкое увеличение активного слайда */
+  opacity: 1; 
+  transform: scale(1.05); 
 }
 .swiper-nav-prev:hover,
 .swiper-nav-next:hover {
-  background-color: rgba(25, 27, 48, 0.1); /* Лёгкий фон при наведении */
+  background-color: rgba(25, 27, 48, 0.1); 
 }
 
-/* Навигационные стрелки */
+
 .swiper-button-prev,
 .swiper-button-next {
   width: 20px;
   height: 20px;
-  background-color: transparent; /* Убираем фон */
+  background-color: transparent; 
   color: rgb(196, 195, 195);
-  border: 1px solid rgb(196, 195, 195); /* Тонкая рамка */
+  border: 1px solid rgb(196, 195, 195); 
   border-radius: 50%;
   transition: all 0.3s ease;
 }
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
-  background-color: rgba(45, 130, 227, 0.8); /* Цвет при наведении */
+  background-color: rgba(45, 130, 227, 0.8); 
   color: white;
-  transform: scale(1.1); /* Лёгкое увеличение при наведении */
+  transform: scale(1.1);
 }
 
 .swiper-button-prev::after,
 .swiper-button-next::after {
-  font-size: 12px; /* Меньший размер стрелок */
+  font-size: 12px; 
 }
 
 /* Пагинация */
 .swiper-pagination {
-  bottom: 0px !important; /* Перемещаем пагинацию ниже карточек */
+  bottom: 0px !important; 
 }
 
 .swiper-pagination-bullet {
   width: 8px;
   height: 8px;
-  background: rgb(196, 195, 195); /* Цвет неактивных точек */
+  background: rgb(196, 195, 195); 
   opacity: 0.6;
-  transition: all 0.3s ease; /* Анимация */
+  transition: all 0.3s ease; 
 }
 
 .swiper-pagination-bullet-active {
-  background: #2d82e3; /* Цвет активной точки */
+  background: #2d82e3; 
   opacity: 1;
-  transform: scale(1.2); /* Лёгкое увеличение активной точки */
+  transform: scale(1.2); 
 }
 
-/* Убираем лишние отступы */
 .card {
   width: 17rem;
   height: 20.5rem;
@@ -974,11 +955,11 @@ input{
   justify-content: space-between;
   border-radius: 1.5em;
   margin: 0;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация наведения */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 .card:hover {
-  transform: scale(1.08); /* Увеличение при наведении */
-  box-shadow: 0 4px 15px rgba(45, 130, 227, 0.3); /* Тень для эффекта поднятия */
+  transform: scale(1.08); 
+  box-shadow: 0 4px 15px rgba(45, 130, 227, 0.3); 
 }
 
 .avatar-wrapper {
@@ -1003,9 +984,9 @@ input{
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0; /* Скрываем input */
+  opacity: 0; 
   cursor: pointer;
-  z-index: 2; /* Выше overlay */
+  z-index: 2; 
 }
 .avatar-overlay {
   position: absolute;
@@ -1013,14 +994,14 @@ input{
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Затемнённый фон */
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0; /* Скрыт по умолчанию */
-  transition: opacity 0.3s ease; /* Плавное появление */
-  z-index: 1; /* Под input */
+  opacity: 0; 
+  transition: opacity 0.3s ease; 
+  z-index: 1; 
 }
 
 .avatar-overlay span {
@@ -1041,10 +1022,10 @@ input{
   height: 100%;
 }
 
-/* Верхняя часть с заблюренным фоном */
+
 .lesson-header {
   position: relative;
-  height: 50vh; /* Половина высоты экрана */
+  height: 50vh; 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1053,21 +1034,19 @@ input{
   align-items: center;
 }
 
-/* Оверлей с блюром */
 .lesson-header-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Полупрозрачный чёрный оверлей */
-  backdrop-filter: blur(15px); /* Блюр фона */
+  background: rgba(0, 0, 0, 0.5); 
+  backdrop-filter: blur(15px); 
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Название урока */
 .lesson-title {
   color: rgb(220, 220, 220);
   font-size: 3rem;
@@ -1077,20 +1056,18 @@ input{
   padding: 0 20px;
 }
 
-/* Контейнер содержимого урока */
 .lesson-content-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
-  background-color: rgb(255, 255, 255); /* Цвет контейнера в тон вашему дизайну */
-  border-radius: 1.5rem; /* Скругление углов */
+  background-color: rgb(255, 255, 255); 
+  border-radius: 1.5rem; 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  margin-top: -80px; /* Контейнер заходит на lesson-header */
-  position: relative; /* Для наложения */
-  z-index: 10; /* Чтобы контейнер был поверх фона */
+  margin-top: -80px; 
+  position: relative; 
+  z-index: 10; 
 }
 
-/* Заголовок "Описание урока" */
 .lesson-content-title {
   font-size: 1.5rem;
   margin-bottom: 25px;
@@ -1098,20 +1075,17 @@ input{
   font-weight: 600;
 }
 
-/* Содержимое урока */
 .lesson-content {
   font-size: 1.1rem;
   line-height: 1.8;
   color: rgb(48, 47, 47);
 }
 
-/* Абзацы */
 .lesson-content p {
   margin-bottom: 1.5rem;
   text-align: justify;
 }
 
-/* Заголовки внутри содержимого (например, h2, h3) */
 .lesson-content h2 {
   font-size: 1.4rem;
   color: rgb(0, 0, 0);
@@ -1128,21 +1102,18 @@ input{
   font-weight: 500;
 }
 
-/* Выделение текста (например, через <strong> или <b>) */
 .lesson-content strong,
 .lesson-content b {
-  color: #414242; /* Акцентный цвет для выделения */
+  color: #414242;
   font-weight: 600;
 }
 
-/* Курсив (например, через <em> или <i>) */
 .lesson-content em,
 .lesson-content i {
   color: rgb(0, 0, 0);
   font-style: italic;
 }
 
-/* Списки */
 .lesson-content ul,
 .lesson-content ol {
   margin-bottom: 1.5rem;
@@ -1154,7 +1125,6 @@ input{
   color: rgb(75, 75, 75);
 }
 
-/* Код или технические термины (например, через <code>) */
 .lesson-content code {
   background-color: rgb(78, 78, 78);
   color: #54f0db;
@@ -1164,7 +1134,6 @@ input{
   font-size: 0.95rem;
 }
 
-/* Цитаты (например, через <blockquote>) */
 .lesson-content blockquote {
   border-left: 4px solid #2b84e9;
   padding-left: 1rem;
@@ -1174,7 +1143,6 @@ input{
   background-color: #ecfcfcc4;
 }
 
-/* Выделение ключевых терминов (можно добавить класс .key-term) */
 .lesson-content .key-term {
   background-color: rgba(45, 130, 227, 0.1);
   color: #2d82e3;
@@ -1183,7 +1151,6 @@ input{
   font-weight: 500;
 }
 
-/* Кнопка "Начать тест" */
 .start-quiz-button {
   display: block;
   margin: 30px auto;
@@ -1202,7 +1169,6 @@ input{
   background-color: #0056b3;
 }
 
-/* Ссылка "Назад" */
 .back-link {
   display: inline-block;
   margin-top: 20px;
@@ -1217,7 +1183,6 @@ input{
   text-decoration: underline;
 }
 
-/* Стили для состояния загрузки */
 .loading {
   text-align: center;
   padding: 50px;
@@ -1225,7 +1190,6 @@ input{
   color: #555;
 }
 
-/* Стили для ошибки */
 .error {
   text-align: center;
   padding: 50px;
@@ -1233,7 +1197,6 @@ input{
   color: #d9534f;
 }
 
-/* Стили для "Урок не найден" */
 .not-found {
   text-align: center;
   padding: 50px;
@@ -1241,6 +1204,139 @@ input{
   color: #555;
 }
 
+.test-page {
+  background: rgb(6, 31, 48); 
+  color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+  min-height: 100vh; 
+  height: auto; 
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.test-page h1 {
+  color: rgb(250, 250, 250);
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.question-container {
+  max-width: 800px;
+  width: 100%;
+  background-color: rgb(23, 32, 71);
+  border-radius: 1.5rem;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.question-container h2 {
+  color: rgb(220, 220, 220);
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.question-text {
+  color: rgb(196, 195, 195);
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.answers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.answer-option {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: rgb(34, 37, 63);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.answer-option:hover {
+  background-color: rgb(45, 130, 227, 0.2);
+}
+
+.answer-option.selected {
+  background-color: rgba(45, 130, 227, 0.4);
+}
+
+.answer-option input {
+  margin-right: 10px;
+}
+
+.answer-option span {
+  color: rgb(196, 195, 195);
+  font-size: 1.1rem;
+}
+
+.navigation-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  max-width: 800px;
+  background-color: rgb(34, 37, 63);
+  border-radius: 0.5rem;
+  height: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #2d82e3;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(220, 220, 220);
+  font-size: 0.9rem;
+}
+
+.results-details {
+  margin-top: 20px;
+}
+
+.result-item {
+  border: 1px solid #ddd;
+  color: black;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 15px;
+}
+
+.result-item.correct {
+  background-color: #36c761;
+  border-color: #2c743d;
+}
+
+.result-item.incorrect {
+  background-color: #c46464;
+  border-color: #c46e76;
+}
+
+.result-item h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.result-item p {
+  margin: 5px 0;
+}
 
 
 
@@ -1312,7 +1408,7 @@ input{
     }
     .edit-input {
       width: 100%;
-      max-width: 25rem; /* Ограничим ширину инпутов */
+      max-width: 25rem;
     }
     
     .edit-button {
@@ -1321,12 +1417,12 @@ input{
       height: 2.2rem;
     }
     .user-img img {
-      width: 10rem; /* Фиксированная ширина */
-      height: 10rem; /* Фиксированная высота */
-      border-radius: 50%; /* Делаем круглым */
-      object-fit: cover; /* Изображение вписывается в круг, обрезая лишнее */
-      object-position: center; /* Центрируем изображение */
-      border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
+      width: 10rem; 
+      height: 10rem; 
+      border-radius: 50%; 
+      object-fit: cover; 
+      object-position: center; 
+      border: 2px solid rgb(45, 130, 227); 
     }
   
    .img-cont img{
@@ -1401,12 +1497,12 @@ input{
   
 
   .user-img img {
-    width: 8rem; /* Фиксированная ширина */
-    height: 8rem; /* Фиксированная высота */
-    border-radius: 50%; /* Делаем круглым */
-    object-fit: cover; /* Изображение вписывается в круг, обрезая лишнее */
-    object-position: center; /* Центрируем изображение */
-    border: 2px solid rgb(45, 130, 227); /* Опционально: рамка для стиля */
+    width: 8rem; 
+    height: 8rem; 
+    border-radius: 50%; 
+    object-fit: cover;
+    object-position: center; 
+    border: 2px solid rgb(45, 130, 227);
   }
 
   img{

@@ -35,21 +35,19 @@ console.log('BaseURL:', $host.defaults.baseURL);
 
 export const fetchOneLesson = async (id) => {
   try {
-    const response = await $host.get(`api/lesson/${id}`);
-    
+    const response = await $host.get(`api/lesson/${id}`); // Исправляем: используем шаблонную строку для вставки id
     if (response.status !== 200) {
-        throw new Error(`Ошибка ${response.status}`);
+      throw new Error(`Ошибка ${response.status}`);
     }
-    
     return response.data;
-} catch (error) {
+  } catch (error) {
     console.error("Ошибка запроса:", {
-        url: error.config.url,
-        status: error.response?.status,
-        data: error.response?.data
+      url: error.config.url,
+      status: error.response?.status,
+      data: error.response?.data,
     });
     throw error;
-}
-}
+  }
+};
 
  

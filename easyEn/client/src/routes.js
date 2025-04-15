@@ -29,7 +29,7 @@ export const authRoutes = [
     {
         path:LESSDETAILS_ROUTE,
         Component: LessonDetails
-    }
+    },
 
 
 ]

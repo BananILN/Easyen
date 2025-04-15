@@ -4,12 +4,14 @@ import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { NavLink, Navigate } from 'react-router';
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, PROFILE_ROUTE, HOME_ROUTE } from '../index'; 
 import { AuthContext } from '../context/AuthContext'; 
+import { UserContext } from '../context/UserContext';
 import './Auth.css'; 
 import { registrationAuth, loginAuth } from '../http/userApi';
 
 const Auth = () => {
   const [isLoginForm, setIsLoginForm] = useState(true); 
   const { isAuth, login } = useContext(AuthContext); 
+  const { setUser } = useContext(UserContext)
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -21,12 +23,18 @@ const Auth = () => {
      
         response = await loginAuth(email, password);
         console.log("Ответ при входе:", response);
-        login(); 
+        login(response); 
+        localStorage.setItem("userId", response.UserID);
+        setUser(response);
         message.success('Вы успешно авторизовались!');
       } else {
        
         response = await registrationAuth(email, username, password);
         console.log("Ответ при регистрации:", response);
+        
+        localStorage.setItem("userId", response.UserID);
+        setUser(response);
+
         message.success('Вы успешно зарегистрировались!');
         setIsLoginForm(true); 
       }

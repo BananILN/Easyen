@@ -27,7 +27,9 @@ function App() {
       }
       
       const data = await check();
+      localStorage.setItem("userId", data.UserID);
       login(data);
+      setUser(data);
     } catch (error) {
       if (error.message !== "Токен отсутствует") {
         console.error("Auth check failed:", error);
@@ -35,7 +37,7 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }, [login]); // Только login в зависимостях
+  }, [login, setUser]); // Только login в зависимостях
 
   useEffect(() => {
     checkAuth();

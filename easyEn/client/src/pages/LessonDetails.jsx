@@ -42,10 +42,6 @@ export default function LessonDetails (){
         return <div>Урок не найден</div>
     }
 
-    const handleStartQuiz = () => {
-        // Предполагаем, что у вас есть маршрут для теста, например, /lesson/:id/quiz
-        navigate(`/lesson/${id}/quiz`);
-      };
 
     return <div className="lesson-details-page">
     {/* Верхняя часть с заблюренным фоном */}
@@ -74,8 +70,8 @@ export default function LessonDetails (){
       />
 
       {/* Кнопка "Начать тест" */}
-      <Link to={TEST_ROUTE}>
-      <button className="start-quiz-button" onClick={handleStartQuiz}>
+      <Link to={`/lesson/${id}/test`}>
+      <button className="start-quiz-button">
         Начать тест
       </button>
       </Link>

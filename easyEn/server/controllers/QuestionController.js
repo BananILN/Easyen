@@ -15,11 +15,13 @@ class QuestionController{
         
     }
 
-    async getAll(req, res){
-        const question = await Question.findAll()
-        return res.json(question)
-    }
-
+    async getAll(req, res) {
+        const { TestID } = req.query;
+        const questions = await Question.findAll({
+          where: TestID ? { TestID } : {},
+        });
+        return res.json(questions);
+      }
 
     async getOne(req, res ,next){
         const { id } = req.params;
