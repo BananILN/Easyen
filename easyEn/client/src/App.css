@@ -5,7 +5,7 @@ body{
   color: var(--color);
   font-family: var(--Mont);
     overflow-x: hidden;
-  
+  height: auto;
 }
 
 :root{
@@ -22,6 +22,7 @@ body{
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
+  
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
@@ -58,8 +59,9 @@ color: blue;
 
 .main{
   display: flex; /* Включаем Flexbox */
-  height: 100vh; /* Занимает всю высоту экрана */
+  height: auto; /* Занимает всю высоту экрана */
   background-color: rgb(44, 48, 80);
+  
 }
 
 a{
@@ -87,6 +89,7 @@ a{
 }
 .sidebar.collapsed {
   width: 5rem; /* Свернутая ширина */
+  
 }
 
 /* Логотип */
@@ -156,15 +159,28 @@ a{
   color: rgb(196, 195, 195);
   font-family: var(--Mont);
   font-size: var(--font-size);
-  transition: color 0.4s ease;
+  transition:  0.6s ease-in-out ;
 }
+
+.nav-items:hover {
+  color: rgb(248, 248, 248); 
+  filter: drop-shadow(0 0 2em #61dafbaa);
+  transition:  0.6s ease-out ;
+}
+
 
 .nav-items svg {
   margin-right: 0.3em;
+  /* transition: color 0.6s ease-in-out; */
 }
 
 .nav-title {
-  transition: opacity 0.3s ease, width 0.3s ease;
+  /* transition: opacity 0.6s ease-in-out, width 0.6s ease-in-out; */
+}
+
+.nav-title:hover {
+  color: #f1f1f1;
+
 }
 
 .sidebar.collapsed .nav-title {
@@ -173,26 +189,19 @@ a{
   overflow: hidden;
 }
 
-.active-item {
+.active-item  .nav-title{
   color: rgb(248, 248, 248);
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0.6em 3em #61dafbaa);
+  
 }
 
 .active-item svg {
   fill: rgb(248, 248, 248); 
   stroke: rgb(247, 241, 241); 
-  filter: drop-shadow(0 0.2em 3em #61dafbaa); /* Эффект тени для иконки */
+  filter: drop-shadow(0 0.2em 3em #000708aa); /* Эффект тени для иконки */
+  /* transition: color 0.6s ease-in-out; */
 }
 
-.nav-items:hover {
-  color: rgb(248, 248, 248);
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-.nav-items:hover path {
-  fill: currentColor;
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
 
 .change-size {
   margin-top: auto;
@@ -226,10 +235,10 @@ a{
   transition: color 0.4s ease;
 } */
 
-/* .active-item{
+.active-item{
   color: rgb(248, 248, 248); 
   filter: drop-shadow(0 0 2em #61dafbaa);
-} */
+}
 
 
 .header-profile.active-item {
@@ -237,15 +246,12 @@ a{
 }
 
 
-.nav-items:hover {
-  color: rgb(248, 248, 248); 
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
 
-.nav-items:hover path {
+/* .nav-items:hover path {
   fill: currentColor; 
   filter: drop-shadow(0 0 2em #61dafbaa);
-}
+  transition: color 0.6s ease-in-out;
+} */
 
 
 
@@ -257,7 +263,7 @@ a{
   flex-direction: column;
   justify-content: left;
   align-items: left;
-  padding: 1rem;
+  /* padding: 1rem; */
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 auto; 
@@ -313,6 +319,7 @@ svg{
   width: calc(100% - 10rem); /* Полная ширина минус меню */
   margin-left: 10rem; /* Совпадает с шириной .navigate */
   transition: margin-left 0.3s ease, width 0.3s ease-in-out; /* Анимация смещения */
+  min-height: 100vh;
 }
 
 .navigate.collapsed + .content-wrapper {
@@ -340,7 +347,7 @@ svg{
   align-items: center;
   border-bottom: 1px solid #444;
   box-sizing: border-box; 
-  margin-bottom: 2em;
+  /* margin-bottom: 2em; */
   
   
 }
@@ -406,7 +413,7 @@ h1{
 
 .main-home{
 display: flex;
-
+padding: 1em;
 }
 
 .content-home{
@@ -438,6 +445,10 @@ display: flex;
 
 img{
   /* padding-top: 0.5em; */
+}
+
+.lesson-main-page{
+  padding: 1em;
 }
 
 .card{
@@ -1021,18 +1032,214 @@ input{
   opacity: 1;
 }
 
-/* .sidebar {
-  width: 10rem;
-  background-color: rgb(34, 37, 63);
-  height: 100vh;
-  position: fixed;
+.lesson-details-page {
+
+  background-color: #232457;
+  color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+  position: relative;
+  height: 100%;
+}
+
+/* Верхняя часть с заблюренным фоном */
+.lesson-header {
+  position: relative;
+  height: 50vh; /* Половина высоты экрана */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Оверлей с блюром */
+.lesson-header-overlay {
+  position: absolute;
   top: 0;
   left: 0;
-  transition: width 0.3s ease;
-  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Полупрозрачный чёрный оверлей */
+  backdrop-filter: blur(15px); /* Блюр фона */
   display: flex;
-  flex-direction: column;
-} */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Название урока */
+.lesson-title {
+  color: rgb(220, 220, 220);
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 0 20px;
+}
+
+/* Контейнер содержимого урока */
+.lesson-content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: rgb(255, 255, 255); /* Цвет контейнера в тон вашему дизайну */
+  border-radius: 1.5rem; /* Скругление углов */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  margin-top: -80px; /* Контейнер заходит на lesson-header */
+  position: relative; /* Для наложения */
+  z-index: 10; /* Чтобы контейнер был поверх фона */
+}
+
+/* Заголовок "Описание урока" */
+.lesson-content-title {
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  color: rgb(31, 30, 30);
+  font-weight: 600;
+}
+
+/* Содержимое урока */
+.lesson-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgb(48, 47, 47);
+}
+
+/* Абзацы */
+.lesson-content p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+/* Заголовки внутри содержимого (например, h2, h3) */
+.lesson-content h2 {
+  font-size: 1.4rem;
+  color: rgb(0, 0, 0);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.lesson-content h3 {
+  font-size: 1.2rem;
+  color: rgb(34, 34, 34);
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+
+/* Выделение текста (например, через <strong> или <b>) */
+.lesson-content strong,
+.lesson-content b {
+  color: #414242; /* Акцентный цвет для выделения */
+  font-weight: 600;
+}
+
+/* Курсив (например, через <em> или <i>) */
+.lesson-content em,
+.lesson-content i {
+  color: rgb(0, 0, 0);
+  font-style: italic;
+}
+
+/* Списки */
+.lesson-content ul,
+.lesson-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+.lesson-content li {
+  margin-bottom: 0.5rem;
+  color: rgb(75, 75, 75);
+}
+
+/* Код или технические термины (например, через <code>) */
+.lesson-content code {
+  background-color: rgb(78, 78, 78);
+  color: #54f0db;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95rem;
+}
+
+/* Цитаты (например, через <blockquote>) */
+.lesson-content blockquote {
+  border-left: 4px solid #2b84e9;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: rgb(53, 52, 52);
+  font-style: italic;
+  background-color: #ecfcfcc4;
+}
+
+/* Выделение ключевых терминов (можно добавить класс .key-term) */
+.lesson-content .key-term {
+  background-color: rgba(45, 130, 227, 0.1);
+  color: #2d82e3;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Кнопка "Начать тест" */
+.start-quiz-button {
+  display: block;
+  margin: 30px auto;
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.start-quiz-button:hover {
+  background-color: #0056b3;
+}
+
+/* Ссылка "Назад" */
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Стили для состояния загрузки */
+.loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* Стили для ошибки */
+.error {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: #d9534f;
+}
+
+/* Стили для "Урок не найден" */
+.not-found {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: #555;
+}
 
 
 

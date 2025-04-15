@@ -11,12 +11,11 @@ export default function ModalLessonEdit({ visible, onClose, lesson, onLessonUpda
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Заполняем поля данными урока при открытии
   useEffect(() => {
     if (lesson) {
       setTitle(lesson.title || "");
       setContent(lesson.content || "");
-      setFile(null); // Сбрасываем файл, так как он не загружается автоматически
+      setFile(null);
     }
   }, [lesson]);
 
@@ -29,7 +28,7 @@ export default function ModalLessonEdit({ visible, onClose, lesson, onLessonUpda
 
     try {
       const decoded = jwtDecode(token);
-      if (decoded.RoleID !== 2) { // Только админ
+      if (decoded.RoleID !== 2) {
         message.error('Недостаточно прав');
         return;
       }
@@ -54,6 +53,11 @@ export default function ModalLessonEdit({ visible, onClose, lesson, onLessonUpda
 
       const updatedLesson = await updateLesson(lesson.LessonID, formData);
       message.success("Урок успешно обновлен");
+
+      // Добавляем временной параметр к URL изображения
+      if (updatedLesson.img) {
+        updatedLesson.imgUrl = `http://localhost:5000/static/${updatedLesson.img}?t=${new Date().getTime()}`;
+      }
 
       onLessonUpdated(updatedLesson);
       handleClose();

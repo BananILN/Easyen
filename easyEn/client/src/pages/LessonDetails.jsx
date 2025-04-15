@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import { fetchOneLesson } from "../http/LessonApi"
 import { Link } from "react-router"
-import { LESSON_ROUTE } from ".."
+import { LESSON_ROUTE, TEST_ROUTE } from ".."
+import Loader from "../components/Loader"
 
 export default function LessonDetails (){
 
@@ -10,6 +11,7 @@ export default function LessonDetails (){
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const { id } = useParams()
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadLesson = async () => {
@@ -29,7 +31,7 @@ export default function LessonDetails (){
     }, [id])
 
     if (loading) {
-        return <div>Загрузка урока...</div>
+        return <Loader/>
     }
 
     if (error) {
@@ -39,33 +41,50 @@ export default function LessonDetails (){
     if (!lesson) {
         return <div>Урок не найден</div>
     }
-    return <>
-       <div className="lesson-details-container">
-            <h1 className="lesson-title">{lesson.title}</h1>
-            
-            {lesson.img && (
-                <img
-                    src={`${import.meta.env.VITE_API_URL}${lesson.img}`}
-                    alt={lesson.title}
-                    className="lesson-image"
-                    onError={(e) => {
-                        e.target.style.display = 'none';
-                    }}
-                />
-            )}
-            
-            <div className="lesson-content-wrapper">
-                <h3>Описание урока:</h3>
-                <div 
-                    className="lesson-content"
-                    dangerouslySetInnerHTML={{ 
-                        __html: lesson.content || "<p>Описание урока отсутствует</p>" 
-                    }}
-                />
-            </div>
-            <Link to={LESSON_ROUTE} className="back-link">
-                ← Назад к списку уроков
-            </Link>
-        </div>
-    </>
+
+    const handleStartQuiz = () => {
+        // Предполагаем, что у вас есть маршрут для теста, например, /lesson/:id/quiz
+        navigate(`/lesson/${id}/quiz`);
+      };
+
+    return <div className="lesson-details-page">
+    {/* Верхняя часть с заблюренным фоном */}
+    <div
+      className="lesson-header"
+      style={{
+        backgroundImage: lesson.img
+          ? `url(${import.meta.env.VITE_API_URL}/static/${lesson.img})`
+          : "none",
+        backgroundColor: lesson.img ? "transparent" : "rgb(34, 37, 63)", // Запасной фон в тон дизайна
+      }}
+    >
+      <div className="lesson-header-overlay">
+        <h1 className="lesson-title">{lesson.title}</h1>
+      </div>
+    </div>
+
+    {/* Содержимое урока */}
+    <div className="lesson-content-container">
+      <h3 className="lesson-content-title">Описание урока:</h3>
+      <div
+        className="lesson-content"
+        dangerouslySetInnerHTML={{
+          __html: lesson.content || "<p>Описание урока отсутствует</p>",
+        }}
+      />
+
+      {/* Кнопка "Начать тест" */}
+      <Link to={TEST_ROUTE}>
+      <button className="start-quiz-button" onClick={handleStartQuiz}>
+        Начать тест
+      </button>
+      </Link>
+  
+
+      {/* Ссылка "Назад" */}
+      <Link to={LESSON_ROUTE} className="back-link">
+        ← Назад к списку уроков
+      </Link>
+    </div>
+  </div>
 }
