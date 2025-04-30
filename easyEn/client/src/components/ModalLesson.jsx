@@ -32,8 +32,13 @@ export default function ModalLessonAdd({visible, onClose, onLessonCreated}){
             message.error('Ошибка проверки прав доступа');
         }
 
-        if(!title.trim()){
-            message.error("Введите название урока");
+        const trimmedTitle = title.trim();
+
+          const isValidTitle = /^[a-zA-ZА-Яа-я0-9\s.,!?:-]{3,1000}$/.test(trimmedTitle);
+          if (!isValidTitle) {
+            message.error(
+              "Название должно содержать от 3 до 100 символов, без специальных символов типа @#$%^&*"
+            );
             return;
         }
 

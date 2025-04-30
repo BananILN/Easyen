@@ -33,14 +33,14 @@ class UserController {
         const hashPassword = await bcrypt.hash(password, 5);
       
         const user = await User.create({ username, email, RoleID: RoleID, password: hashPassword });
-        console.log("Созданный пользователь:", user); // Проверьте, что user содержит UserID
+        console.log("Созданный пользователь:", user); 
       
         if (!user.UserID) {
           return next(ApiError.internal("Ошибка при создании пользователя: UserID не найден"));
         }
       
         const token = generateJwt(user.UserID, user.username, user.email, user.RoleID);
-        console.log("Декодированный токен:", jwt.decode(token)); // Проверьте содержимое токена
+        console.log("Декодированный токен:", jwt.decode(token)); 
       
         return res.json({ token });
       }

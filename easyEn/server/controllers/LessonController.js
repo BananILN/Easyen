@@ -40,7 +40,7 @@ class LessonController{
           if (lesson.img) {
             const filePath = path.resolve(__dirname, '..', 'static', lesson.img);
             if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath); // Удаляем файл
+              fs.unlinkSync(filePath); 
             }
           }
     
