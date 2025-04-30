@@ -12,6 +12,14 @@ const generateJwt =  (UserID, username, email, RoleID) =>{
         );
 }
 
+const generateTempJwt = (username, email, hashPassword, RoleID) =>{
+  return jwt.sign({username, email, hashPassword, RoleID}, process.env.SECRET_KEY, {expiresIn: '10m'});
+}
+
+const generateVerificationCode = () =>{
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 class UserController {
     async registration(req, res, next) {
         const { username, email, password, RoleID = 1 } = req.body;
