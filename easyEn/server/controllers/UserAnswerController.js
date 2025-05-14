@@ -35,7 +35,7 @@ class UserAnswerController {
     }
   }
 
-  // Новый метод для удаления ответов пользователя для теста и пользователя
+
   async deleteByTestAndUser(req, res, next) {
     try {
       const { testId, userId } = req.params;

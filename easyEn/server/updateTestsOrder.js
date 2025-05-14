@@ -8,7 +8,7 @@ const updateTestOrders = async () => {
     await sequelize.authenticate();
     console.log('База данных подключена');
 
-    // Обновляем порядок тестов
+   
     await Test.update({ order: 1 }, { where: { TestID: 1 } });
     await Test.update({ order: 2 }, { where: { TestID: 2 } });
  

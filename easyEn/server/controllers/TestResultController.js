@@ -8,20 +8,19 @@ class TestResultController {
     try {
       const { TestID, UserID, Score, timeTaken } = req.body;
 
-      // Проверяем, существует ли уже результат для данного теста и пользователя
       let testResult = await TestResult.findOne({
         where: { TestID, UserID },
       });
 
       if (testResult) {
-        // Обновляем существующий результат
+      
         await testResult.update({
           Score,
           CompletedAt: new Date(),
           timeTaken,
         });
       } else {
-        // Создаем новый результат, если его нет
+       
         testResult = await TestResult.create({
           TestID,
           UserID,

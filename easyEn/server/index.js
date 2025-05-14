@@ -27,7 +27,7 @@ app.use('/static', express.static(staticPath));
 app.use(fileUpload({}));
 app.use('/api', router);
 
-// Перехват всех остальных маршрутов (только после static и api)
+
 // app.get('*', (req, res) => {
 //   console.log("Перехват маршрута:", req.originalUrl);
 //   res.sendFile(path.resolve(__dirname, '../../dist/index.html'));

@@ -11,9 +11,9 @@ export default function HomePage(){
             <div className="content-home">
                 <div className="text-content">
                 <h1 className="title-desc">
-                Обучение и
-преподавание онлайн
-стали проще.
+                        Обучение и
+                    преподавание онлайн
+                    стали проще.
                 </h1>
 
                 

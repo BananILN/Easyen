@@ -23,7 +23,7 @@ export default function LessonDetails() {
   const [completedTests, setCompletedTests] = useState([]);
   const [testHistory, setTestHistory] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [showResults, setShowResults] = useState(false); // Убираем зависимость от URL
+  const [showResults, setShowResults] = useState(false); 
 
   useEffect(() => {
     const loadLesson = async () => {
@@ -102,7 +102,7 @@ export default function LessonDetails() {
       setCurrentTestIndex(nextIndex);
       setSearchParams({ currentTestIndex: nextIndex });
     } else {
-      setShowResults(true); // Показываем результаты без изменения URL
+      setShowResults(true); 
     }
   };
 
@@ -160,7 +160,7 @@ export default function LessonDetails() {
   };
 
   const handleFinishLesson = () => {
-    setShowResults(true); // Показываем результаты без изменения URL
+    setShowResults(true); 
   };
 
   const handleBackToLessons = () => {

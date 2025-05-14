@@ -176,13 +176,13 @@ const Test = () => {
 
     const userId = user?.UserID;
     if (userId && test) {
-      // Очищаем существующие ответы перед сохранением новых
+ 
       const existingUserAnswers = await fetchUserAnswersByTest(test.TestID, userId);
       if (existingUserAnswers.length > 0) {
         await deleteUserAnswersByTest(test.TestID, userId);
       }
 
-      // Сохранение новых ответов
+   
       try {
         await Promise.all(
           userAnswersToSave.map((userAnswer) => saveUserAnswers(userAnswer))
@@ -192,7 +192,7 @@ const Test = () => {
         console.error("Ошибка при сохранении ответов пользователя:", err);
       }
 
-      // Обновляем или создаем результат теста
+      
       await fetch(`${import.meta.env.VITE_API_URL}/api/testResult`, {
         method: 'POST',
         headers: {
@@ -209,7 +209,7 @@ const Test = () => {
         console.error("Ошибка при отправке результата теста:", err);
       });
 
-      // Сохранение прогресса
+  
       await saveProgress(userId, test.LessonID, test.TestID, true);
     }
   };
@@ -230,7 +230,7 @@ const Test = () => {
     if (hasNextTest) {
       navigate(`/lesson/${test.LessonID}?currentTestIndex=${savedCompletedTests.length}`);
     } else {
-      // Если тестов больше нет, переходим напрямую на страницу результатов
+      
       navigate(`/lesson/${test.LessonID}/results`);
     }
   };
@@ -251,7 +251,7 @@ const Test = () => {
     if (hasNextTest) {
       navigate(`/lesson/${test.LessonID}?currentTestIndex=${savedCompletedTests.length}`);
     } else {
-      // Если тестов больше нет, переходим напрямую на страницу результатов
+      
       navigate(`/lesson/${test.LessonID}/results`);
     }
   };
