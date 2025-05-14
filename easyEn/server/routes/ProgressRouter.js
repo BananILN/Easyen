@@ -6,3 +6,4 @@ export const router = new Router();
 
 router.post('/', ProgressController.create)
 router.get('/', ProgressController.getAll)
+router.get('/user/:userId/lesson/:lessonId', ProgressController.getByUserAndLesson);

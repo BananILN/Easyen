@@ -5,6 +5,7 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import { HOME_ROUTE } from "..";
+import  defaultImg   from "../assets/user.svg";
 import ExitIcon from "../assets/exit.svg?react";
 import { fetchProfile } from "../http/ProfileApi"; 
 
@@ -29,7 +30,7 @@ export default function Header() {
     };
 
     loadProfile();
-  }, [isAuth, user, setUser]);
+  }, [isAuth, user?.UserID, setUser]);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -43,8 +44,8 @@ export default function Header() {
   console.log("User data in Header:", user);
   const avatarUrl = user && user.img
     ? `${import.meta.env.VITE_API_URL}/static/${user.img}`
-    : "/src/assets/user.svg";
-  console.log("Generated avatar URL:", avatarUrl);
+    : defaultImg;
+  // console.log("Generated avatar URL:", avatarUrl);
 
   if (loading) {
     return <header className="header">Загрузка...</header>;

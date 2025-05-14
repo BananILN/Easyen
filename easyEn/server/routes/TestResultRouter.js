@@ -5,5 +5,7 @@ import authMiddleware from "../middleware/authMiddleware.js";
 
 export const router = new Router();
 
-router.post('/',authMiddleware, TestResultController.create)
-router.get('/', TestResultController.getAll)
+router.post('/', authMiddleware, TestResultController.createOrUpdate);
+router.get('/', TestResultController.getAll);
+router.get('/:id', TestResultController.getOne);
+router.get('/lesson/:lessonId/user/:userId', TestResultController.getByLessonAndUser);

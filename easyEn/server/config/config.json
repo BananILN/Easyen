@@ -2,25 +2,22 @@
   "development": {
     "username": "postgres",
     "password": "12030609",
-    "database": "Easyen",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "port": 5432
+    "database": "EasyEnv2",
+    "host": "localhost",
+    "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "12030609",
-    "database": "Easyen",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "port": 5432
+    "database": "EasyEnv2",
+    "host": "localhost",
+    "dialect": "postgres"
   },
   "production": {
-    "username": "postgres", 
+    "username": "postgres",
     "password": "12030609",
-    "database": "Easyen_prod",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "port": 5432
+    "database": "EasyEnv2",
+    "host": "localhost",
+    "dialect": "postgres"
   }
 }

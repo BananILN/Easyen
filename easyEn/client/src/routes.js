@@ -8,6 +8,7 @@ import  Lesson  from "./pages/Lesson"
 import HomePage from "./pages/HomePage"
 import Profile from "./pages/Profile"
 import LessonDetails  from "./pages/LessonDetails"
+import TestResults from "./pages/TestResults.jsx"
 
 export const authRoutes = [
     {
@@ -30,6 +31,10 @@ export const authRoutes = [
         path:LESSDETAILS_ROUTE,
         Component: LessonDetails
     },
+    {
+        path: "/test-results/:lessonId",
+        Component: TestResults
+    }
 
 
 ]

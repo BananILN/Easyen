@@ -20,13 +20,16 @@ const Lesson = sequelize.define('Lesson', {
     title: { type: DataTypes.STRING, allowNull: false }, 
     content: { type: DataTypes.TEXT, allowNull: true },
     img: { type: DataTypes.STRING, allowNull: true }, 
+    sections: { type: DataTypes.JSON, allowNull: true, defaultValue: [] }
 });
 
-const Progress = sequelize.define('Progress', {
+const Progresses = sequelize.define('Progresses', {
     ProgressID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     completed: { type: DataTypes.BOOLEAN, defaultValue: false }, 
     UserID: { type: DataTypes.INTEGER, allowNull: false }, 
-    LessonID: { type: DataTypes.INTEGER, allowNull: false } 
+    LessonID: { type: DataTypes.INTEGER, allowNull: false },
+    TestID: { type: DataTypes.INTEGER, allowNull: true }, 
+    CompletedAt: { type: DataTypes.DATE, allowNull: true }
 });
 
 
@@ -35,7 +38,8 @@ const Test = sequelize.define('Test', {
     TestID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 
     createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, allowNull: true }, 
-    LessonID: { type: DataTypes.INTEGER, allowNull: false } 
+    LessonID: { type: DataTypes.INTEGER, allowNull: false } ,
+    order: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 }
 });
 
 const Question = sequelize.define('Question', {
@@ -57,7 +61,8 @@ const TestResult = sequelize.define('TestResult', {
     Score: { type: DataTypes.INTEGER, allowNull: false }, 
     CompletedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }, 
     TestID: { type: DataTypes.INTEGER, allowNull: false }, 
-    UserID: { type: DataTypes.INTEGER, allowNull: false } 
+    UserID: { type: DataTypes.INTEGER, allowNull: false },
+    timeTaken: { type: DataTypes.INTEGER, allowNull: true }
 });
 
 const Groups = sequelize.define('Groups', {
@@ -81,17 +86,35 @@ const TeacherGroup = sequelize.define('TeacherGroup', {
     primaryKey: false 
 });
 
+const UserAnswer = sequelize.define('UserAnswer', {
+  UserAnswerID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  UserID: { type: DataTypes.INTEGER, allowNull: false },
+  QuestionID: { type: DataTypes.INTEGER, allowNull: false },
+  AnswerID: { type: DataTypes.INTEGER, allowNull: false },
+  TestID: { type: DataTypes.INTEGER, allowNull: false },
+});
 
-   
+User.hasMany(UserAnswer, { foreignKey: 'UserID' });
+UserAnswer.belongsTo(User, { foreignKey: 'UserID' });
+
+Question.hasMany(UserAnswer, { foreignKey: 'QuestionID' });
+UserAnswer.belongsTo(Question, { foreignKey: 'QuestionID' });
+
+Answer.hasMany(UserAnswer, { foreignKey: 'AnswerID' });
+UserAnswer.belongsTo(Answer, { foreignKey: 'AnswerID' });
+
+Test.hasMany(UserAnswer, { foreignKey: 'TestID' });
+UserAnswer.belongsTo(Test, { foreignKey: 'TestID' });
+
 
 Role.hasMany(User, { foreignKey: 'RoleID' });
 User.belongsTo(Role, { foreignKey: 'RoleID' });
 
-User.hasMany(Progress, { foreignKey: 'UserID' });
-Progress.belongsTo(User, { foreignKey: 'UserID' });
+User.hasMany(Progresses, { foreignKey: 'UserID' });
+Progresses.belongsTo(User, { foreignKey: 'UserID' });
 
-Lesson.hasMany(Progress, { foreignKey: 'LessonID' });
-Progress.belongsTo(Lesson, { foreignKey: 'LessonID' });
+Lesson.hasMany(Progresses, { foreignKey: 'LessonID' });
+Progresses.belongsTo(Lesson, { foreignKey: 'LessonID' });
 
 Lesson.hasMany(Test, { foreignKey: 'LessonID' });
 Test.belongsTo(Lesson, { foreignKey: 'LessonID' });
@@ -130,14 +153,15 @@ TeacherGroup.belongsTo(User, { foreignKey: 'TeacherID' });
     User,
     Role,
     Lesson,
-    Progress,
+    Progresses,
     Test,
     TestResult,
     Question,
     Answer,
     Groups,
     StudentGroup,
-    TeacherGroup
+    TeacherGroup,
+    UserAnswer
 }
 
  

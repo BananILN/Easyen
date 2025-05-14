@@ -1,4 +1,3 @@
-// server/controllers/TestController.js
 import { models } from '../models/models.js';
 import ApiError from '../Error/ApiErrors.js';
 

@@ -40,7 +40,7 @@ const start = async () => {
     console.log('Попытка подключения к базе данных...');
     await sequelize.authenticate();
     console.log('База данных подключена');
-    await sequelize.sync();
+    // await sequelize.sync();
     console.log('Таблицы синхронизированы');
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
   } catch (error) {

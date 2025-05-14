@@ -1154,7 +1154,7 @@ input{
 }
 
 .start-quiz-button {
-  display: block;
+  display: flex;
   margin: 30px auto;
   padding: 12px 30px;
   font-size: 1.2rem;
@@ -1340,6 +1340,16 @@ input{
   margin: 5px 0;
 }
 
+
+.button-container{
+  padding: 10px;
+}
+
+.next-part{
+  display: flex ;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
 
 
 @media (max-width: 1980px)  {

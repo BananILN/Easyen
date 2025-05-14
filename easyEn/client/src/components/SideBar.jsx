@@ -1,4 +1,4 @@
-import Logo from '../assets/Language.svg?react';
+import Logo from '../assets/planetIcon.svg?react';
 import { NavLink } from 'react-router';
 
 
