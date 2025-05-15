@@ -1351,6 +1351,130 @@ input{
     flex-wrap: wrap;
 }
 
+/* Общий контейнер страницы статистики */
+.stat-page {
+  background: rgb(44, 48, 80); /* Соответствует .main */
+  color: rgb(196, 195, 195);
+  font-family: var(--Mont);
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Контейнер статистики */
+.stat-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px; /* Соответствует .lesson-content-container */
+  width: 100%;
+  padding: 20px;
+}
+
+/* Заголовок страницы */
+.stat-title {
+  color: rgb(220, 220, 220) !important; /* Соответствует .lesson-title */
+  font-size: 2.5rem !important;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1em !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Карточка для графика времени */
+.activity {
+  width: 100%;
+  max-width: 64rem;
+  background-color: rgb(23, 32, 71);
+  border-radius: 1.5em;
+  padding: 1em;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.activity:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(45, 130, 227, 0.3);
+}
+
+/* Контейнер для двух графиков (Pie и Column) */
+.stat-charts {
+  display: flex;
+  gap: 2em;
+  width: 100%;
+  max-width: 64rem;
+  justify-content: space-between;
+}
+
+/* Стили для карточек графиков */
+.stat-card {
+  flex: 1;
+  background-color: rgb(23, 32, 71) !important;
+  color: rgb(196, 195, 195) !important;
+  border-radius: 1.5em !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  padding: 1em !important;
+}
+
+.stat-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(45, 130, 227, 0.3) !important;
+}
+
+/* Адаптивность */
+@media (max-width: 1280px) {
+  .stat-cont {
+    max-width: 1000px;
+    padding: 15px;
+  }
+
+  .stat-title {
+    font-size: 2rem !important;
+  }
+
+  .activity {
+    max-width: 100%;
+  }
+
+  .stat-charts {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-page {
+    padding: 20px 10px;
+  }
+
+  .stat-cont {
+    padding: 10px;
+  }
+
+  .stat-title {
+    font-size: 1.8rem !important;
+  }
+
+  .activity {
+    padding: 0.5em;
+  }
+
+  .stat-charts {
+    flex-direction: column;
+    gap: 1.5em;
+  }
+
+  .stat-card {
+    width: 100%;
+    padding: 0.5em !important;
+  }
+}
+
 
 @media (max-width: 1980px)  {
 

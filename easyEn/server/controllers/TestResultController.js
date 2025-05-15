@@ -1,42 +1,44 @@
 import { models } from '../models/models.js';
 import ApiError from '../Error/ApiErrors.js';
 
-const { TestResult, Test, UserAnswer, Question, Answer } = models;
+const { TestResult, Test, UserAnswer, Question, Answer,User } = models;
 
 class TestResultController {
-  async createOrUpdate(req, res, next) {
-    try {
-      const { TestID, UserID, Score, timeTaken } = req.body;
+ async createOrUpdate(req, res, next) {
+  try {
+    const { TestID, UserID, Score, timeTaken } = req.body;
 
-      let testResult = await TestResult.findOne({
-        where: { TestID, UserID },
-      });
-
-      if (testResult) {
-      
-        await testResult.update({
-          Score,
-          CompletedAt: new Date(),
-          timeTaken,
-        });
-      } else {
-       
-        testResult = await TestResult.create({
-          TestID,
-          UserID,
-          Score,
-          timeTaken,
-          CompletedAt: new Date(),
-        });
-      }
-
-      return res.json(testResult);
-    } catch (e) {
-      console.error(e);
-      return next(ApiError.badRequest(e.message));
+    const parsedTimeTaken = timeTaken !== undefined ? parseInt(timeTaken) : 0;
+    if (isNaN(parsedTimeTaken) || parsedTimeTaken < 0) {
+      return next(ApiError.badRequest('timeTaken должен быть неотрицательным целым числом'));
     }
-  }
 
+    let testResult = await TestResult.findOne({
+      where: { TestID, UserID },
+    });
+
+    if (testResult) {
+      await testResult.update({
+        Score,
+        CompletedAt: new Date(),
+        timeTaken: parsedTimeTaken,
+      });
+    } else {
+      testResult = await TestResult.create({
+        TestID,
+        UserID,
+        Score,
+        timeTaken: parsedTimeTaken,
+        CompletedAt: new Date(),
+      });
+    }
+
+    return res.json(testResult);
+  } catch (e) {
+    console.error(e);
+    return next(ApiError.badRequest(e.message));
+  }
+}
   async getAll(req, res, next) {
     try {
       const testResults = await TestResult.findAll();
@@ -122,6 +124,65 @@ class TestResultController {
       return next(ApiError.badRequest(e.message));
     }
   }
+ async getStatistics(req, res, next) {
+  try {
+    const testResults = await TestResult.findAll({
+      include: [
+        { model: User },
+        {
+          model: Test,
+          include: [
+            {
+              model: Question,
+              include: [
+                { model: Answer },
+                {
+                  model: UserAnswer,
+                  include: [{ model: Answer }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    const statistics = testResults.map(result => {
+      const detailedResults = result.Test.Questions.map(q => {
+        const userAnswers = q.UserAnswers?.length
+          ? q.UserAnswers.map(ua => (ua.Answer ? ua.Answer.AnswerText : 'Неизвестный ответ'))
+          : [];
+        const correctAnswers = q.Answers?.length
+          ? q.Answers.filter(a => a.IsCorrect).map(a => a.AnswerText)
+          : [];
+        return {
+          questionText: q.QuestionText,
+          userAnswers,
+          correctAnswers,
+          isCorrect: userAnswers.length === correctAnswers.length && userAnswers.every((ua, idx) => ua === correctAnswers[idx]),
+        };
+      });
+
+      return {
+        ResultID: result.ResultID,
+        Score: result.Score,
+        CompletedAt: result.CompletedAt,
+        TestID: result.TestID,
+        UserID: result.UserID,
+        username: result.User.username,
+        timeTaken: Math.floor(Number(result.timeTaken) || 0), // Гарантируем целое число
+        detailedResults,
+      };
+    });
+
+    return res.json(statistics);
+  } catch (e) {
+    console.error(e);
+    return next(ApiError.badRequest(e.message));
+  }
 }
+}
+
+
 
 export default new TestResultController();
