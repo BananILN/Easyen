@@ -17,7 +17,7 @@ export default function ThemeContext({children}) {
 
     useEffect(() => {
       if (user && user.theme && user.theme !== theme) {
-        setTheme(user.theme); // Если тема в профиле отличается, обновляем её
+        setTheme(user.theme); 
       }
     }, [user]);
     

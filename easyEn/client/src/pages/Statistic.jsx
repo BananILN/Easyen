@@ -2,13 +2,13 @@ import { useEffect, useState, useContext } from 'react';
 import { Card, Typography } from 'antd';
 import { Column } from '@ant-design/charts';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import { PieChart, Pie, Cell } from 'recharts'; // Импортируем для PieChartWithCustomizedLabel
+import { PieChart, Pie, Cell } from 'recharts'; 
 import { fetchStatistics } from '../http/StatisticApi';
 import { UserContext } from '../context/UserContext';
 
 const { Title } = Typography;
 
-// Функция для кастомных меток в PieChartWithCustomizedLabel
+
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, type }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -68,7 +68,7 @@ export default function Statistic() {
   if (error) return <div className="error">Ошибка: {error}</div>;
   if (!user) return <div className="error">Пользователь не авторизован</div>;
 
-  // 1. График времени прохождения тестов (в секундах) с использованием recharts
+  // 1
   const timeChartData = statistics
     .filter(result => {
       const timeTaken = Number(result.timeTaken);
@@ -89,7 +89,7 @@ export default function Statistic() {
 
   console.log('Данные для графика времени:', timeChartData);
 
-  // 2. Круговая диаграмма для правильных/неправильных ответов
+  // 2
   const answerStats = statistics.reduce(
     (acc, result) => {
       if (result.detailedResults && Array.isArray(result.detailedResults)) {
@@ -121,7 +121,7 @@ export default function Statistic() {
 
   const COLORS = ['#1890ff', '#ff4d4f'];
 
-  // 3. Столбчатая диаграмма для количества тестов по пользователям
+  // 3
   const userTestCount = statistics.reduce((acc, result) => {
     const username = result.username || `Пользователь ${result.UserID}`;
     acc[username] = (acc[username] || 0) + 1;

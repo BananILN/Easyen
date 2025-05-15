@@ -170,7 +170,7 @@ class TestResultController {
         TestID: result.TestID,
         UserID: result.UserID,
         username: result.User.username,
-        timeTaken: Math.floor(Number(result.timeTaken) || 0), // Гарантируем целое число
+        timeTaken: Math.floor(Number(result.timeTaken) || 0), 
         detailedResults,
       };
     });
