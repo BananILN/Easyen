@@ -93,42 +93,48 @@ class LessonController{
         return res.json(lessons)
     }
 
-    async getOne(req, res, next) {
-        try {
-            const { id } = req.params;
-            const lesson = await Lesson.findByPk(id, {
-                include: [
-                    {
-                        model: Test,
-                        as: 'Tests',
-                        order: [['order', 'ASC']],
-                    },
-                ],
-            });
+   async getOne(req, res, next) {
+    try {
+      const { id } = req.params;
+      console.log('LessonController.getOne - Requested ID:', id); 
 
-            if (!lesson) {
-                return res.status(404).json({ message: "Урок не найден" });
-            }
+      if (!id || isNaN(id)) {
+        return res.status(400).json({ message: 'Неверный ID урока' });
+      }
 
-            const response = {
-                LessonID: lesson.LessonID,
-                title: lesson.title,
-                content: lesson.content,
-                img: lesson.img,
-                createdAt: lesson.createdAt,
-                updatedAt: lesson.updatedAt,
-                tests: lesson.Tests,
-                sections: lesson.sections, 
-                currentTestIndex: 0,
-            };
+      const lesson = await Lesson.findByPk(parseInt(id), {
+        include: [
+          {
+            model: Test,
+            as: 'Tests',
+            order: [['order', 'ASC']],
+          },
+        ],
+      });
 
-            res.set('Content-Type', 'application/json');
-            return res.json(response);
-        } catch (e) {
-            console.error(e);
-            return res.status(500).json({ message: "Ошибка сервера" });
-        }
+      if (!lesson) {
+        return res.status(404).json({ message: 'Урок не найден' });
+      }
+
+      const response = {
+        LessonID: lesson.LessonID,
+        title: lesson.title,
+        content: lesson.content,
+        img: lesson.img,
+        createdAt: lesson.createdAt,
+        updatedAt: lesson.updatedAt,
+        tests: lesson.Tests,
+        sections: lesson.sections,
+        currentTestIndex: 0,
+      };
+
+      res.set('Content-Type', 'application/json');
+      return res.json(response);
+    } catch (e) {
+      console.error('LessonController.getOne - Error:', e);
+      return res.status(500).json({ message: 'Ошибка сервера', error: e.message });
     }
+  }
     
 
 }

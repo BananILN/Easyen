@@ -12,7 +12,11 @@ const User = sequelize.define('User', {
     email: { type: DataTypes.STRING, unique: true, allowNull: false }, 
     password: { type: DataTypes.STRING, allowNull: false }, 
     img: { type: DataTypes.STRING, allowNull: true }, 
-    RoleID: { type: DataTypes.INTEGER, allowNull: false } 
+    RoleID: { type: DataTypes.INTEGER, allowNull: false },
+    theme: { type: DataTypes.STRING, allowNull: true, defaultValue: "blue" }, 
+    about: { type: DataTypes.TEXT, allowNull: true },
+    gender: { type: DataTypes.STRING, allowNull: true, defaultValue: "male" },
+    language: { type: DataTypes.STRING, allowNull: true, defaultValue: "ru" }
 });
 
 const Lesson = sequelize.define('Lesson', {

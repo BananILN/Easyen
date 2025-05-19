@@ -12,6 +12,7 @@ import ModalLessonAdd from "../components/ModalLesson";
 import ModalLessonEdit from "../components/ModalLessonEdit";
 import ModalLessonDelete from "../components/ModalLessonDelete";
 import Loader from "../components/Loader";
+import { useTranslation } from 'react-i18next';
 
 const Lesson = () => {
   const { id } = useParams();
@@ -25,6 +26,7 @@ const Lesson = () => {
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
   const [selectedLessonForDelete, setSelectedLessonForDelete] = useState(null);
+  const { t } = useTranslation();
 
   const handleLessonCreated = (newLesson) => {
     if (newLesson.img) {
@@ -102,7 +104,7 @@ const Lesson = () => {
   }
 
   if (error) {
-    return <div>Ошибка: {error}</div>;
+    return <div>{t('error')}: {error}</div>;
   }
 
   return (
@@ -110,12 +112,12 @@ const Lesson = () => {
       <input
         type="text"
         className="search-input"
-        placeholder="Search courses"
+        placeholder={t('search_courses')}
         value={search}
         onChange={handleSearchChange}
       />
       <div className="title-content">
-        <h1>Уроки</h1>
+        <h1>{t('courses')}</h1>
       </div>
       <div>
         <div style={{ margin: "20px 0", display: "flex", justifyContent: "flex-end" }}>
@@ -123,7 +125,7 @@ const Lesson = () => {
             type="primary"
             onClick={() => setModalAddVisible(true)}
           >
-            Добавить урок
+            {t('add_lesson')}
           </Button>
         </div>
 
@@ -151,7 +153,7 @@ const Lesson = () => {
 
       <div className="card-container">
         {filteredLessons.length === 0 ? (
-          <div>No lessons found</div>
+          <div>{t('no_lessons_found')}</div>
         ) : (
           <div className="swiper-wrapper">
             <div className="swiper-nav-prev" />

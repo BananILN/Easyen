@@ -22,9 +22,9 @@ import { jwtDecode } from "jwt-decode";
 //   }
 // };
 
-  export const registrationAuth = async (email, username, password) => {
+  export const registrationAuth = async (email, username, password,gender) => {
     try {
-      const { data } = await $host.post("api/user/registration", { email, username, password, RoleID: 1 });
+      const { data } = await $host.post("api/user/registration", { email, username, password,gender, RoleID: 1 });
       if (!data.tempToken) {
         throw new Error("Временный токен не получен");
       }

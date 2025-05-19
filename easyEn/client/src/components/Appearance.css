@@ -1,0 +1,233 @@
+
+.appearance-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  height: 100%;
+  padding: 2rem;
+  background-color: rgba(131, 133, 134, 0.1); 
+  backdrop-filter: blur(5px);
+ 
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.appearance-title {
+  color: var(--text-light);
+  font-size: 2.5em;
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.appearance-description {
+  font-size: 1.1rem;
+  color: var(--color);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.theme-button-group {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.theme-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.theme-button-selected .theme-icon-wrapper {
+  transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(var(--hover-color), 0.5);
+  background-color: rgba(var(--hover-color), 0.2);
+}
+
+.theme-icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--card-background);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.theme-icon-wrapper:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow);
+  background-color: rgba(var(--hover-color), 0.1);
+}
+
+.theme-icon-wrapper:active {
+  transform: scale(0.95);
+  background-color: var(--active-color);
+}
+
+.theme-icon-wrapper svg {
+  transition: stroke 0.3s ease;
+}
+
+.theme-icon-wrapper:hover svg {
+  stroke: var(--hover-color);
+}
+
+.theme-icon-wrapper:active svg {
+  stroke: var(--hover-color);
+}
+
+.theme-label {
+  color: var(--color);
+  font-family: var(--Mont);
+  font-size: var(--font-size);
+  transition: color 0.3s ease;
+}
+
+.theme-icon-wrapper:hover .theme-label {
+  color: var(--hover-color);
+}
+
+.theme-icon-wrapper:active .theme-label {
+  color: var(--hover-color);
+}
+
+.apply-button {
+  margin-top: 1rem;
+  width: 12rem;
+  height: 2.2rem;
+  font-size: var(--font-size);
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.apply-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.apply-button:active {
+  transform: translateY(1px);
+}
+
+.appearance-note {
+  font-size: 0.9rem;
+  color: var(--color);
+  opacity: 0.8;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.language-title {
+  color: var(--text-light);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.language-button-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.language-button {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  background-color: var(--sidebar-background);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.language-button:hover {
+  background-color: rgba(var(--hover-color), 0.2);
+  border-color: var(--hover-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.language-button-selected {
+  background-color: rgba(var(--hover-color), 0.4);
+  border-color: var(--hover-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.language-icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.language-label {
+  color: var(--color);
+  font-size: 1rem;
+  font-family: var(--Mont);
+}
+
+@media (max-width: 1980px) {
+  .appearance-container {
+    width: 100%;
+    margin-left: 0;
+  }
+  .appearance-title {
+    font-size: 2rem;
+  }
+  .theme-icon-wrapper {
+    padding: 0.8rem;
+  }
+  .apply-button {
+    width: 18rem;
+  }
+}
+
+@media (max-width: 1600px) {
+  .appearance-title {
+    font-size: 2rem;
+  }
+  .theme-icon-wrapper {
+    padding: 0.6rem;
+  }
+  .apply-button {
+    width: 15rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .appearance-title {
+    font-size: 1.8rem;
+  }
+  .theme-icon-wrapper {
+    padding: 0.5rem;
+  }
+  .apply-button {
+    width: 12rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .appearance-container {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 2em;
+  }
+  .appearance-title {
+    font-size: 1.5rem;
+  }
+  .theme-button-group {
+    gap: 1.5rem;
+  }
+  .theme-icon-wrapper {
+    padding: 0.4rem;
+  }
+  .apply-button {
+    width: 10rem;
+    height: 2rem;
+  }
+}

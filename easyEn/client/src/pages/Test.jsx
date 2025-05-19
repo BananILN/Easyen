@@ -35,9 +35,15 @@ const Test = () => {
           setTestNotFound(true);
           return;
         }
+        console.log('Test - testData:', testData);
         setTest(testData);
 
+        if (!testData.LessonID || isNaN(testData.LessonID)) {
+          throw new Error(`Неверный LessonID: ${testData.LessonID}`);
+        }
+
         const lessonData = await fetchOneLesson(testData.LessonID);
+        console.log("Test - Lesson data:", lessonData);
         if (!lessonData) {
           throw new Error("Урок не найден");
         }
@@ -60,7 +66,8 @@ const Test = () => {
         setAnswers(answersData);
         setSelectedAnswers(initialSelectedAnswers);
       } catch (err) {
-        setError(err.message);
+        console.error('Test - Ошибка загрузки данных:', err);
+        setError(err.message || "Ошибка загрузки данных");
       } finally {
         setLoading(false);
       }
@@ -176,13 +183,11 @@ const Test = () => {
 
     const userId = user?.UserID;
     if (userId && test) {
- 
       const existingUserAnswers = await fetchUserAnswersByTest(test.TestID, userId);
       if (existingUserAnswers.length > 0) {
         await deleteUserAnswersByTest(test.TestID, userId);
       }
 
-   
       try {
         await Promise.all(
           userAnswersToSave.map((userAnswer) => saveUserAnswers(userAnswer))
@@ -192,7 +197,6 @@ const Test = () => {
         console.error("Ошибка при сохранении ответов пользователя:", err);
       }
 
-      
       await fetch(`${import.meta.env.VITE_API_URL}/api/testResult`, {
         method: 'POST',
         headers: {
@@ -209,61 +213,93 @@ const Test = () => {
         console.error("Ошибка при отправке результата теста:", err);
       });
 
-  
       await saveProgress(userId, test.LessonID, test.TestID, true);
     }
   };
 
   const handleNextTest = async () => {
     const userId = user?.UserID;
-    if (!userId) return;
+    if (!userId) {
+      setError("Пользователь не авторизован");
+      return;
+    }
 
-    const progressData = await fetchProgress(userId, test.LessonID);
-    const savedCompletedTests = progressData
-      .filter((progress) => progress.completed && progress.TestID)
-      .map((progress) => progress.TestID);
-    setCompletedTests(savedCompletedTests);
+    try {
+      const progressData = await fetchProgress(userId, test.LessonID);
+      const savedCompletedTests = progressData
+        .filter((progress) => progress.completed && progress.TestID)
+        .map((progress) => progress.TestID);
+      setCompletedTests(savedCompletedTests);
 
-    const allTests = lesson.tests || [];
-    const hasNextTest = savedCompletedTests.length < allTests.length;
+      const nextIndex = savedCompletedTests.length;
+      console.log("handleNextTest - lesson.tests:", lesson?.tests);
+      console.log("handleNextTest - savedCompletedTests:", savedCompletedTests);
+      console.log("handleNextTest - test.LessonID:", test.LessonID);
+      console.log("handleNextTest - Navigating to:", `/lesson/${test.LessonID}?currentLessonIndex=${nextIndex}`);
 
-    if (hasNextTest) {
-      navigate(`/lesson/${test.LessonID}?currentTestIndex=${savedCompletedTests.length}`);
-    } else {
-      
-      navigate(`/lesson/${test.LessonID}/results`);
+      if (!test.LessonID || isNaN(test.LessonID)) {
+        throw new Error(`Неверный LessonID: ${test.LessonID}`);
+      }
+
+      if (!lesson || !lesson.tests) {
+        console.warn("handleNextTest - Данные урока отсутствуют, загружаем заново");
+        const lessonData = await fetchOneLesson(test.LessonID);
+        setLesson(lessonData);
+        if (!lessonData.tests) {
+          console.error("handleNextTest - Тесты урока не найдены");
+          navigate(`/lesson/${test.LessonID}/results`);
+          return;
+        }
+      }
+
+      navigate(`/lesson/${test.LessonID}?currentLessonIndex=${nextIndex}`, { replace: true });
+    } catch (error) {
+      console.error("handleNextTest - Ошибка:", error);
+      setError("Не удалось перейти к следующей части урока");
     }
   };
 
   const handleReturnToLesson = async () => {
     const userId = user?.UserID;
-    if (!userId) return;
+    if (!userId) {
+      setError("Пользователь не авторизован");
+      return;
+    }
 
-    const progressData = await fetchProgress(userId, test.LessonID);
-    const savedCompletedTests = progressData
-      .filter((progress) => progress.completed && progress.TestID)
-      .map((progress) => progress.TestID);
-    setCompletedTests(savedCompletedTests);
+    try {
+      const progressData = await fetchProgress(userId, test.LessonID);
+      const savedCompletedTests = progressData
+        .filter((progress) => progress.completed && progress.TestID)
+        .map((progress) => progress.TestID);
+      setCompletedTests(savedCompletedTests);
 
-    const allTests = lesson.tests || [];
-    const hasNextTest = savedCompletedTests.length < allTests.length;
+      const allTests = lesson?.tests || [];
+      const hasNextTest = savedCompletedTests.length < allTests.length;
 
-    if (hasNextTest) {
-      navigate(`/lesson/${test.LessonID}?currentTestIndex=${savedCompletedTests.length}`);
-    } else {
-      
-      navigate(`/lesson/${test.LessonID}/results`);
+      if (hasNextTest) {
+        navigate(`/lesson/${test.LessonID}?currentLessonIndex=${savedCompletedTests.length}`);
+      } else {
+        navigate(`/lesson/${test.LessonID}/results`);
+      }
+    } catch (error) {
+      console.error("handleReturnToLesson - Ошибка:", error);
+      setError("Не удалось вернуться к уроку");
     }
   };
 
   useEffect(() => {
     const loadProgress = async () => {
       if (score !== null && user?.UserID && test) {
-        const progressData = await fetchProgress(user.UserID, test.LessonID);
-        const savedCompletedTests = progressData
-          .filter((progress) => progress.completed && progress.TestID)
-          .map((progress) => progress.TestID);
-        setCompletedTests(savedCompletedTests);
+        try {
+          const progressData = await fetchProgress(user.UserID, test.LessonID);
+          const savedCompletedTests = progressData
+            .filter((progress) => progress.completed && progress.TestID)
+            .map((progress) => progress.TestID);
+          setCompletedTests(savedCompletedTests);
+        } catch (error) {
+          console.error("loadProgress - Ошибка:", error);
+          setError("Ошибка загрузки прогресса");
+        }
       }
     };
     loadProgress();
@@ -276,7 +312,14 @@ const Test = () => {
   }
 
   if (error) {
-    return <div className="error">Ошибка: {error}</div>;
+    return (
+      <div className="error">
+        Ошибка: {error}
+        <Button type="primary" onClick={() => navigate(`/lesson/${test?.LessonID || ''}`)}>
+          Вернуться к уроку
+        </Button>
+      </div>
+    );
   }
 
   if (testNotFound) {
@@ -284,7 +327,7 @@ const Test = () => {
       <div className="test-page">
         <h1>Тест не найден</h1>
         <p>Для этого урока тест ещё не создан.</p>
-        <Button type="primary" onClick={handleReturnToLesson}>
+        <Button type="primary" onClick={() => navigate(`/lesson/${test?.LessonID || ''}`)}>
           Вернуться к уроку
         </Button>
       </div>
@@ -299,15 +342,9 @@ const Test = () => {
       <div className="test-page">
         <h1>Результат теста</h1>
         <p>Ваш результат: {score}%</p>
-        {completedTests.length < (lesson.tests || []).length ? (
-          <Button type="primary" onClick={handleNextTest}>
-            Далее
-          </Button>
-        ) : (
-          <Button type="primary" onClick={handleReturnToLesson}>
-            Завершить урок
-          </Button>
-        )}
+        <Button type="primary" onClick={handleNextTest}>
+          Далее
+        </Button>
       </div>
     );
   }
@@ -338,11 +375,6 @@ const Test = () => {
                 )
               }
             >
-              <input
-                type={currentQuestion.IsMultipleChoice ? "checkbox" : "radio"}
-                checked={selectedAnswers[currentQuestion.QuestionID]?.includes(answer.AnswerID) || false}
-                onChange={() => {}}
-              />
               <span>{answer.AnswerText}</span>
             </div>
           ))}

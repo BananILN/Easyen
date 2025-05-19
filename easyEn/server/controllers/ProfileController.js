@@ -38,45 +38,49 @@ class ProfileController{
             return res.json(user)
         }
         
-        async update(req, res, next) {
-          try {
-            const { id } = req.params;
-            const { username, email } = req.body;
-      
-            console.log("Полученные данные:", { id, username, email, files: req.files });
-      
-            const user = await User.findByPk(id);
-            if (!user) {
-              return next(ApiError.badRequest("Пользователь не найден"));
-            }
-      
-            let fileName = user.img;
-            if (req.files && req.files.img) {
-              const file = req.files.img;
-              fileName = `${uuidv4()}-${file.name}`;
-              const filePath = path.resolve(__dirname, '..', 'static', fileName);
-              console.log("Сохраняем файл в:", filePath);
-              await file.mv(filePath);
-              console.log("Сохранённый файл:", fileName);
-            } else {
-              console.log("Файл не загружен");
-            }
-      
-            const updatedData = {
-              username: username || user.username,
-              email: email || user.email,
-              img: fileName,
-            };
-      
-            console.log("Данные для обновления:", updatedData);
-            await user.update(updatedData);
-            console.log("Обновлённый пользователь:", user.toJSON());
-            return res.json(user);
-          } catch (e) {
-            console.error("Ошибка в update:", e);
-            return next(ApiError.internal(`Ошибка сервера: ${e.message}`));
-          }
-        }
+      async update(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { username, email, theme, about, gender, language } = req.body;
+
+    console.log("Полученные данные:", { id, username, email, theme, about, language, files: req.files, gender });
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return next(ApiError.badRequest("Пользователь не найден"));
+    }
+
+    let fileName = user.img;
+    if (req.files && req.files.img) {
+      const file = req.files.img;
+      fileName = `${uuidv4()}-${file.name}`;
+      const filePath = path.resolve(__dirname, '..', 'static', fileName);
+      console.log("Сохраняем файл в:", filePath);
+      await file.mv(filePath);
+      console.log("Сохранённый файл:", fileName);
+    } else {
+      console.log("Файл не загружен");
+    }
+
+    const updatedData = {
+      username: username || user.username,
+      email: email || user.email,
+      img: fileName,
+      theme: theme || user.theme,
+      about: about || user.about,
+      gender: gender || user.gender,
+      language: language || user.language, 
+    };
+
+    console.log("Данные для обновления:", updatedData);
+    await user.update(updatedData);
+    console.log("Обновлённый пользователь:", user.toJSON());
+    return res.json(user);
+  } catch (e) {
+    console.error("Ошибка в update:", e);
+    return next(ApiError.internal(`Ошибка сервера: ${e.message}`));
+  }
+}
         
 }
 

@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
-import { LockOutlined, UserOutlined, MailOutlined, EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { useEffect, useState, useContext, useRef } from "react";
+import { LockOutlined, UserOutlined, MailOutlined, EyeOutlined, EyeInvisibleOutlined, ManOutlined, WomanOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex, message } from "antd";
 import { NavLink, Navigate } from "react-router";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, HOME_ROUTE } from "../index";
@@ -7,6 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import "./Auth.css";
 import { registrationAuth, loginAuth, verifyEmail, resendCode } from "../http/userApi";
+import { useTranslation } from 'react-i18next';
 
 const Auth = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -16,12 +17,14 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("male");
   const [code, setCode] = useState(new Array(6).fill(""));
   const [tempToken, setTempToken] = useState(null);
   const [timer, setTimer] = useState(600);
   const [canResend, setCanResend] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const codeInputs = useRef([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isVerificationStep && timer > 0) {
@@ -53,17 +56,17 @@ const Auth = () => {
         login(response);
         localStorage.setItem("userId", response.UserID);
         setUser(response);
-        message.success("Вы успешно авторизовались!");
+        message.success(t('login_success'));
       } else {
-        response = await registrationAuth(email, username, password);
+        response = await registrationAuth(email, username, password, gender);
         setTempToken(response.tempToken);
         setIsVerificationStep(true);
-        setTimer(600); 
+        setTimer(600);
         setCanResend(false);
         message.success(response.message);
       }
     } catch (error) {
-      message.error(error.response?.data?.message || "Произошла ошибка. Пожалуйста, попробуйте снова.");
+      message.error(error.response?.data?.message || t('auth_error'));
     }
   };
 
@@ -74,10 +77,10 @@ const Auth = () => {
       login(response);
       localStorage.setItem("userId", response.UserID);
       setUser(response);
-      message.success("Email успешно подтверждён!");
+      message.success(t('email_verified'));
       setIsVerificationStep(false);
     } catch (error) {
-      message.error(error.response?.data?.message || "Ошибка подтверждения. Попробуйте снова.");
+      message.error(error.response?.data?.message || t('verify_error'));
     }
   };
 
@@ -90,7 +93,7 @@ const Auth = () => {
       setCode(new Array(6).fill(""));
       codeInputs.current[0]?.focus();
     } catch (error) {
-      message.error(error.response?.data?.message || "Ошибка повторной отправки кода");
+      message.error(error.response?.data?.message || t('resend_error'));
     }
   };
 
@@ -145,7 +148,7 @@ const Auth = () => {
 
   return (
     <div className="Auth-container">
-      <h1>{isLoginForm ? "Вход" : isVerificationStep ? "Подтверждение email" : "Регистрация"}</h1>
+      <h1>{isLoginForm ? t('login') : isVerificationStep ? t('verify_email') : t('register')}</h1>
       <Form
         name={isLoginForm ? "login" : "register"}
         initialValues={{ remember: true }}
@@ -157,11 +160,11 @@ const Auth = () => {
             {!isLoginForm && (
               <Form.Item
                 name="username"
-                rules={[{ required: true, message: "Пожалуйста, введите ваш логин!" }]}
+                rules={[{ required: true, message: t('username_required') }]}
               >
                 <Input
                   prefix={<UserOutlined style={{ color: "#1890ff" }} />}
-                  placeholder="Логин"
+                  placeholder={t('username')}
                   className="custom-input"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -171,13 +174,13 @@ const Auth = () => {
             <Form.Item
               name="email"
               rules={[
-                { required: true, message: "Пожалуйста, введите ваш Email!" },
-                { type: "email", message: "Пожалуйста, введите корректный email!" },
+                { required: true, message: t('email_required') },
+                { type: "email", message: t('email_invalid') },
               ]}
             >
               <Input
                 prefix={<MailOutlined style={{ color: "#1890ff" }} />}
-                placeholder="Email"
+                placeholder={t('email')}
                 className="custom-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -186,8 +189,8 @@ const Auth = () => {
             <Form.Item
               name="password"
               rules={[
-                { required: true, message: "Пожалуйста, введите ваш пароль!" },
-                { min: 6, message: "Пароль должен содержать минимум 6 символов!" },
+                { required: true, message: t('password_required') },
+                { min: 6, message: t('password_min_length') },
               ]}
             >
               <Input
@@ -201,20 +204,49 @@ const Auth = () => {
                   </span>
                 }
                 type={showPassword ? "text" : "password"}
-                placeholder="Пароль"
+                placeholder={t('password')}
                 className="custom-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Item>
+            {!isLoginForm && (
+              <Form.Item
+                className="gender-selection"
+                rules={[{ required: true, message: t('gender_required') }]}
+              >
+                <div className="gender-container">
+                  <div className="gender-icons">
+                    <ManOutlined style={{ marginRight: 0, color: "#1890ff" }} />
+                    <WomanOutlined style={{ marginLeft: -2, marginRight: 0, color: "#ff4d4f" }} />
+                  </div>
+                  <div className={`gender-buttons ${gender === "male" ? "male-selected" : "female-selected"}`}>
+                    <button
+                      type="button"
+                      className={`gender-button male ${gender === "male" ? "selected" : ""}`}
+                      onClick={() => setGender("male")}
+                    >
+                      {t('gender_male')}
+                    </button>
+                    <button
+                      type="button"
+                      className={`gender-button female ${gender === "female" ? "selected" : ""}`}
+                      onClick={() => setGender("female")}
+                    >
+                      {t('gender_female')}
+                    </button>
+                  </div>
+                </div>
+              </Form.Item>
+            )}
           </>
         ) : (
           <>
             <p className="verification-message">
-              Код подтверждения отправлен на <strong>{email}</strong>
+              {t('verification_code_sent')} <strong>{email}</strong>
             </p>
             <p className="timer-text">
-              Оставшееся время: <span>{formatTime(timer)}</span>
+              {t('timer')} <span>{formatTime(timer)}</span>
             </p>
             <Form.Item className="code-input-container">
               <div className="code-inputs" onPaste={handlePaste}>
@@ -235,7 +267,7 @@ const Auth = () => {
             {canResend && (
               <Form.Item>
                 <Button type="link" onClick={handleResendCode} className="resend-button">
-                  Отправить код повторно
+                  {t('resend_code')}
                 </Button>
               </Form.Item>
             )}
@@ -246,31 +278,25 @@ const Auth = () => {
           <Form.Item>
             <Flex justify="space-between" align="center">
               <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Запомнить меня</Checkbox>
+                <Checkbox>{t('remember_me')}</Checkbox>
               </Form.Item>
-              <a href="">Забыли пароль?</a>
+              <a href="">{t('forgot_password')}</a>
             </Flex>
           </Form.Item>
         )}
 
         <Form.Item>
           <Button block type="primary" htmlType="submit" className="auth-button">
-            {isLoginForm ? "Войти" : isVerificationStep ? "Подтвердить" : "Зарегистрироваться"}
+            {isLoginForm ? t('login') : isVerificationStep ? t('submit') : t('register')}
           </Button>
           {isLoginForm ? (
             <div style={{ textAlign: "center", marginTop: "10px" }}>
-              Нет аккаунта?{" "}
-              <NavLink to={REGISTRATION_ROUTE} onClick={toggleForm}>
-                Зарегистрируйтесь
-              </NavLink>
+              {t('no_account')} <NavLink to={REGISTRATION_ROUTE} onClick={toggleForm}>{t('register_here')}</NavLink>
             </div>
           ) : (
             !isVerificationStep && (
               <div style={{ textAlign: "center", marginTop: "10px" }}>
-                Уже есть аккаунт?{" "}
-                <NavLink to={LOGIN_ROUTE} onClick={toggleForm}>
-                  Войдите
-                </NavLink>
+                {t('already_have_account')} <NavLink to={LOGIN_ROUTE} onClick={toggleForm}>{t('login_here')}</NavLink>
               </div>
             )
           )}

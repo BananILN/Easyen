@@ -1,173 +1,286 @@
 .custom-input::placeholder {
-    color: #1890ff; 
-    opacity: 1; 
-  }
+  color: #1890ff;
+  opacity: 1;
+}
 
 .custom-input {
-    color: black; 
-  }
-  
-  .custom-input:focus {
-    border-color: #1890ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-  }  
+  color: black;
+}
 
+.custom-input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.Auth-container {
+  width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.Auth-container h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.custom-input {
+  border-radius: 12px !important;
+  height: 40px !important;
+  transition: all 0.3s ease;
+}
+
+.custom-input:hover,
+.custom-input:focus {
+  border-color: #1890ff !important;
+  box-shadow: 0 0 8px rgba(24, 144, 255, 0.2) !important;
+}
+
+.auth-button {
+  height: 40px !important;
+  font-size: 16px !important;
+  border-radius: 8px !important;
+  background: linear-gradient(90deg, #1890ff, #0fadf7) !important;
+  border: none !important;
+  transition: all 0.4s ease-in-out !important;
+}
+
+.auth-button:hover {
+  background: linear-gradient(90deg, #087be7, #08acf8) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.verification-message {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.verification-message strong {
+  color: #1890ff;
+}
+
+.timer-text {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.timer-text span {
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.code-input-container {
+  margin-bottom: 20px !important;
+}
+
+.code-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.code-input {
+  width: 45px;
+  height: 50px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  border: 2px solid #d9d9d9;
+  border-radius: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #f5f5f5;
+}
+
+.code-input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+  background: #fff;
+}
+
+.code-input:not(:placeholder-shown) {
+  border-color: #1890ff;
+  background: #e6f7ff;
+}
+
+.resend-button {
+  font-size: 14px !important;
+  color: #1890ff !important;
+  transition: all 0.3s ease !important;
+}
+
+.resend-button span {
+  font-size: 18px !important;
+  color: #1890ff !important;
+  transition: all 0.3s ease !important;
+}
+
+.resend-button span:hover {
+  color: #06358b !important;
+  text-decoration: none !important;
+}
+
+.password-toggle-icon {
+  cursor: pointer;
+  color: #888;
+  transition: all 0.4s ease;
+}
+
+.password-toggle-icon:hover {
+  color: #1890ff;
+}
+
+.password-toggle-icon:active {
+  transform: scale(0.9);
+}
+
+.gender-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.gender-icons {
+  display: flex;
+  gap: 4px;
+}
+
+.gender-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.gender-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0px;
+  margin-left: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gender-buttons::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, #1890ff, #ff4d4f);
+  transition: transform 0.5s ease;
+  z-index: 0;
+}
+
+.gender-buttons.male-selected::before {
+  transform: translateX(0);
+}
+
+.gender-buttons.female-selected::before {
+  transform: translateX(100%);
+}
+
+.gender-button {
+  padding: 5px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid #d9d9d9;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.5s ease; 
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+
+.gender-button:first-child {
+  border-radius: 8px 0 0 8px;
+  border-right: none;
+}
+
+.gender-button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.gender-button:hover {
+  background-color: #e6f7ff;
+  border-color: #1890ff;
+  transform: scale(1.02);
+}
+
+.gender-button:active {
+  transform: scale(0.98);
+}
+
+.gender-button.selected {
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.gender-button.male {
+  background-color: #fff;
+  color: #333;
+  transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease; 
+}
+
+.gender-button.male.selected {
+  background: linear-gradient(90deg, #1890ff, #0fadf7);
+  color: #fff;
+  border-color: #1890ff; 
+}
+
+.gender-button.female {
+  background-color: #fff;
+  color: #333;
+  transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease; 
+}
+
+.gender-button.female.selected {
+  background: linear-gradient(90deg, #ff4d4f, #f5222d);
+  color: #fff;
+  border-color: #ff4d4f; 
+}
+
+@media (max-width: 480px) {
   .Auth-container {
-    width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    margin: 20px;
+    padding: 15px;
   }
-  
-  .Auth-container h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #333;
-  }
-  
 
-  .custom-input {
-    border-radius: 12px !important;
-    height: 40px !important;
-    transition: all 0.3s ease;
+  h1 {
+    font-size: 20px;
   }
-  
-  .custom-input:hover,
-  .custom-input:focus {
-    border-color: #1890ff !important;
-    box-shadow: 0 0 8px rgba(24, 144, 255, 0.2) !important;
-  }
-  
-  .auth-button {
-    height: 40px !important;
-    font-size: 16px !important;
-    border-radius: 8px !important;
-    background: linear-gradient(90deg, #1890ff, #0fadf7) !important;
-    border: none !important;
-    transition: all 0.4s ease-in-out !important;
-  }
-  
-  .auth-button:hover {
-    background: linear-gradient(90deg, #087be7, #08acf8) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-    
-  }
-  
 
-  .verification-message {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 10px;
-  }
-  
-  .verification-message strong {
-    color: #1890ff;
-  }
-  
-  .timer-text {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 20px;
-  }
-  
-  .timer-text span {
-    font-weight: 600;
-    color: #1890ff;
-  }
-  
-
-  .code-input-container {
-    margin-bottom: 20px !important;
-  }
-  
-  .code-inputs {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
   .code-input {
-    width: 45px;
-    height: 50px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-    border: 2px solid #d9d9d9;
-    border-radius: 14px;
-    outline: none;
-    transition: all 0.3s ease;
-    background: #f5f5f5;
-  }
-  
-  .code-input:focus {
-    border-color: #1890ff;
-    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-    background: #fff;
-  }
-  
-  .code-input:not(:placeholder-shown) {
-    border-color: #1890ff;
-    background: #e6f7ff;
-  }
-  
-  .resend-button {
-    font-size: 14px !important;
-    color: #1890ff !important;
-    transition: all 0.3s ease !important;
-  }
-  .resend-button span{
-    font-size: 18px !important;
-    color: #1890ff !important;
-    transition: all 0.3s ease !important;
-  }
-  
-  .resend-button span:hover {
-    color: #06358b !important;
-    text-decoration: none !important;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
   }
 
-  .password-toggle-icon {
-    cursor: pointer;
-    color: #888;
-    transition: all 0.4s ease;
+  .auth-button {
+    font-size: 14px !important;
+    height: 36px !important;
   }
-  
-  .password-toggle-icon:hover {
-    color: #1890ff;
+
+  .gender-container {
+    padding: 8px;
   }
-  
-  .password-toggle-icon:active {
-    transform: scale(0.9); 
+
+  .gender-button {
+    padding: 8px 16px;
+    font-size: 14px;
   }
-  
-  
- 
-  
-  
-  @media (max-width: 480px) {
-    .Auth-container {
-      margin: 20px;
-      padding: 15px;
-    }
-  
-    h1 {
-      font-size: 20px;
-    }
-  
-    .code-input {
-      width: 35px;
-      height: 35px;
-      font-size: 16px;
-    }
-  
-    .auth-button {
-      font-size: 14px !important;
-      height: 36px !important;
-    }
-  }
+}

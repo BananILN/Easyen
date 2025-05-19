@@ -2,7 +2,6 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams, useSearchParams, useLocation } from "react-router";
 import { fetchOneLesson } from "../http/LessonApi";
 import { fetchProgress, saveProgress } from "../http/TestApi";
-import { LESSON_ROUTE } from "../";
 import Loader from "../components/Loader";
 import { Button } from "antd";
 import TestResults from "./TestResults";
@@ -17,20 +16,26 @@ export default function LessonDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentTestIndex, setCurrentTestIndex] = useState(
-    parseInt(searchParams.get("currentTestIndex")) || 0
+  const [currentLessonIndex, setCurrentLessonIndex] = useState(
+    parseInt(searchParams.get("currentLessonIndex")) || 0
   );
   const [completedTests, setCompletedTests] = useState([]);
   const [testHistory, setTestHistory] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [showResults, setShowResults] = useState(false); 
+  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
     const loadLesson = async () => {
       try {
         setLoading(true);
+        console.log('LessonDetails - ID from useParams:', id);
+
+        if (!id || isNaN(id)) {
+          throw new Error(`Неверный ID урока: ${id}`);
+        }
+
         const data = await fetchOneLesson(id);
-        console.log("Данные урока:", data);
+        console.log("Lesson data in LessonDetails:", data);
         setLesson(data);
 
         const userId = user?.UserID;
@@ -50,19 +55,20 @@ export default function LessonDetails() {
 
         if (isInitialLoad) {
           const nextIndex = savedCompletedTests.length;
-          const currentIndexFromParams = parseInt(searchParams.get("currentTestIndex")) || 0;
+          const currentIndexFromParams = parseInt(searchParams.get("currentLessonIndex")) || 0;
           const initialIndex = currentIndexFromParams !== 0 ? currentIndexFromParams : nextIndex;
-          if (initialIndex <= (data.tests?.length - 1 || 0)) {
-            setCurrentTestIndex(initialIndex);
-            setSearchParams({ currentTestIndex: initialIndex });
+          if (initialIndex <= (data.sections?.length - 1 || 0)) {
+            setCurrentLessonIndex(initialIndex);
+            setSearchParams({ currentLessonIndex: initialIndex });
           } else {
-            setCurrentTestIndex(data.tests?.length - 1 || 0);
-            setSearchParams({ currentTestIndex: data.tests?.length - 1 || 0 });
+            setCurrentLessonIndex(data.sections?.length - 1 || 0);
+            setSearchParams({ currentLessonIndex: data.sections?.length - 1 || 0 });
           }
           setIsInitialLoad(false);
         }
       } catch (err) {
-        setError(err.message);
+        console.error('LessonDetails - Ошибка загрузки урока:', err);
+        setError(err.message || 'Ошибка загрузки урока');
       } finally {
         setLoading(false);
       }
@@ -77,14 +83,14 @@ export default function LessonDetails() {
   }, [id, setSearchParams, user]);
 
   useEffect(() => {
-    const currentIndexFromParams = parseInt(searchParams.get("currentTestIndex")) || 0;
-    if (currentIndexFromParams !== currentTestIndex && currentIndexFromParams < (lesson?.tests?.length || 0)) {
-      setCurrentTestIndex(currentIndexFromParams);
-    } else if (currentIndexFromParams >= (lesson?.tests?.length || 0)) {
-      setCurrentTestIndex(lesson?.tests?.length - 1 || 0);
-      setSearchParams({ currentTestIndex: lesson?.tests?.length - 1 || 0 });
+    const currentIndexFromParams = parseInt(searchParams.get("currentLessonIndex")) || 0;
+    if (currentIndexFromParams !== currentLessonIndex && currentIndexFromParams < (lesson?.sections?.length || 0)) {
+      setCurrentLessonIndex(currentIndexFromParams);
+    } else if (currentIndexFromParams >= (lesson?.sections?.length || 0)) {
+      setCurrentLessonIndex(lesson?.sections?.length - 1 || 0);
+      setSearchParams({ currentLessonIndex: lesson?.sections?.length - 1 || 0 });
     }
-  }, [searchParams, lesson]);
+  }, [searchParams, lesson, setSearchParams]);
 
   const handleTestComplete = async (testId) => {
     const userId = user?.UserID;
@@ -98,11 +104,11 @@ export default function LessonDetails() {
     await saveProgress(userId, id, testId, true);
 
     const nextIndex = updatedCompletedTests.length;
-    if (nextIndex < lesson.tests.length) {
-      setCurrentTestIndex(nextIndex);
-      setSearchParams({ currentTestIndex: nextIndex });
+    if (nextIndex < (lesson.tests?.length || 0)) {
+      setCurrentLessonIndex(nextIndex);
+      setSearchParams({ currentLessonIndex: nextIndex });
     } else {
-      setShowResults(true); 
+      setShowResults(true);
     }
   };
 
@@ -128,43 +134,43 @@ export default function LessonDetails() {
 
     const testIndex = lesson.tests.findIndex((test) => test.TestID === testId);
     if (testIndex >= 0) {
-      setCurrentTestIndex(testIndex);
-      setSearchParams({ currentTestIndex: testIndex });
+      setCurrentLessonIndex(testIndex);
+      setSearchParams({ currentLessonIndex: testIndex });
     }
 
     navigate(`/test/${testId}`);
   };
 
   const handleGoBack = () => {
-    const prevIndex = currentTestIndex - 1;
+    const prevIndex = currentLessonIndex - 1;
     if (prevIndex >= 0) {
-      setCurrentTestIndex(prevIndex);
-      setSearchParams({ currentTestIndex: prevIndex });
+      setCurrentLessonIndex(prevIndex);
+      setSearchParams({ currentLessonIndex: prevIndex });
     }
   };
 
   const handleGoForward = () => {
-    const nextIndex = currentTestIndex + 1;
-    if (nextIndex < lesson.tests.length) {
-      setCurrentTestIndex(nextIndex);
-      setSearchParams({ currentTestIndex: nextIndex });
+    const nextIndex = currentLessonIndex + 1;
+    if (nextIndex < (lesson.sections?.length || 0)) {
+      setCurrentLessonIndex(nextIndex);
+      setSearchParams({ currentLessonIndex: nextIndex });
     }
   };
 
   const handleSkipToNextSection = () => {
-    const nextIndex = currentTestIndex + 1;
-    if (nextIndex < lesson.tests.length) {
-      setCurrentTestIndex(nextIndex);
-      setSearchParams({ currentTestIndex: nextIndex });
+    const nextIndex = currentLessonIndex + 1;
+    if (nextIndex < (lesson.sections?.length || 0)) {
+      setCurrentLessonIndex(nextIndex);
+      setSearchParams({ currentLessonIndex: nextIndex });
     }
   };
 
   const handleFinishLesson = () => {
-    setShowResults(true); 
+    setShowResults(true);
   };
 
   const handleBackToLessons = () => {
-    navigate(LESSON_ROUTE);
+    navigate('/lesson');
   };
 
   if (loading) {
@@ -172,7 +178,14 @@ export default function LessonDetails() {
   }
 
   if (error) {
-    return <div>Ошибка: {error}</div>;
+    return (
+      <div className="error">
+        Ошибка: {error}
+        <Button type="primary" onClick={() => navigate('/lesson')}>
+          Вернуться к урокам
+        </Button>
+      </div>
+    );
   }
 
   if (!lesson) {
@@ -180,15 +193,15 @@ export default function LessonDetails() {
   }
 
   const currentSection =
-    lesson.sections && lesson.sections[currentTestIndex]
-      ? lesson.sections[currentTestIndex]
+    lesson.sections && lesson.sections[currentLessonIndex]
+      ? lesson.sections[currentLessonIndex]
       : { content: lesson.content || "<p>Теория отсутствует</p>" };
   const currentTest =
-    lesson.tests && lesson.tests.length > currentTestIndex
-      ? lesson.tests[currentTestIndex]
+    lesson.tests && lesson.tests.length > currentLessonIndex
+      ? lesson.tests[currentLessonIndex]
       : null;
 
-  const canSkipFirstTest = testHistory.includes(lesson.tests[0]?.TestID);
+  const canSkipFirstTest = testHistory.includes(lesson.tests?.[0]?.TestID);
 
   if (showResults) {
     return <TestResults lessonId={id} />;
@@ -214,9 +227,9 @@ export default function LessonDetails() {
       <div className="lesson-content-container" style={{ transition: "all 0.3s ease" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
           <h3 className="lesson-content-title">Теория урока:</h3>
-          {lesson.tests && lesson.tests.length > 0 && (
+          {lesson.sections && lesson.sections.length > 0 && (
             <span style={{ color: "rgb(31, 30, 30)", fontSize: "1.2em", fontWeight: "bold" }}>
-              Часть {currentTestIndex + 1}/{lesson.tests.length}
+              Часть {currentLessonIndex + 1}/{lesson.sections.length}
             </span>
           )}
         </div>
@@ -232,7 +245,7 @@ export default function LessonDetails() {
         {lesson.tests && lesson.tests.length > 0 && currentTest ? (
           <div className="test-section" style={{ marginTop: "20px" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {currentTestIndex > 0 && (
+              {currentLessonIndex > 0 && (
                 <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                   <Button type="default" onClick={handleGoBack}>
                     Назад
@@ -244,19 +257,19 @@ export default function LessonDetails() {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: currentTestIndex === 0 ? "center" : "center",
+                    justifyContent: currentLessonIndex === 0 ? "center" : "center",
                     width: "100%",
                   }}
                 >
                   <div className="next-part">
                     <p>Тест "{currentTest.title}" завершён!</p>
                     <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-                      {currentTestIndex < lesson.tests.length - 1 ? (
+                      {currentLessonIndex < lesson.tests.length - 1 ? (
                         <Button
                           type="primary"
                           onClick={() => {
-                            setCurrentTestIndex(currentTestIndex + 1);
-                            setSearchParams({ currentTestIndex: currentTestIndex + 1 });
+                            setCurrentLessonIndex(currentLessonIndex + 1);
+                            setSearchParams({ currentLessonIndex: currentLessonIndex + 1 });
                           }}
                         >
                           Перейти к следующей части
@@ -282,7 +295,7 @@ export default function LessonDetails() {
                   >
                     Начать тест
                   </Button>
-                  {currentTestIndex === 0 && canSkipFirstTest && (
+                  {currentLessonIndex === 0 && canSkipFirstTest && (
                     <Button
                       type="default"
                       onClick={handleSkipToNextSection}

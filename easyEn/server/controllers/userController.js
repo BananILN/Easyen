@@ -8,14 +8,14 @@ import { sendVerificationEmail } from "../utils/EmailService.js";
 
 const {User, Lesson} = models;
 
-const generateJwt =  (UserID, username, email, RoleID) =>{
-    return jwt.sign({ UserID, username, email, RoleID }, process.env.SECRET_KEY,
+const generateJwt =  (UserID, username, email, RoleID, gender) =>{
+    return jwt.sign({ UserID, username, email, RoleID, gender }, process.env.SECRET_KEY,
          { expiresIn: '24h' }
         );
 }
 
-const generateTempJwt = (username, email, hashPassword, RoleID) =>{
-  return jwt.sign({username, email, hashPassword, RoleID}, process.env.SECRET_KEY, {expiresIn: '10m'});
+const generateTempJwt = (username, email, hashPassword, RoleID, gender) =>{
+  return jwt.sign({username, email, hashPassword, RoleID, gender}, process.env.SECRET_KEY, {expiresIn: '10m'});
 }
 
 const generateVerificationCode = () =>{
@@ -24,11 +24,16 @@ const generateVerificationCode = () =>{
 
 class UserController {
         async registration(req, res, next) {
-          const { username, email, password, RoleID = 1 } = req.body;
+          const { username, email, password, gender, RoleID = 1 } = req.body;
 
           if (!email || !password || !username) {
             return next(ApiError.badRequest("Email, password, and username are required"));
           }
+
+          if (!["male", "female"].includes(gender)) {
+            return next(ApiError.badRequest("Gender must be either 'male' or 'female'"));
+          }
+          
 
           try {
             const emailCandidate = await User.findOne({ where: { email } });
@@ -42,9 +47,10 @@ class UserController {
             }
 
             const hashPassword = await bcrypt.hash(password, 5);
-            const tempToken = generateTempJwt(username, email, hashPassword, RoleID);
+            const tempToken = generateTempJwt(username, email, hashPassword, RoleID, gender);
 
             const verificationCode = generateVerificationCode();
+            
             const expiresAt = Date.now() + 10 * 60 * 1000;
 
             storeVerificationCode(tempToken, verificationCode, expiresAt);
@@ -73,13 +79,14 @@ class UserController {
             }
       
             const decoded = jwt.verify(tempToken, process.env.SECRET_KEY);
-            const { username, email, hashPassword, RoleID } = decoded;
+            const { username, email, hashPassword, RoleID,gender } = decoded;
       
             const user = await User.create({
               username,
               email,
               RoleID: RoleID,
               password: hashPassword,
+              gender : gender || "male",
             });
       
             if (!user.UserID) {

@@ -28,7 +28,7 @@ export const authRoutes = [
         Component: Statistic
     },
     {
-        path:LESSDETAILS_ROUTE,
+        path: '/lesson/:id',
         Component: LessonDetails
     },
     {

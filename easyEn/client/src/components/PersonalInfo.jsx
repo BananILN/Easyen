@@ -4,6 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import { Button, Input, message, Skeleton } from "antd";
+import { ManOutlined, WomanOutlined } from "@ant-design/icons";
+import { useTranslation } from 'react-i18next';
 
 export default function PersonalInfo() {
   const [profile, setProfile] = useState(null);
@@ -16,46 +18,44 @@ export default function PersonalInfo() {
   const [userId, setUserId] = useState(null);
   const { isAuth } = useContext(AuthContext);
   const { user } = useContext(UserContext);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!isAuth) {
-      setError("Требуется авторизация");
+      setError(t('authorization_required'));
       setLoading(false);
       return;
     }
 
     const token = localStorage.getItem("token");
     if (!token) {
-      setError("Токен не найден");
+      setError(t('token_not_found'));
       setLoading(false);
       return;
     }
 
     try {
       const decodedToken = jwtDecode(token);
-      console.log("Декодированный токен:", decodedToken);
       const userId = decodedToken.UserID || user?.UserID;
-      if (!userId) throw new Error("ID пользователя не найден");
+      if (!userId) throw new Error(t('user_id_not_defined'));
 
       setUserId(userId);
 
       fetchProfile(userId)
         .then((data) => {
-          console.log("Данные профиля:", data);
           setProfile(data);
           setEditedProfile(data);
           const imageUrl = data.img ? `${import.meta.env.VITE_API_URL}/static/${data.img}` : null;
-          console.log("Начальный URL изображения:", imageUrl);
           setPreviewUrl(imageUrl);
         })
         .catch((err) => {
           console.error("Ошибка загрузки:", err);
-          setError("Ошибка загрузки профиля");
+          setError(t('profile_not_found'));
         })
         .finally(() => setLoading(false));
     } catch (err) {
       console.error("Ошибка декодирования:", err);
-      setError("Неверный токен");
+      setError(t('invalid_token'));
       setLoading(false);
     }
   }, [isAuth, user]);
@@ -63,23 +63,18 @@ export default function PersonalInfo() {
   const handleEditToggle = async () => {
     if (isEditing) {
       if (!userId) {
-        message.error("ID пользователя не определён");
+        message.error(t('user_id_not_defined'));
         return;
       }
       try {
         const formData = new FormData();
         formData.append("username", editedProfile.username || "");
         formData.append("email", editedProfile.email || "");
+        formData.append("about", editedProfile.about || "");
+        formData.append("gender", editedProfile.gender || "male");
         if (file) {
           formData.append("img", file);
         }
-
-        console.log("Отправляемые данные:", {
-          userId,
-          username: editedProfile.username,
-          email: editedProfile.email,
-          file: file ? file.name : "Нет файла",
-        });
 
         const updatedProfile = await updateProfile(userId, formData);
         setProfile(updatedProfile);
@@ -87,24 +82,21 @@ export default function PersonalInfo() {
         const newImageUrl = updatedProfile.img
           ? `${import.meta.env.VITE_API_URL}/static/${updatedProfile.img}?t=${Date.now()}`
           : null;
-        console.log("Новый URL изображения:", newImageUrl);
+        setPreviewUrl(newImageUrl);
 
         try {
           const res = await fetch(newImageUrl, { method: "HEAD" });
-          if (!res.ok) {
-            throw new Error(`Сервер вернул статус: ${res.status}`);
-          }
-          console.log("Изображение доступно:", newImageUrl);
+          if (!res.ok) throw new Error(t('image_saved_but_unavailable'));
           setPreviewUrl(newImageUrl);
         } catch (err) {
           console.error("Ошибка проверки изображения:", err.message);
-          message.warning("Изображение сохранено, но недоступно на сервере");
+          message.warning(t('image_saved_but_unavailable'));
         }
 
-        message.success("Профиль успешно обновлен");
+        message.success(t('profile_update_success'));
       } catch (err) {
         console.error("Ошибка при сохранении:", err.response?.data || err);
-        message.error(`Ошибка при сохранении профиля: ${err.response?.data?.message || err.message}`);
+        message.error(t('profile_update_error'));
       }
     }
     setIsEditing(!isEditing);
@@ -115,15 +107,17 @@ export default function PersonalInfo() {
     if (selectedFile) {
       setFile(selectedFile);
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setPreviewUrl(event.target.result);
-      };
+      reader.onload = (event) => setPreviewUrl(event.target.result);
       reader.readAsDataURL(selectedFile);
     }
   };
 
   const handleInputChange = (field, value) => {
     setEditedProfile((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleGenderChange = (newGender) => {
+    handleInputChange("gender", newGender);
   };
 
   if (loading) {
@@ -134,11 +128,11 @@ export default function PersonalInfo() {
     );
   }
   if (error) return <div>{error}</div>;
-  if (!profile) return <div>Профиль не найден</div>;
+  if (!profile) return <div>{t('profile_not_found')}</div>;
 
   return (
     <div className="user-info" style={{ minHeight: "400px" }}>
-      <h1>Personal Info</h1>
+      <h1>{t('personal_info')}</h1>
       <div className="user-img">
         <div className="avatar-wrapper">
           <img
@@ -170,7 +164,7 @@ export default function PersonalInfo() {
       </div>
       <div className="user-desc">
         <div className="user-name">
-          <label>Имя</label>
+          <label>{t('name_label')}</label>
           {isEditing ? (
             <Input
               value={editedProfile.username || ""}
@@ -182,7 +176,7 @@ export default function PersonalInfo() {
           )}
         </div>
         <div className="user-email">
-          <label>Email</label>
+          <label>{t('email_label')}</label>
           {isEditing ? (
             <Input
               value={editedProfile.email || ""}
@@ -193,12 +187,56 @@ export default function PersonalInfo() {
             <p>{profile.email}</p>
           )}
         </div>
+        <div className="user-about">
+          <label>{t('about_label')}</label>
+          {isEditing ? (
+            <Input.TextArea
+              value={editedProfile.about || ""}
+              onChange={(e) => handleInputChange("about", e.target.value)}
+              className="edit-input about-textarea"
+              rows={4}
+              placeholder={t('about_placeholder')}
+              autoSize={{ minRows: 4, maxRows: 10 }}
+            />
+          ) : (
+            <p>{profile.about || t('about_not_specified')}</p>
+          )}
+        </div>
+        <div className="user-gender">
+          <label>{t('gender_label')}</label>
+          {isEditing ? (
+            <div className="gender-container-profile">
+              <div className="gender-icons">
+                <ManOutlined style={{ marginRight: 0, color: "#1890ff" }} />
+                <WomanOutlined style={{ marginLeft: -2, marginRight: 0, color: "#ff4d4f" }} />
+              </div>
+              <div className="gender-buttons">
+                <button
+                  type="button"
+                  className={`gender-button male ${editedProfile.gender === "male" ? "selected" : ""}`}
+                  onClick={() => handleGenderChange("male")}
+                >
+                  {t('gender_male')}
+                </button>
+                <button
+                  type="button"
+                  className={`gender-button female ${editedProfile.gender === "female" ? "selected" : ""}`}
+                  onClick={() => handleGenderChange("female")}
+                >
+                  {t('gender_female')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p>{profile.gender === "male" ? t('gender_male') : t('gender_female')}</p>
+          )}
+        </div>
         <Button
           type={isEditing ? "primary" : "default"}
           onClick={handleEditToggle}
           className="edit-button"
         >
-          {isEditing ? "Сохранить" : "Редактировать"}
+          {isEditing ? t('save') : t('edit')}
         </Button>
       </div>
     </div>

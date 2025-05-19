@@ -8,7 +8,6 @@ import { UserContext } from '../context/UserContext';
 
 const { Title } = Typography;
 
-
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, type }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -46,16 +45,20 @@ export default function Statistic() {
         setLoading(true);
         const userId = user.UserID;
         console.log(`Fetching statistics for UserID: ${userId}`);
+        
         const data = await fetchStatistics(userId);
         console.log('Исходные данные статистики:', data.map(item => ({
           TestID: item.TestID,
           timeTaken: item.timeTaken,
           type: typeof item.timeTaken,
+          LessonID: item.LessonID,
+          lessonTitle: item.lessonTitle,
+          detailedResults: item.detailedResults, 
         })));
         setStatistics(data);
       } catch (err) {
         setError(err.message);
-        console.error('Ошибка при получении статистики:', err);
+        console.error('Ошибка при получении данных:', err);
       } finally {
         setLoading(false);
       }
@@ -68,7 +71,19 @@ export default function Statistic() {
   if (error) return <div className="error">Ошибка: {error}</div>;
   if (!user) return <div className="error">Пользователь не авторизован</div>;
 
-  // 1
+  const testsByLesson = statistics.reduce((acc, result) => {
+    const lessonId = result.LessonID;
+    if (!lessonId) {
+      console.warn(`LessonID отсутствует для TestID ${result.TestID}`);
+      return acc;
+    }
+    if (!acc[lessonId]) {
+      acc[lessonId] = [];
+    }
+    acc[lessonId].push(result);
+    return acc;
+  }, {});
+
   const timeChartData = statistics
     .filter(result => {
       const timeTaken = Number(result.timeTaken);
@@ -79,17 +94,29 @@ export default function Statistic() {
       return true;
     })
     .map(result => {
+      const lessonId = result.LessonID;
       const timeTaken = Math.floor(Number(result.timeTaken) || 0);
-      console.log(`Обработано timeTaken для TestID ${result.TestID}: ${timeTaken}`);
+      if (!lessonId) {
+        return {
+          testId: `Тест ${result.TestID}`,
+          timeTaken,
+        };
+      }
+
+      const testsInLesson = testsByLesson[lessonId] || [];
+      const testIndex = testsInLesson.findIndex(test => test.TestID === result.TestID) + 1;
+      const lessonName = result.lessonTitle || `Урок ${lessonId}`;
+
+      console.log(`Обработано timeTaken для TestID ${result.TestID}: ${timeTaken}, LessonID: ${lessonId}, TestIndex: ${testIndex}`);
       return {
-        testId: `Тест ${result.TestID}`,
+        testId: `Урок: ${lessonName} - Тест ${testIndex}`,
         timeTaken,
       };
     });
 
   console.log('Данные для графика времени:', timeChartData);
 
-  // 2
+  
   const answerStats = statistics.reduce(
     (acc, result) => {
       if (result.detailedResults && Array.isArray(result.detailedResults)) {
@@ -112,16 +139,18 @@ export default function Statistic() {
     { correct: 0, incorrect: 0 }
   );
 
+  console.log('Статистика ответов:', answerStats); 
+
   const pieData = [
     { type: 'Правильные', value: answerStats.correct || 0 },
     { type: 'Неправильные', value: answerStats.incorrect || 0 },
-  ].filter(item => item.value > 0);
+  ]; 
 
   console.log('Данные для круговой диаграммы:', pieData);
 
   const COLORS = ['#1890ff', '#ff4d4f'];
 
-  // 3
+ 
   const userTestCount = statistics.reduce((acc, result) => {
     const username = result.username || `Пользователь ${result.UserID}`;
     acc[username] = (acc[username] || 0) + 1;
@@ -164,7 +193,7 @@ export default function Statistic() {
           Статистика по тестам
         </Title>
 
-        <div className="activity">
+        <div className="">
           <Card
             title="Время прохождения тестов (сек)"
             className="stat-card"
@@ -209,7 +238,7 @@ export default function Statistic() {
             className="stat-card"
             styles={{ header: { color: 'rgb(196, 195, 195)', fontFamily: 'Montserrat, sans-serif' } }}
           >
-            {pieData.length > 0 ? (
+            {pieData.some(item => item.value > 0) ? (
               <PieChart width={400} height={200}>
                 <Pie
                   data={pieData}

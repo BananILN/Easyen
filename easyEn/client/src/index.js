@@ -21,19 +21,19 @@ export const LESSDETAILS_ROUTE = '/lesson/:id'
 
 export const NAV_ITEMS = [
     {
-        title:"Главная",
+        title:"home",
         path: HOME_ROUTE,
     },
     {
-        title:"Уроки",
+        title:"lessons",
         path: LESSON_ROUTE,
     },
     {
-        title:"Статистика",
+        title:"statistic",
         path: ROUTES.statistic
     },
     {
-        title:"Профиль",
+        title:"profile",
         path: PROFILE_ROUTE,
     },
 ]
