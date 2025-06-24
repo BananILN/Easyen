@@ -1,141 +1,238 @@
-import { message } from "antd";
-import React, { useState } from "react";
+import { message, Button, Input, Upload, Form, Modal, Space, Spin } from "antd";
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next"; // Добавляем useTranslation
 import { createLesson } from "../http/LessonApi";
-import {Button, Input, Upload} from "antd";
-import {UploadOutlined} from "@ant-design/icons"
+import { UploadOutlined, CheckCircleOutlined, LoadingOutlined } from "@ant-design/icons";
+import { jwtDecode } from "jwt-decode";
 
+const ModalLessonAdd = ({ open, onClose, onLessonCreated }) => {
+  const { t } = useTranslation(); // Добавляем хук перевода
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [fileLoading, setFileLoading] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
-export default function ModalLessonAdd({visible, onClose, onLessonCreated}){
+  useEffect(() => {
+    if (open) {
+      form.resetFields();
+      setUploadedFileName(null);
+      setSelectedFile(null);
+    } else {
+      form.resetFields();
+      setUploadedFileName(null);
+      setSelectedFile(null);
+    }
+  }, [open, form]);
 
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [file,setFile] = useState(null);
-    const [loading, setLoading] = useState(false);
+  const handleSubmit = async (values) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      message.error(t("authorization_required"));
+      return;
+    }
 
-    const handleSubmit = async () =>{
+    try {
+      const decoded = jwtDecode(token);
+      if (decoded.RoleID !== 2) {
+        message.error(t("access_denied"));
+        return;
+      }
+    } catch (e) {
+      message.error(t("access_check_error"));
+      return;
+    }
 
-        const token = localStorage.getItem('token');
-        if (!token) {
-            message.error('Требуется авторизация');
-            return;
-        }
+    const trimmedTitle = values.title.trim();
+    if (!trimmedTitle) {
+      message.error(t("lesson_title_required"));
+      return;
+    }
+    const isValidTitle = /^[a-zA-ZА-Яа-я0-9\s.,!?;-]{3,100}$/.test(trimmedTitle);
+    if (!isValidTitle) {
+      message.error(t("invalid_lesson_title"));
+      return;
+    }
 
-        try {
-            const decoded = jwtDecode(token);
-            if (decoded.RoleID !== 2) { 
-            message.error('Недостаточно прав');
-            return;
-            }
-            
-        
-        } catch (e) {
-            message.error('Ошибка проверки прав доступа');
-        }
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("title", trimmedTitle);
+      formData.append("content", values.content || "");
+      formData.append("sections", JSON.stringify(values.sections || []));
+      if (selectedFile) {
+        formData.append("img", selectedFile);
+      }
 
-        const trimmedTitle = title.trim();
+      const newLesson = await createLesson(formData);
+      message.success(t("lesson_created_success"));
+      onLessonCreated(newLesson);
+      onClose();
+    } catch (error) {
+      message.error(`${t("error_creating_lesson")}: ${error.response?.data?.message || error.message}`);
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-          const isValidTitle = /^[a-zA-ZА-Яа-я0-9\s.,!?:-]{3,1000}$/.test(trimmedTitle);
-          if (!isValidTitle) {
-            message.error(
-              "Название должно содержать от 3 до 100 символов, без специальных символов типа @#$%^&*"
-            );
-            return;
-        }
+  const handleFileChange = ({ file, fileList }) => {
+    setFileLoading(true);
+    if (file && file.status !== "removed") {
+      setUploadedFileName(file.name);
+      setSelectedFile(file.originFileObj || file);
+      setFileLoading(false);
+    } else {
+      setUploadedFileName(null);
+      setSelectedFile(null);
+      setFileLoading(false);
+    }
+  };
 
-        setLoading(true);
-        try {
-            const formData = new FormData();
-            formData.append("title", title);
-            formData.append("content", content);
-            if (file) {
-              formData.append("img", file);
-            }
-      
-            const newLesson = await createLesson(formData);
-            message.success("Урок успешно создан");
+  const handleClose = () => {
+    form.resetFields();
+    setUploadedFileName(null);
+    setSelectedFile(null);
+    onClose();
+  };
 
-            onLessonCreated(newLesson);
-            handleClose();
+  const isFormValid =
+    form.getFieldsError().every((field) => !field.errors.length) &&
+    form.isFieldsTouched(true) &&
+    form.getFieldValue("title")?.trim() &&
+    form.getFieldValue("content");
 
-          } catch (error) {
-            message.error("Ошибка при создании урока");
-            console.error(error);
-          } finally {
-            setLoading(false);
-          }
-    };
+  return (
+    <Modal
+      open={open}
+      title={t("add_lesson")} 
+      onCancel={handleClose}
+      footer={null}
+      className="modal-main"
+      width={700}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        initialValues={{ sections: [] }}
+      >
+        <Form.Item
+          name="title"
+          label={t("lesson_title")} 
+          rules={[{ required: true, message: t("please_input_lesson_title") }]}
+        >
+          <Input placeholder={t("enter_lesson_title")} />
+        </Form.Item>
 
-    const handleClose = () => {
-        setTitle("");
-        setContent("");
-        setFile(null);
-        onClose();
-      };
+        <Form.Item
+          name="content"
+          label={t("lesson_description")} 
+          rules={[{ required: true, message: t("please_input_lesson_description") }]}
+        >
+          <Input.TextArea placeholder={t("enter_lesson_description")} rows={4} />
+        </Form.Item>
 
-      const beforeUpload = (file) => {
-        setFile(file);
-        return false; 
-      };
-    
-      if (!visible) return null;
+        <Form.Item label={t("lesson_sections")}> 
+          <Form.List name="sections">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map((field) => (
+                  <Space
+                    key={field.key}
+                    direction="vertical"
+                    style={{ display: "flex", marginBottom: 8 }}
+                    align="start"
+                  >
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "title"]}
+                      fieldKey={[field.fieldKey, "title"]}
+                      rules={[{ required: true, message: t("please_input_section_title") }]}
+                    >
+                      <Input placeholder={t("enter_section_title")} />
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "content"]}
+                      fieldKey={[field.fieldKey, "content"]}
+                      rules={[{ required: true, message: t("please_input_section_content") }]}
+                    >
+                      <Input.TextArea placeholder={t("enter_section_content")} rows={3} />
+                    </Form.Item>
+                    <Button type="danger" onClick={() => remove(field.name)}>
+                      {t("remove_section")}
+                    </Button>
+                  </Space>
+                ))}
+                <Form.Item>
+                  <Button type="dashed" onClick={() => add()} block>
+                    {t("add_section")} 
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+        </Form.Item>
 
-   
-    return (
-        <div className="modal-overlay">
-        <div className="modal-main">
-          <div className="modal-header">
-            <h2>Добавить новый урок</h2>
-            <button className="close-btn" onClick={handleClose}>
-              &times;
-            </button>
+        <Form.Item
+          label={t("upload_image")} 
+          name="file"
+          valuePropName="fileList"
+          getValueFromEvent={(e) => {
+            const files = Array.isArray(e) ? e : e?.fileList || [];
+            return files;
+          }}
+        >
+          <Upload
+            beforeUpload={() => false}
+            onChange={handleFileChange}
+            maxCount={1}
+            accept="image/*"
+            fileList={form.getFieldValue("file") || []}
+            showUploadList={false}
+          >
+            <Button
+              icon={
+                fileLoading ? (
+                  <Spin indicator={<LoadingOutlined />} />
+                ) : uploadedFileName ? (
+                  <CheckCircleOutlined style={{ color: "green" }} />
+                ) : (
+                  <UploadOutlined />
+                )
+              }
+            >
+              {fileLoading
+                ? t("uploading")
+                : uploadedFileName
+                ? `${t("uploaded")}: ${uploadedFileName}`
+                : t("select_file")}
+            </Button>
+          </Upload>
+        </Form.Item>
+        {uploadedFileName && (
+          <div style={{ marginTop: 8, color: "green", fontSize: "0.9rem" }}>
+            {t("file")}: {uploadedFileName}
           </div>
-  
-          <div className="modal-body">
-            <div className="form-group">
-              <label>Название урока</label>
-              <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Введите название"
-              />
-            </div>
-  
-            <div className="form-group">
-              <label>Описание урока</label>
-              <Input.TextArea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Введите описание"
-                rows={4}
-              />
-            </div>
-  
-            <div className="form-group">
-              <label>Изображение</label>
-              <Upload
-                beforeUpload={beforeUpload}
-                showUploadList={false}
-                accept="image/*"
-              >
-                <Button icon={<UploadOutlined />}>
-                  {file ? file.name : "Выберите файл"}
-                </Button>
-              </Upload>
-            </div>
-          </div>
-  
-          <div className="modal-footer">
-            <Button onClick={handleClose}>Отмена</Button>
+        )}
+
+        <Form.Item>
+          <Space>
             <Button
               type="primary"
-              onClick={handleSubmit}
+              htmlType="submit"
               loading={loading}
-              disabled={!title.trim()}
+              disabled={!isFormValid}
             >
-              Создать урок
+              {t("create_lesson")} 
             </Button>
-          </div>
-        </div>
-      </div>
-    )
-}
+            <Button onClick={handleClose}>{t("cancel")}</Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
+
+export default ModalLessonAdd;

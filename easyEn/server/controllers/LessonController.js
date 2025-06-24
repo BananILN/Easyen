@@ -13,7 +13,19 @@ const { Lesson, Test } = models;
 class LessonController{
     async create(req, res, next) {
         try {
-            const { title, content, sections = [] } = req.body;
+            let { title, content, sections: rawSections } = req.body;
+            
+            let sections = [];
+            if (typeof rawSections === 'string') {
+                try {
+                    sections = JSON.parse(rawSections);
+                } catch (e) {
+                    console.error("Ошибка парсинга sections при создании:", e);
+                    sections = [];
+                }
+            } else {
+                sections = Array.isArray(rawSections) ? rawSections : [];
+            }
             let fileName = null;
 
             if (req.files && req.files.img) {
@@ -22,6 +34,7 @@ class LessonController{
                 await img.mv(path.resolve(__dirname, '..', 'static', fileName));
             }
             const lesson = await Lesson.create({ title, content, img: fileName, sections });
+            console.log("Созданный урок (sections как массив):", lesson.sections);
             return res.json(lesson);
         } catch (e) {
             next(ApiError.badRequest(e.message));
@@ -49,10 +62,22 @@ class LessonController{
             next(ApiError.badRequest(e.message));
         }
     }
-      async update(req, res, next) {
+     async update(req, res, next) {
         try {
             const { id } = req.params;
-            const { title, content, sections } = req.body;
+            let { title, content, sections: rawSections } = req.body;
+            // Парсим строку JSON, если она пришла
+            let sections = [];
+            if (typeof rawSections === 'string') {
+                try {
+                    sections = JSON.parse(rawSections);
+                } catch (e) {
+                    console.error("Ошибка парсинга sections при обновлении:", e);
+                    sections = [];
+                }
+            } else {
+                sections = Array.isArray(rawSections) ? rawSections : [];
+            }
             let fileName = null;
 
             const lesson = await Lesson.findByPk(id);
@@ -78,15 +103,14 @@ class LessonController{
                 title: title || lesson.title,
                 content: content || lesson.content,
                 img: fileName || lesson.img,
-                sections: sections || lesson.sections,
+                sections: sections,
             });
-
+            console.log("Обновленный урок (sections как массив):", lesson.sections);
             return res.json(lesson);
         } catch (e) {
             next(ApiError.badRequest(e.message));
         }
     }
-
 
     async getAll(req, res){
         const lessons = await Lesson.findAll()

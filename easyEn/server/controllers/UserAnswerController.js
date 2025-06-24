@@ -36,17 +36,21 @@ class UserAnswerController {
   }
 
 
-  async deleteByTestAndUser(req, res, next) {
-    try {
-      const { testId, userId } = req.params;
-      await UserAnswer.destroy({
-        where: { TestID: testId, UserID: userId },
-      });
-      return res.json({ message: "Ответы пользователя успешно удалены" });
-    } catch (e) {
-      return next(ApiError.badRequest(e.message));
+async deleteByTestAndUser(req, res, next) {
+  try {
+    const { testId, userId, questionId } = req.params;
+    const whereClause = { TestID: testId, UserID: userId };
+    if (questionId) {
+      whereClause.QuestionID = questionId;
     }
+    await UserAnswer.destroy({
+      where: whereClause,
+    });
+    return res.json({ message: "Ответы пользователя успешно удалены" });
+  } catch (e) {
+    return next(ApiError.badRequest(e.message));
   }
+}
 }
 
 export default new UserAnswerController();

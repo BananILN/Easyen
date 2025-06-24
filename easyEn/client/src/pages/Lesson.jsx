@@ -1,94 +1,75 @@
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useSearchParams } from "react-router";
-import { useState, useEffect } from "react";
 import CourseCard from "../components/CourseCard";
 import { fetchLesson } from "../http/LessonApi";
-import { Button } from "antd";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import ModalLessonAdd from "../components/ModalLesson";
-import ModalLessonEdit from "../components/ModalLessonEdit";
-import ModalLessonDelete from "../components/ModalLessonDelete";
+import { fetchTestByLesson, fetchProgress } from "../http/TestApi";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import Loader from "../components/Loader";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { UserContext } from "../context/UserContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Lesson = () => {
   const { id } = useParams();
+  const { user } = useContext(UserContext);
+  const { theme } = useContext(ThemeContext);
   const [lesson, setLesson] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
-  const [modalAddVisible, setModalAddVisible] = useState(false);
-  const [modalEditVisible, setModalEditVisible] = useState(false);
-  const [selectedLesson, setSelectedLesson] = useState(null);
-  const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-  const [selectedLessonForDelete, setSelectedLessonForDelete] = useState(null);
+  const [progressData, setProgressData] = useState({});
   const { t } = useTranslation();
-
-  const handleLessonCreated = (newLesson) => {
-    if (newLesson.img) {
-      newLesson.imgUrl = `http://localhost:5000/static/${newLesson.img}?t=${new Date().getTime()}`;
-    }
-    setLesson([...lesson, newLesson]);
-  };
-
-  const handleLessonUpdated = (updatedLesson) => {
-    setLesson(lesson.map(item =>
-      item.LessonID === updatedLesson.LessonID ? updatedLesson : item
-    ));
-  };
-
-  const handleLessonDeleted = (deletedLessonId) => {
-    setLesson(lesson.filter(item => item.LessonID !== deletedLessonId));
-  };
-
-  const handleEditLesson = (lesson) => {
-    setSelectedLesson(lesson);
-    setModalEditVisible(true);
-  };
-
-  const handleDeleteLesson = (lesson) => {
-    setSelectedLessonForDelete(lesson);
-    setModalDeleteVisible(true);
-  };
-
-  const updateSearchParams = (newSearch) => {
-    setSearchParams((params) => {
-      if (newSearch) {
-        params.set("search", newSearch);
-      } else {
-        params.delete("search");
-      }
-      return params;
-    });
-  };
-
-  const filteredLessons = lesson.filter(item =>
-    item.title.toLowerCase().includes(search.toLowerCase())
-  );
 
   const handleSearchChange = (e) => {
     const newSearch = e.target.value;
     setSearchParams(newSearch ? { search: newSearch } : {});
   };
 
+  const filteredLessons = lesson.filter((item) =>
+    item.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   useEffect(() => {
     let isMounted = true;
 
     const getCourses = async () => {
       try {
-        const data = await fetchLesson(search);
-        const updatedData = data.map(item => ({
+        setLoading(true);
+        const lessonData = await fetchLesson("");
+        const updatedLessons = lessonData.map((item) => ({
           ...item,
-          imgUrl: item.img ? `http://localhost:5000/static/${item.img}?t=${new Date().getTime()}` : null
+          imgUrl: item.img ? `http://localhost:5000/static/${item.img}?t=${new Date().getTime()}` : null,
         }));
-        setLesson(updatedData);
-        setLoading(false);
+
+        const lessonsWithTests = await Promise.all(
+          updatedLessons.map(async (lessonItem) => {
+            const tests = await fetchTestByLesson(lessonItem.LessonID);
+            return { ...lessonItem, tests };
+          })
+        );
+
+        setLesson(lessonsWithTests);
+
+        if (user?.UserID) {
+          const progressPromises = lessonsWithTests.map(async (lessonItem) => {
+            const progress = await fetchProgress(user.UserID, lessonItem.LessonID);
+            return { lessonId: lessonItem.LessonID, progress };
+          });
+          const progressResults = await Promise.all(progressPromises);
+          const progressMap = progressResults.reduce((acc, { lessonId, progress }) => {
+            acc[lessonId] = progress;
+            return acc;
+          }, {});
+          setProgressData(progressMap);
+        }
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -97,14 +78,22 @@ const Lesson = () => {
     return () => {
       isMounted = false;
     };
-  }, [search]);
+  }, [user]);
+
+  const loaderColor = theme === "light" ? "#333333" : theme === "dark" ? "#ffffff" : "#ffffff";
 
   if (loading) {
-    return <div className="loader"><Loader /></div>;
+    return (
+      <div className="lesson-main-page">
+        <div className="loader-centered">
+          <Loader color={loaderColor} />
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>{t('error')}: {error}</div>;
+    return <div>{t("error")}: {error}</div>;
   }
 
   return (
@@ -112,48 +101,16 @@ const Lesson = () => {
       <input
         type="text"
         className="search-input"
-        placeholder={t('search_courses')}
+        placeholder={t("search_courses")}
         value={search}
         onChange={handleSearchChange}
       />
       <div className="title-content">
-        <h1>{t('courses')}</h1>
+        <h1>{t("courses")}</h1>
       </div>
-      <div>
-        <div style={{ margin: "20px 0", display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="primary"
-            onClick={() => setModalAddVisible(true)}
-          >
-            {t('add_lesson')}
-          </Button>
-        </div>
-
-        <ModalLessonAdd
-          visible={modalAddVisible}
-          onClose={() => setModalAddVisible(false)}
-          onLessonCreated={handleLessonCreated}
-        />
-        <ModalLessonEdit
-          visible={modalEditVisible}
-          onClose={() => setModalEditVisible(false)}
-          lesson={selectedLesson}
-          onLessonUpdated={handleLessonUpdated}
-        />
-        <ModalLessonDelete
-          visible={modalDeleteVisible}
-          onClose={() => {
-            setModalDeleteVisible(false);
-            setSelectedLessonForDelete(null);
-          }}
-          lesson={selectedLessonForDelete}
-          onLessonDeleted={handleLessonDeleted}
-        />
-      </div>
-
       <div className="card-container">
         {filteredLessons.length === 0 ? (
-          <div>{t('no_lessons_found')}</div>
+          <div>{t("no_lessons_found")}</div>
         ) : (
           <div className="swiper-wrapper">
             <div className="swiper-nav-prev" />
@@ -162,8 +119,8 @@ const Lesson = () => {
               spaceBetween={10}
               slidesPerView={3}
               navigation={{
-                prevEl: '.swiper-nav-prev',
-                nextEl: '.swiper-nav-next',
+                prevEl: ".swiper-nav-prev",
+                nextEl: ".swiper-nav-next",
               }}
               pagination={{ clickable: true }}
               breakpoints={{
@@ -191,7 +148,10 @@ const Lesson = () => {
             >
               {filteredLessons.map((item) => (
                 <SwiperSlide key={item.LessonID}>
-                  <CourseCard lesson={item} onEdit={handleEditLesson} onDelete={handleDeleteLesson} />
+                  <CourseCard
+                    lesson={item}
+                    progress={progressData[item.LessonID] || []}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>

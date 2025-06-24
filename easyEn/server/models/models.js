@@ -42,8 +42,13 @@ const Test = sequelize.define('Test', {
     TestID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false }, 
     createdBy: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, allowNull: true }, 
-    LessonID: { type: DataTypes.INTEGER, allowNull: false } ,
-    order: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 }
+    LessonID: { type: DataTypes.INTEGER, allowNull: false },
+    order: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
+    testType: { 
+        type: DataTypes.ENUM('regular', 'classic', 'trueFalse'), 
+        allowNull: false, 
+        defaultValue: 'regular' 
+    }
 });
 
 const Question = sequelize.define('Question', {
@@ -169,3 +174,4 @@ TeacherGroup.belongsTo(User, { foreignKey: 'TeacherID' });
 }
 
  
+

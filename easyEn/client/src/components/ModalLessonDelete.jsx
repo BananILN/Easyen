@@ -3,7 +3,7 @@ import { Button, message } from "antd";
 import { deleteLesson } from "../http/LessonApi";
 import { jwtDecode } from "jwt-decode";
 
-export default function ModalLessonDelete({ visible, onClose, lesson, onLessonDeleted }) {
+export default function ModalLessonDelete({ open, onClose, lesson, onLessonDeleted }) {
   const [loading, setLoading] = React.useState(false);
 
   const handleDelete = async () => {
@@ -31,14 +31,14 @@ export default function ModalLessonDelete({ visible, onClose, lesson, onLessonDe
       onLessonDeleted(lesson.LessonID);
       onClose();
     } catch (error) {
-      message.error("Ошибка при удалении урока");
-      console.error(error);
+      message.error("Ошибка при удалении урока: " + (error.response?.data?.message || error.message));
+      console.error("Ошибка удаления:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (!visible) return null;
+  if (!open) return null;
 
   return (
     <div className="modal-overlay">

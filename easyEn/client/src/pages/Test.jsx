@@ -1,12 +1,28 @@
-import { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router";
-import { fetchTestById, fetchQuestionsByTest, fetchAnswersByQuestion, submitTestResult, fetchProgress, saveProgress, saveUserAnswers, fetchUserAnswersByTest, deleteUserAnswersByTest } from "../http/TestApi";
+import { useTranslation } from "react-i18next";
+import {
+  fetchTestById,
+  fetchQuestionsByTest,
+  fetchAnswersByQuestion,
+  submitTestResult,
+  fetchProgress,
+  saveProgress,
+  saveUserAnswers,
+  fetchUserAnswersByTest,
+  deleteUserAnswersByTest,
+} from "../http/TestApi";
 import { fetchOneLesson } from "../http/LessonApi";
-import Loader from "../components/Loader";
-import { Button } from "antd";
+import LoaderNote from "../components/Loader";
+import { Button, message } from "antd";
 import { UserContext } from "../context/UserContext";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import humanOnglas from '../assets/humanOnglas.png';
+import pAtoms from '../assets/pAtoms.png';
+import human from '../assets/human.png';
 
 const Test = () => {
+  const { t } = useTranslation();
   const { id: testId } = useParams();
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
@@ -23,6 +39,30 @@ const Test = () => {
   const [results, setResults] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [completedTests, setCompletedTests] = useState([]);
+  const [feedback, setFeedback] = useState({});
+  const [isLocked, setIsLocked] = useState({});
+  const [showConfetti, setShowConfetti] = useState({});
+  const [hasShaken, setHasShaken] = useState({});
+
+  const answerRefs = useRef({});
+  const isSaving = useRef(false);
+
+   const backgroundStyle = {
+  content: '',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundImage: `url(${humanOnglas}), url(${pAtoms}), url(${human})`,
+  backgroundSize: '30%, 40%, 35%',
+  backgroundPosition: '10% 10%, 70% 70%, 30% 50%',
+  backgroundRepeat: 'no-repeat',
+  opacity: 0.2,
+  backgroundBlendMode: 'overlay',
+  zIndex: -1,
+  animation: 'fadeBackground 15s infinite ease-in-out',
+};
 
   useEffect(() => {
     const loadTestData = async () => {
@@ -35,40 +75,41 @@ const Test = () => {
           setTestNotFound(true);
           return;
         }
-        console.log('Test - testData:', testData);
         setTest(testData);
 
         if (!testData.LessonID || isNaN(testData.LessonID)) {
-          throw new Error(`Неверный LessonID: ${testData.LessonID}`);
+          throw new Error(t("invalid_lesson_id", { id: testData.LessonID }));
         }
 
         const lessonData = await fetchOneLesson(testData.LessonID);
-        console.log("Test - Lesson data:", lessonData);
-        if (!lessonData) {
-          throw new Error("Урок не найден");
-        }
         setLesson(lessonData);
 
         const questionsData = await fetchQuestionsByTest(testData.TestID);
+        console.log("Fetched questions for test ID", testId, ":", questionsData);
         if (questionsData.length === 0) {
-          throw new Error("Вопросы для теста не найдены");
+          console.warn("No questions found for test ID:", testId);
+          setError(t("no_questions_found"));
+          return;
         }
         const limitedQuestions = questionsData.slice(0, 15);
         setQuestions(limitedQuestions);
 
         const answersData = {};
         const initialSelectedAnswers = {};
+        const initialIsLocked = {};
         for (const question of limitedQuestions) {
           const questionAnswers = await fetchAnswersByQuestion(question.QuestionID);
           answersData[question.QuestionID] = questionAnswers;
           initialSelectedAnswers[question.QuestionID] = [];
+          initialIsLocked[question.QuestionID] = false;
         }
         setAnswers(answersData);
         setSelectedAnswers(initialSelectedAnswers);
+        setIsLocked(initialIsLocked);
       } catch (err) {
-        console.error('Test - Ошибка загрузки данных:', err);
-        setError(err.message || "Ошибка загрузки данных");
-      } finally {
+        console.error("Test - Error loading data:", err);
+        setError(err.message || t("error_loading_data"));
+      } finally {                                                                                                                                                                                                                                                                                    
         setLoading(false);
       }
     };
@@ -77,32 +118,122 @@ const Test = () => {
       loadTestData();
     } else {
       setLoading(false);
-      setError("Пользователь не авторизован");
+      setError(t("user_not_authenticated"));
     }
-  }, [testId, user]);
+  }, [testId, user, t]);
 
-  const handleAnswerSelect = (questionId, answerId, isMultipleChoice) => {
+  const handleAnswerSelect = async (questionId, answerId) => {
+    const currentQuestionId = questions[currentQuestionIndex]?.QuestionID;
+    if (!currentQuestionId || isLocked[currentQuestionId]) return;
+
     setSelectedAnswers((prev) => {
-      const currentSelection = prev[questionId] || [];
-      if (isMultipleChoice) {
-        if (currentSelection.includes(answerId)) {
-          return {
+      const newSelection = [answerId]; 
+
+    
+      const correctAnswerIds = answers[questionId].filter((a) => a.IsCorrect).map((a) => a.AnswerID);
+
+      
+      const isCorrect = correctAnswerIds.includes(answerId);
+
+      
+      setFeedback((prev) => ({
+        ...prev,
+        [questionId]: {
+          isCorrect,
+          correctAnswers: correctAnswerIds,
+          userAnswers: newSelection,
+        },
+      }));
+
+      
+      if (!isCorrect) {
+        if (!hasShaken[`${questionId}-${answerId}`]) {
+          animateShake(questionId, answerId);
+          setHasShaken((prev) => ({
             ...prev,
-            [questionId]: currentSelection.filter((id) => id !== answerId),
-          };
-        } else {
-          return {
-            ...prev,
-            [questionId]: [...currentSelection, answerId],
-          };
+            [`${questionId}-${answerId}`]: true,
+          }));
         }
-      } else {
-        return {
-          ...prev,
-          [questionId]: [answerId],
-        };
       }
+
+   
+      if (isCorrect) {
+        correctAnswerIds.forEach((correctId) => {
+          if (!showConfetti[`${questionId}-${correctId}`]) {
+            animateConfetti(questionId, correctId);
+            setShowConfetti((prev) => ({
+              ...prev,
+              [`${questionId}-${correctId}`]: true,
+            }));
+          }
+        });
+      }
+
+     
+      setIsLocked((prev) => ({
+        ...prev,
+        [questionId]: true,
+      }));
+
+      saveAnswerToDB(questionId, newSelection);
+
+      return {
+        ...prev,
+        [questionId]: newSelection,
+      };
     });
+  };
+
+  const saveAnswerToDB = async (questionId, answerIds) => {
+  const userId = user?.UserID;
+  if (!userId || !test || isSaving.current) return;
+
+  isSaving.current = true;
+  try {
+    const answersToSave = answerIds.map((answerId) => ({
+      UserID: userId,
+      QuestionID: questionId,
+      AnswerID: answerId,
+      TestID: test.TestID,
+    }));
+
+    
+    const existingAnswers = await fetchUserAnswersByTest(test.TestID, userId);
+    const existingForQuestion = existingAnswers.filter((a) => a.QuestionID === questionId);
+    if (existingForQuestion.length > 0) {
+      await deleteUserAnswersByTest(test.TestID, userId, questionId); 
+    }
+
+    await Promise.all(answersToSave.map((answer) => saveUserAnswers(answer)));
+    message.success(t("answer_saved_success"));
+  } catch (err) {
+    console.error("Ошибка сохранения ответа:", err);
+    message.error(t("error_saving_answer"));
+  } finally {
+    isSaving.current = false;
+  }
+};
+
+  const animateShake = (questionId, answerId) => {
+    const element = answerRefs.current[`${questionId}-${answerId}`];
+    if (element) {
+      element.classList.remove("horizontal-shaking");
+      requestAnimationFrame(() => {
+        element.style.animation = "none";
+        element.offsetHeight;
+        element.style.animation = "";
+        element.classList.add("horizontal-shaking");
+      });
+    }
+  };
+
+  const animateConfetti = (questionId, answerId) => {
+    const element = answerRefs.current[`${questionId}-${answerId}`];
+    if (element) {
+      element.classList.remove("bubbly-effect", "animate");
+      void element.offsetWidth;
+      element.classList.add("bubbly-effect", "animate");
+    }
   };
 
   const isAnswerSelected = () => {
@@ -117,6 +248,8 @@ const Test = () => {
     if (!isAnswerSelected()) return;
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setShowConfetti({});
+      setHasShaken({});
     } else {
       calculateScore();
     }
@@ -128,99 +261,59 @@ const Test = () => {
     }
   };
 
-  const calculateScore = async () => {
-    let correctAnswers = 0;
-    const detailedResults = [];
+const calculateScore = async () => {
+  let correctAnswers = 0;
+  const detailedResults = [];
 
-    const userAnswersToSave = [];
+  questions.forEach((question) => {
+    const userAnswers = selectedAnswers[question.QuestionID] || [];
+    const correctAnswerIds = answers[question.QuestionID]
+      .filter((answer) => answer.IsCorrect)
+      .map((answer) => answer.AnswerID);
 
-    questions.forEach((question) => {
-      const userAnswers = selectedAnswers[question.QuestionID] || [];
-      const correctAnswerIds = answers[question.QuestionID]
-        .filter((answer) => answer.IsCorrect)
-        .map((answer) => answer.AnswerID);
+    const isCorrect = userAnswers.length > 0 && correctAnswerIds.includes(userAnswers[0]);
 
-      let isCorrect = false;
-      if (question.IsMultipleChoice) {
-        isCorrect =
-          userAnswers.length === correctAnswerIds.length &&
-          userAnswers.every((answerId) => correctAnswerIds.includes(answerId));
-      } else {
-        isCorrect = userAnswers[0] && correctAnswerIds.includes(userAnswers[0]);
-      }
+    if (isCorrect) correctAnswers++;
 
-      if (isCorrect) correctAnswers++;
+    const userAnswerTexts = userAnswers.map((answerId) =>
+      answers[question.QuestionID].find((ans) => ans.AnswerID === answerId)?.AnswerText || t("not_selected")
+    );
+    const correctAnswerTexts = correctAnswerIds.map((answerId) =>
+      answers[question.QuestionID].find((ans) => ans.AnswerID === answerId)?.AnswerText
+    );
 
-      const userAnswerTexts = userAnswers.map((answerId) =>
-        answers[question.QuestionID].find((ans) => ans.AnswerID === answerId)?.AnswerText || "Не выбрано"
-      );
-      const correctAnswerTexts = correctAnswerIds.map((answerId) =>
-        answers[question.QuestionID].find((ans) => ans.AnswerID === answerId)?.AnswerText
-      );
-
-      detailedResults.push({
-        questionText: question.QuestionText,
-        userAnswers: userAnswerTexts,
-        correctAnswers: correctAnswerTexts,
-        isCorrect,
-      });
-
-      userAnswers.forEach((answerId) => {
-        userAnswersToSave.push({
-          UserID: user.UserID,
-          QuestionID: question.QuestionID,
-          AnswerID: answerId,
-          TestID: test.TestID,
-        });
-      });
+    detailedResults.push({
+      questionText: question.QuestionText,
+      userAnswers: userAnswerTexts,
+      correctAnswers: correctAnswerTexts,
+      isCorrect,
     });
+  });
 
-    const finalScore = Math.round((correctAnswers / questions.length) * 100);
-    const endTime = new Date();
-    const timeTaken = Math.round((endTime - startTime) / 1000);
-    setScore(finalScore);
-    setResults(detailedResults);
+  const finalScore = Math.round((correctAnswers / questions.length) * 100);
+  const endTime = new Date();
+  const timeTaken = Math.round((endTime - startTime) / 1000);
+  setScore(finalScore);
+  setResults(detailedResults);
 
-    const userId = user?.UserID;
-    if (userId && test) {
-      const existingUserAnswers = await fetchUserAnswersByTest(test.TestID, userId);
-      if (existingUserAnswers.length > 0) {
-        await deleteUserAnswersByTest(test.TestID, userId);
-      }
-
-      try {
-        await Promise.all(
-          userAnswersToSave.map((userAnswer) => saveUserAnswers(userAnswer))
-        );
-        console.log("Ответы пользователя успешно сохранены или обновлены");
-      } catch (err) {
-        console.error("Ошибка при сохранении ответов пользователя:", err);
-      }
-
-      await fetch(`${import.meta.env.VITE_API_URL}/api/testResult`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          TestID: test.TestID,
-          UserID: userId,
-          Score: finalScore,
-          timeTaken,
-        }),
-      }).catch((err) => {
-        console.error("Ошибка при отправке результата теста:", err);
-      });
-
+  const userId = user?.UserID;
+  if (userId && test) {
+    try {
+      await submitTestResult(test.TestID, userId, finalScore, timeTaken, detailedResults);
       await saveProgress(userId, test.LessonID, test.TestID, true);
+      message.success(t("test_completed_success"));
+      navigate(`/lesson/${test.LessonID}?currentLessonIndex=${completedTests.length + 1}`);
+    } catch (err) {
+      console.error("Ошибка сохранения результата теста:", err);
+      message.error(t("error_completing_test"));
     }
-  };
+  }
+};
 
   const handleNextTest = async () => {
     const userId = user?.UserID;
     if (!userId) {
-      setError("Пользователь не авторизован");
+      setError(t("user_not_authenticated"));
       return;
     }
 
@@ -232,21 +325,14 @@ const Test = () => {
       setCompletedTests(savedCompletedTests);
 
       const nextIndex = savedCompletedTests.length;
-      console.log("handleNextTest - lesson.tests:", lesson?.tests);
-      console.log("handleNextTest - savedCompletedTests:", savedCompletedTests);
-      console.log("handleNextTest - test.LessonID:", test.LessonID);
-      console.log("handleNextTest - Navigating to:", `/lesson/${test.LessonID}?currentLessonIndex=${nextIndex}`);
-
       if (!test.LessonID || isNaN(test.LessonID)) {
-        throw new Error(`Неверный LessonID: ${test.LessonID}`);
+        throw new Error(t("invalid_lesson_id", { id: test.LessonID }));
       }
 
       if (!lesson || !lesson.tests) {
-        console.warn("handleNextTest - Данные урока отсутствуют, загружаем заново");
         const lessonData = await fetchOneLesson(test.LessonID);
         setLesson(lessonData);
         if (!lessonData.tests) {
-          console.error("handleNextTest - Тесты урока не найдены");
           navigate(`/lesson/${test.LessonID}/results`);
           return;
         }
@@ -254,15 +340,15 @@ const Test = () => {
 
       navigate(`/lesson/${test.LessonID}?currentLessonIndex=${nextIndex}`, { replace: true });
     } catch (error) {
-      console.error("handleNextTest - Ошибка:", error);
-      setError("Не удалось перейти к следующей части урока");
+      console.error("handleNextTest - Error:", error);
+      setError(t("failed_to_proceed"));
     }
   };
 
   const handleReturnToLesson = async () => {
     const userId = user?.UserID;
     if (!userId) {
-      setError("Пользователь не авторизован");
+      setError(t("user_not_authenticated"));
       return;
     }
 
@@ -282,8 +368,8 @@ const Test = () => {
         navigate(`/lesson/${test.LessonID}/results`);
       }
     } catch (error) {
-      console.error("handleReturnToLesson - Ошибка:", error);
-      setError("Не удалось вернуться к уроку");
+      console.error("handleReturnToLesson - Error:", error);
+      setError(t("failed_to_return"));
     }
   };
 
@@ -297,26 +383,26 @@ const Test = () => {
             .map((progress) => progress.TestID);
           setCompletedTests(savedCompletedTests);
         } catch (error) {
-          console.error("loadProgress - Ошибка:", error);
-          setError("Ошибка загрузки прогресса");
+          console.error("loadProgress - Error:", error);
+          setError(t("error_loading_progress"));
         }
       }
     };
     loadProgress();
-  }, [score, user, test]);
+  }, [score, user, test, t]);
 
   const progressPercentage = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   if (loading) {
-    return <div className="loader"><Loader /></div>;
+    return <div className="loader"><LoaderNote /></div>;
   }
 
   if (error) {
     return (
       <div className="error">
-        Ошибка: {error}
-        <Button type="primary" onClick={() => navigate(`/lesson/${test?.LessonID || ''}`)}>
-          Вернуться к уроку
+        {t("error")}: {error}
+        <Button type="primary" onClick={() => navigate(`/lesson/${test?.LessonID || ""}`)}>
+          {t("return_to_lesson")}
         </Button>
       </div>
     );
@@ -325,25 +411,31 @@ const Test = () => {
   if (testNotFound) {
     return (
       <div className="test-page">
-        <h1>Тест не найден</h1>
-        <p>Для этого урока тест ещё не создан.</p>
-        <Button type="primary" onClick={() => navigate(`/lesson/${test?.LessonID || ''}`)}>
-          Вернуться к уроку
+        <h1>{t("test_not_found")}</h1>
+        <p>{t("test_not_created")}</p>
+        <Button type="primary" onClick={() => navigate(`/lesson/${test?.LessonID || ""}`)}>
+          {t("return_to_lesson")}
         </Button>
       </div>
     );
   }
 
-  if (score !== null && lesson) {
+ 
+
+  if (score !== null && lesson && test.testType === "regular") {
     const userId = user?.UserID;
-    if (!userId) return <div>Пользователь не авторизован</div>;
+    if (!userId) return <div>{t("user_not_authenticated")}</div>;
 
     return (
       <div className="test-page">
-        <h1>Результат теста</h1>
-        <p>Ваш результат: {score}%</p>
+       
+      
+        <h1>{t("test_results")}</h1>
+        <p>
+          {t("your_score")}: {score}%
+        </p>
         <Button type="primary" onClick={handleNextTest}>
-          Далее
+          {t("next")}
         </Button>
       </div>
     );
@@ -354,43 +446,123 @@ const Test = () => {
 
   return (
     <div className="test-page">
+       
+    
       <h1>{test?.title}</h1>
       <div className="question-container">
-        <h2>Вопрос {currentQuestionIndex + 1} из {questions.length}</h2>
+        <h2>
+          {t("question_progress", { index: currentQuestionIndex + 1, total: questions.length })}
+        </h2>
         <p className="question-text">{currentQuestion?.QuestionText}</p>
-        <div className="answers-container">
-          {currentAnswers.map((answer) => (
-            <div
-              key={answer.AnswerID}
-              className={`answer-option ${
-                selectedAnswers[currentQuestion.QuestionID]?.includes(answer.AnswerID)
-                  ? "selected"
-                  : ""
-              }`}
-              onClick={() =>
-                handleAnswerSelect(
-                  currentQuestion.QuestionID,
-                  answer.AnswerID,
-                  currentQuestion.IsMultipleChoice
-                )
-              }
-            >
-              <span>{answer.AnswerText}</span>
-            </div>
-          ))}
-        </div>
+        {test.testType === "trueFalse" ? (
+          <div className="true-false-container">
+            {currentAnswers.map((answer) => {
+              const questionId = currentQuestion.QuestionID;
+              const isSelected = selectedAnswers[questionId]?.includes(answer.AnswerID);
+              const feedbackData = feedback[questionId];
+              const correctAnswerIds = feedbackData?.correctAnswers || [];
+              const isAnswerCorrect = correctAnswerIds.includes(answer.AnswerID);
+              const hasConfetti = showConfetti[`${questionId}-${answer.AnswerID}`] && isAnswerCorrect;
+              const hasShake = hasShaken[`${questionId}-${answer.AnswerID}`] && !isAnswerCorrect;
+
+              return (
+                <div
+                  key={answer.AnswerID}
+                  ref={(el) => (answerRefs.current[`${questionId}-${answer.AnswerID}`] = el)}
+                  className={`answer-option true-false-card ${
+                    isSelected
+                      ? isAnswerCorrect
+                        ? "correct"
+                        : "incorrect"
+                      : feedbackData && isAnswerCorrect
+                      ? "correct-faded"
+                      : feedbackData && !isAnswerCorrect
+                      ? "incorrect-faded"
+                      : ""
+                  } ${isSelected ? "selected" : ""} ${hasConfetti ? "bubbly-effect animate" : ""} ${
+                    hasShake ? "horizontal-shaking" : ""
+                  }`}
+                  onClick={() => handleAnswerSelect(questionId, answer.AnswerID)}
+                  style={{
+                    cursor: isLocked[questionId] ? "default" : "pointer",
+                  }}
+                >
+                  <div className="answer-content-trueFalse">
+                    <span>{answer.AnswerText}</span>
+                    {feedbackData && isLocked[questionId] && (
+                      <div className="feedback-container">
+                        {isAnswerCorrect && <CheckCircleOutlined />}
+                        {!isAnswerCorrect && <CloseCircleOutlined />}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="answers-container" style={{ animation: currentQuestionIndex > 0 ? "fadeIn 0.5s" : "none" }}>
+            {currentAnswers.map((answer) => {
+              const questionId = currentQuestion.QuestionID;
+              const isSelected = selectedAnswers[questionId]?.includes(answer.AnswerID);
+              const feedbackData = feedback[questionId];
+              const correctAnswerIds = feedbackData?.correctAnswers || [];
+              const isAnswerCorrect = correctAnswerIds.includes(answer.AnswerID);
+              const hasConfetti = showConfetti[`${questionId}-${answer.AnswerID}`] && isAnswerCorrect;
+              const hasShake = hasShaken[`${questionId}-${answer.AnswerID}`] && !isAnswerCorrect;
+
+              return (
+                <div
+                  key={answer.AnswerID}
+                  ref={(el) => (answerRefs.current[`${questionId}-${answer.AnswerID}`] = el)}
+                  className={`answer-option ${
+                    isSelected
+                      ? isAnswerCorrect
+                        ? "correct"
+                        : "incorrect"
+                      : feedbackData && isAnswerCorrect
+                      ? "correct-faded"
+                      : feedbackData && !isAnswerCorrect
+                      ? "incorrect-faded"
+                      : ""
+                  } ${isSelected ? "selected" : ""} ${hasConfetti ? "bubbly-effect animate" : ""} ${
+                    hasShake ? "horizontal-shaking" : ""
+                  }`}
+                  onClick={() => handleAnswerSelect(questionId, answer.AnswerID)}
+                  style={{
+                    cursor: isLocked[questionId] ? "default" : "pointer",
+                  }}
+                >
+                  <div className="answer-content">
+                    <span>{answer.AnswerText}</span>
+                    {feedbackData && isLocked[questionId] && (
+                      <div className="feedback-container">
+                        {isAnswerCorrect && <CheckCircleOutlined />}
+                        {!isAnswerCorrect && <CloseCircleOutlined />}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {!isAnswerSelected() && (
-        <p className="warning-message">Пожалуйста, выберите хотя бы один ответ, чтобы продолжить.</p>
+        <p className="warning-message">{t("warning_select_answer")}</p>
       )}
 
       <div className="navigation-buttons">
         <Button disabled={currentQuestionIndex === 0} onClick={handlePreviousQuestion}>
-          Назад
+          {t("previous")}
         </Button>
-        <Button type="primary" onClick={handleNextQuestion} disabled={!isAnswerSelected()}>
-          {currentQuestionIndex === questions.length - 1 ? "Завершить" : "Далее"}
+        <Button
+          type="primary"
+          onClick={handleNextQuestion}
+          disabled={!isAnswerSelected()}
+        >
+          {currentQuestionIndex === questions.length - 1 ? t("finish") : t("next")}
         </Button>
       </div>
 
@@ -398,7 +570,13 @@ const Test = () => {
         <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
         <span className="progress-text">{Math.round(progressPercentage)}%</span>
       </div>
+        <div className="img-container-test">
+          <img src={human} alt="Test"  className="random-img2"  />
+          <img src={pAtoms} alt="Test" className="random-img3"   />
+        </div>
+        
     </div>
+    
   );
 };
 

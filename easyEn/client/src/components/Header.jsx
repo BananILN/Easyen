@@ -1,13 +1,13 @@
-// Header.jsx
-import { NavLink, useNavigate } from "react-router"; 
+import { NavLink, useNavigate } from "react-router"; // Исправлено на react-router-dom
 import { NAV_ITEMS } from "..";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { UserContext } from "../context/UserContext";
 import { HOME_ROUTE } from "..";
-import  defaultImg   from "../assets/user.svg";
+import defaultImg from "../assets/user.svg";
 import ExitIcon from "../assets/exit.svg?react";
-import { fetchProfile } from "../http/ProfileApi"; 
+import { SettingOutlined } from "@ant-design/icons"; // Импорт иконки из antd
+import { fetchProfile } from "../http/ProfileApi";
 
 export default function Header() {
   const { isAuth, logout } = useContext(AuthContext);
@@ -21,7 +21,7 @@ export default function Header() {
           const userId = localStorage.getItem("userId");
           if (userId) {
             const profileData = await fetchProfile(userId);
-            setUser((prev) => ({ ...prev, ...profileData })); 
+            setUser((prev) => ({ ...prev, ...profileData }));
           }
         } catch (error) {
           console.error("Не удалось загрузить данные профиля в Header:", error);
@@ -40,12 +40,12 @@ export default function Header() {
   };
 
   const profile = NAV_ITEMS.find((item) => item.path === "/profile");
+  const isAdmin = user?.RoleID === 2; // Проверка роли админа (RoleID = 2)
 
   console.log("User data in Header:", user);
   const avatarUrl = user && user.img
     ? `${import.meta.env.VITE_API_URL}/static/${user.img}`
     : defaultImg;
-  // console.log("Generated avatar URL:", avatarUrl);
 
   if (loading) {
     return <header className="header">Загрузка...</header>;
@@ -74,6 +74,16 @@ export default function Header() {
                   onLoad={() => console.log("Image loaded successfully")}
                 />
               </div>
+            </NavLink>
+          )}
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `header-admin ${isActive ? "active-item" : ""}`
+              }
+            >
+              <SettingOutlined style={{ fontSize: "24px", color: "inherit" }} />
             </NavLink>
           )}
           <NavLink

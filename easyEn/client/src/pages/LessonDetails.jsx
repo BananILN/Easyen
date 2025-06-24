@@ -36,6 +36,10 @@ export default function LessonDetails() {
 
         const data = await fetchOneLesson(id);
         console.log("Lesson data in LessonDetails:", data);
+        // Сортируем тесты по порядку
+        if (data.tests) {
+          data.tests.sort((a, b) => a.order - b.order);
+        }
         setLesson(data);
 
         const userId = user?.UserID;
@@ -56,13 +60,25 @@ export default function LessonDetails() {
         if (isInitialLoad) {
           const nextIndex = savedCompletedTests.length;
           const currentIndexFromParams = parseInt(searchParams.get("currentLessonIndex")) || 0;
-          const initialIndex = currentIndexFromParams !== 0 ? currentIndexFromParams : nextIndex;
-          if (initialIndex <= (data.sections?.length - 1 || 0)) {
+
+          const sectionsLength = data.sections?.length || 0;
+
+          let initialIndex = currentIndexFromParams;
+          if (currentIndexFromParams >= sectionsLength) {
+            initialIndex = sectionsLength > 0 ? sectionsLength - 1 : 0;
+            setSearchParams({ currentLessonIndex: initialIndex });
+          } else if (currentIndexFromParams !== 0) {
+            initialIndex = currentIndexFromParams;
+          } else {
+            initialIndex = nextIndex;
+          }
+
+          if (initialIndex < sectionsLength) {
             setCurrentLessonIndex(initialIndex);
             setSearchParams({ currentLessonIndex: initialIndex });
           } else {
-            setCurrentLessonIndex(data.sections?.length - 1 || 0);
-            setSearchParams({ currentLessonIndex: data.sections?.length - 1 || 0 });
+            setCurrentLessonIndex(sectionsLength > 0 ? sectionsLength - 1 : 0);
+            setSearchParams({ currentLessonIndex: sectionsLength > 0 ? sectionsLength - 1 : 0 });
           }
           setIsInitialLoad(false);
         }
@@ -84,11 +100,14 @@ export default function LessonDetails() {
 
   useEffect(() => {
     const currentIndexFromParams = parseInt(searchParams.get("currentLessonIndex")) || 0;
-    if (currentIndexFromParams !== currentLessonIndex && currentIndexFromParams < (lesson?.sections?.length || 0)) {
+    const sectionsLength = lesson?.sections?.length || 0;
+
+    if (currentIndexFromParams !== currentLessonIndex && currentIndexFromParams < sectionsLength) {
       setCurrentLessonIndex(currentIndexFromParams);
-    } else if (currentIndexFromParams >= (lesson?.sections?.length || 0)) {
-      setCurrentLessonIndex(lesson?.sections?.length - 1 || 0);
-      setSearchParams({ currentLessonIndex: lesson?.sections?.length - 1 || 0 });
+    } else if (currentIndexFromParams >= sectionsLength) {
+      const newIndex = sectionsLength > 0 ? sectionsLength - 1 : 0;
+      setCurrentLessonIndex(newIndex);
+      setSearchParams({ currentLessonIndex: newIndex });
     }
   }, [searchParams, lesson, setSearchParams]);
 

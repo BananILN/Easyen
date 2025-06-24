@@ -10,6 +10,7 @@ import {router as ProgressRouter} from  "./ProgressRouter.js"
 import {router as ProfileRouter} from "./ProfileRouter.js"
 import { router as UserAnswerRouter } from "./UserAnswerRouter.js";
 import {router as StatisticRouter} from "./StatisticRouter.js"
+import { router as AdminRouter } from "./AdminRouter.js";
 
 export const router = new Router();
 
@@ -24,5 +25,6 @@ router.use('/role',roleRouter)
 router.use('/progress',ProgressRouter)
 router.use('/userAnswer', UserAnswerRouter);
 router.use('/statistics',StatisticRouter)
+router.use("/admin", AdminRouter);
 
 
